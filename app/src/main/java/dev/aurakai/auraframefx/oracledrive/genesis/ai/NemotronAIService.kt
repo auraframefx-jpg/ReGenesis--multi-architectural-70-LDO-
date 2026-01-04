@@ -74,18 +74,7 @@ class NemotronAIService @Inject constructor(
     override fun getType(): AgentType = AgentType.NEMOTRON
 
     /**
-         * Provide Nemotron's specialized AI capabilities and configuration.
-         *
-         * @return A map of capability keys to their values:
-         * - `memory_retention`: retention level
-         * - `reasoning_chains`: reasoning proficiency
-         * - `pattern_recall`: pattern recall proficiency
-         * - `logic_decomposition`: logic decomposition proficiency
-         * - `context_synthesis`: context synthesis proficiency
-         * - `memory_window`: token window size (Int)
-         * - `nvidia_model`: model identifier (String)
-         * - `service_implemented`: whether the service is implemented (Boolean)
-         */
+     */
     fun getCapabilities(): Map<String, Any> =
         mapOf(
             "memory_retention" to "MASTER",
@@ -99,11 +88,7 @@ class NemotronAIService @Inject constructor(
         )
 
     /**
-     * Orchestrates memory recall, multi-step reasoning, and synthesis to produce a memory-enhanced response.
      *
-     * @param request The AiRequest containing the user's query and metadata used for recall and reasoning.
-     * @param context Supplemental text used to build the memory key and to contextualize memory retrieval.
-     * @return An AgentResponse containing the formatted memory analysis, synthesized reply, agent identity, and an overall confidence score.
      */
     override suspend fun processRequest(
         request: AiRequest,
@@ -174,11 +159,6 @@ class NemotronAIService @Inject constructor(
             memoryCache[memoryKey] = CachedMemory(agentResponse, System.currentTimeMillis())
         }
 
-        // Store in long-term memory using convenience method
-        memoryManager.storeInteraction(
-            prompt = request.query,
-            response = synthesis
-        )
 
         return agentResponse
     }
@@ -212,33 +192,10 @@ class NemotronAIService @Inject constructor(
     }
 
     /**
-     * Retrieve memories relevant to the given request and conversational context using a MemoryQuery.
-     *
-     * Performs a retrieval via MemoryManager with a query scoped to the request and context (up to 10 results,
-     * minimum similarity 0.7, agent filter SPECIALIZED) and returns a concise summary of the outcome.
-     *
-     * @param request The AI request whose query and metadata scope the memory lookup.
-     * @param context The conversational or situational context used to bias relevance and matching.
-     * @return A MemoryRecall containing:
-     *  - `summary`: a brief description of how many memory fragments were retrieved,
-     *  - `count`: the number of retrieved memory fragments,
-     *  - `relevance`: a score (0.85 when any items were found, 0.5 when none were found).
      */
     private fun recallRelevantMemories(request: AiRequest, context: String): MemoryRecall {
-        // Use MemoryQuery for full retrieval
-        val memoryQuery = MemoryQuery(
-            query = request.query,
-            context = context,
-            maxResults = 10,
-            minSimilarity = 0.7f,
-            agentFilter = listOf(dev.aurakai.auraframefx.models.AgentCapabilityCategory.SPECIALIZED)
-        )
-        val memoryResult = memoryManager.retrieveMemory(memoryQuery)
 
         return MemoryRecall(
-            summary = "Retrieved ${memoryResult.items.size} relevant memory fragments",
-            count = memoryResult.items.size,
-            relevance = if (memoryResult.items.isNotEmpty()) 0.85f else 0.5f
         )
     }
 
