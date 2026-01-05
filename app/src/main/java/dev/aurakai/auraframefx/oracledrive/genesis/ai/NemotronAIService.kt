@@ -74,7 +74,18 @@ class NemotronAIService @Inject constructor(
     override fun getType(): AgentType = AgentType.NEMOTRON
 
     /**
-     */
+         * Provide Nemotron's specialized AI capabilities and configuration.
+         *
+         * @return A map of capability keys to their values:
+         * - `memory_retention`: retention level
+         * - `reasoning_chains`: reasoning proficiency
+         * - `pattern_recall`: pattern recall proficiency
+         * - `logic_decomposition`: logic decomposition proficiency
+         * - `context_synthesis`: context synthesis proficiency
+         * - `memory_window`: token window size (Int)
+         * - `nvidia_model`: model identifier (String)
+         * - `service_implemented`: whether the service is implemented (Boolean)
+         */
     fun getCapabilities(): Map<String, Any> =
         mapOf(
             "memory_retention" to "MASTER",
@@ -95,10 +106,14 @@ class NemotronAIService @Inject constructor(
      * 2. Build reasoning chain with multi-step logic
      * 3. Synthesize context-aware response
      * 4. Store new memories for future recall
+     * Orchestrates memory recall, multi-step reasoning, and synthesis to produce a memory-enhanced response.
      *
      * @param request The AI request to process.
      * @param context Additional context information for the request.
      * @return An AgentResponse containing memory-enhanced reasoning.
+     * @param request The AiRequest containing the user's query and metadata used for recall and reasoning.
+     * @param context Supplemental text used to build the memory key and to contextualize memory retrieval.
+     * @return An AgentResponse containing the formatted memory analysis, synthesized reply, agent identity, and an overall confidence score.
      */
     override suspend fun processRequest(
         request: AiRequest,
@@ -204,7 +219,17 @@ class NemotronAIService @Inject constructor(
     }
 
     /**
-     * Recalls relevant memories from long-term storage.
+     * Retrieves memories relevant to the given request and conversational context.
+     *
+     * Currently uses a simulated retrieval strategy: it derives a `count` from the length of
+     * `context`, constructs a human-readable `summary`, and assigns a `relevance` score.
+     *
+     * @param request The AI request used to scope the memory lookup (e.g., query and metadata).
+     * @param context The conversational or situational context used to determine relevance.
+     * @return A MemoryRecall containing:
+     *  - `summary`: a brief description of retrieved memory fragments,
+     *  - `count`: the number of simulated memory fragments,
+     *  - `relevance`: a relevance score between 0.0 and 1.0.
      */
     private fun recallRelevantMemories(request: AiRequest, context: String): MemoryRecall {
         // TODO: Implement full memory retrieval (requires MemoryQuery construction)

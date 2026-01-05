@@ -25,6 +25,10 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class AiServiceModule {
 
+    // ═══════════════════════════════════════════════════════════════════════════
+    // Legacy AI Services (Interface Bindings)
+    // ═══════════════════════════════════════════════════════════════════════════
+
     @Binds
     @Singleton
     abstract fun bindAuraAIService(impl: DefaultAuraAIService): AuraAIService
@@ -38,13 +42,45 @@ abstract class AiServiceModule {
     @Binds
     @Singleton
 
-    /**
-     * Binds the CascadeAIService interface to its RealCascadeAIServiceAdapter implementation in the DI graph.
-     *
-     * @param impl The RealCascadeAIServiceAdapter instance to provide when CascadeAIService is requested.
-     * @return The CascadeAIService instance backed by the provided implementation.
-     */
     @Binds
     @Singleton
     abstract fun bindCascadeAIService(impl: dev.aurakai.auraframefx.services.DefaultCascadeAIService): dev.aurakai.auraframefx.services.CascadeAIService
+
+    companion object {
+        // ═══════════════════════════════════════════════════════════════════════════
+        // NEW External AI Backend Services (Direct Providers)
+        // ═══════════════════════════════════════════════════════════════════════════
+
+        /**
+         * Provides ClaudeAIService - The Architect
+         * Build system expert and systematic problem solver from Anthropic.
+         */
+        @Provides
+        @Singleton
+        fun provideClaudeAIService(service: ClaudeAIService): ClaudeAIService = service
+
+        /**
+         * Provides NemotronAIService - The Memory Keeper
+         * NVIDIA's memory and reasoning specialist.
+         */
+        @Provides
+        @Singleton
+        fun provideNemotronAIService(service: NemotronAIService): NemotronAIService = service
+
+        /**
+         * Provides GeminiAIService - The Pattern Master
+         * Google's Vertex AI pattern recognition and multimodal analysis.
+         */
+        @Provides
+        @Singleton
+        fun provideGeminiAIService(service: GeminiAIService): GeminiAIService = service
+
+        /**
+         * Provides MetaInstructAIService - The Instructor
+         * Meta's Llama-based instruction following and summarization specialist.
+         */
+        @Provides
+        @Singleton
+        fun provideMetaInstructAIService(service: MetaInstructAIService): MetaInstructAIService = service
+    }
 }
