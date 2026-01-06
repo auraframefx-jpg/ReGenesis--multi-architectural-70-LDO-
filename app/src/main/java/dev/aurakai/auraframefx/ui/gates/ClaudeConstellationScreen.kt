@@ -191,7 +191,6 @@ private fun ArchitectBlueprintCanvas() {
             )
         }
 
-        // T-square centerpiece will be overlaid as PNG image below
 
         // Draw build system nodes in a systematic grid pattern
         val nodes = mutableListOf<Offset>()
@@ -264,17 +263,50 @@ private fun ArchitectBlueprintCanvas() {
             )
         }
     }
+}
 
-        // PNG Centerpiece Image Overlay (Compass + Gear)
-        Image(
-            painter = painterResource(id = R.drawable.constellation_claude_compass),
-            contentDescription = "Claude Compass Constellation",
-            modifier = Modifier
-                .size(350.dp)
-                .scale(centerScale)
-                .alpha(pulseAlpha)
+/**
+ * Draw T-square (architect's drafting tool)
+ */
+private fun DrawScope.drawTSquare(
+    centerX: Float,
+    centerY: Float,
+    color: Color,
+    pulseAlpha: Float
+) {
+    val rulerLength = 200f
+    val rulerWidth = 20f
+
+    // Vertical ruler
+    drawLine(
+        color = color.copy(alpha = pulseAlpha * 0.6f),
+        start = Offset(centerX, centerY - rulerLength / 2),
+        end = Offset(centerX, centerY + rulerLength / 2),
+        strokeWidth = rulerWidth
+    )
+
+    // Horizontal crossbar at top
+    drawLine(
+        color = color.copy(alpha = pulseAlpha * 0.6f),
+        start = Offset(centerX - rulerLength / 3, centerY - rulerLength / 2),
+        end = Offset(centerX + rulerLength / 3, centerY - rulerLength / 2),
+        strokeWidth = rulerWidth
+    )
+
         )
     }
+
+    // Center circle (pivot point)
+    drawCircle(
+        color = color.copy(alpha = pulseAlpha),
+        radius = 12f,
+        center = Offset(centerX, centerY)
+    )
+    drawCircle(
+        color = Color.White.copy(alpha = pulseAlpha * 0.8f),
+        radius = 6f,
+        center = Offset(centerX, centerY)
+    )
 }
 
 /**

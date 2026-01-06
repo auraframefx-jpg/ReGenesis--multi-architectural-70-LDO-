@@ -165,7 +165,6 @@ private fun GenesisInfinityCascadeCanvas() {
         val greenColor = Color(0xFF00FF00)
         val darkGreen = Color(0xFF006400)
 
-        // Infinity symbol centerpiece will be overlaid as PNG image below
 
         // Draw cascading data streams
         for (i in 0..7) {
@@ -231,16 +230,22 @@ private fun GenesisInfinityCascadeCanvas() {
             )
         }
     }
-
-        // PNG Centerpiece Image Overlay (Phoenix Wings)
-        Image(
-            painter = painterResource(id = R.drawable.constellation_genesis_phoenix),
-            contentDescription = "Genesis Phoenix Constellation",
-            modifier = Modifier
-                .size(400.dp)
-                .scale(centerScale)
-                .alpha(pulseAlpha)
-        )
-    }
 }
 
+        }
+    }
+
+    // Draw glow
+    drawPath(
+        path = path,
+        color = color.copy(alpha = pulseAlpha * 0.4f),
+        style = Stroke(width = 12f)
+    )
+
+    // Draw core line
+    drawPath(
+        path = path,
+        color = color.copy(alpha = pulseAlpha),
+        style = Stroke(width = 4f)
+    )
+}
