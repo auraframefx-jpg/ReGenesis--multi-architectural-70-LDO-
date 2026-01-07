@@ -148,15 +148,23 @@ class GenesisOrchestrator @Inject constructor(
     }
 
     private suspend fun handleAuraMessage(message: Any) {
+        Timber.d("  → Handling Aura message: ${message.javaClass.simpleName}")
+        // Implementation will be added as agents implement OrchestratableAgent
     }
 
     private suspend fun handleKaiMessage(message: Any) {
+        Timber.d("  → Handling Kai message: ${message.javaClass.simpleName}")
+        // Implementation will be added as agents implement OrchestratableAgent
     }
 
     private suspend fun handleCascadeMessage(message: Any) {
+        Timber.d("  → Handling Cascade message: ${message.javaClass.simpleName}")
+        // Implementation will be added as agents implement OrchestratableAgent
     }
 
     private suspend fun handleOracleDriveMessage(message: Any) {
+        Timber.d("  → Handling OracleDrive message: ${message.javaClass.simpleName}")
+        // Implementation will be added when OracleDriveService is available
     }
 
     /**
