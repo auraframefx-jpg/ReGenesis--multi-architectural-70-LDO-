@@ -298,7 +298,9 @@ class VertexAIClientImpl @Inject constructor(
             .apply {
                 // Add authentication header
                 config.apiKey?.let { apiKey ->
+                    addHeader("Authorization", "Bearer $apiKey")
                 }
+                addHeader("Content-Type", "application/json")
             }
             .build()
 

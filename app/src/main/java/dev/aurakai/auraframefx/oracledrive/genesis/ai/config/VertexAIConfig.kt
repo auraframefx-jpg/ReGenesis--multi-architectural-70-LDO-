@@ -23,6 +23,7 @@ data class VertexAIConfig(
     val safetySettings: Map<String, String> = emptyMap(),
     val timeout: Long = 30000,
     val retryCount: Int = 3,
+    val enableStreaming: Boolean = false
 ) {
     companion object {
         /**
@@ -47,16 +48,6 @@ fun default(): VertexAIConfig = VertexAIConfig()
             location = System.getenv("VERTEX_LOCATION") ?: "us-central1",
             modelName = System.getenv("VERTEX_MODEL") ?: "gemini-pro"
         )
-    }
-
-    /**
-     * Builds the full model endpoint URL for this configuration.
-     *
-     * @return The model endpoint URL in the form
-     * `https://{endpoint}/v1/projects/{projectId}/locations/{location}/publishers/google/models/{modelName}:generateContent`
-     */
-    fun getModelEndpoint(): String {
-        return "https://$endpoint/v1/projects/$projectId/locations/$location/publishers/google/models/$modelName:generateContent"
     }
 }
 

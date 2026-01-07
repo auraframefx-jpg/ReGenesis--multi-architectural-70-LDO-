@@ -131,7 +131,8 @@ internal fun MainScreenContent(
                             if (offset.x < with(density) { 30.dp.toPx() }) {
                                 showSidebar = true
                             }
-                        }
+                        },
+                        onHorizontalDrag = { _, _ -> /* Handle drag */ }
                     )
                 }
         )
