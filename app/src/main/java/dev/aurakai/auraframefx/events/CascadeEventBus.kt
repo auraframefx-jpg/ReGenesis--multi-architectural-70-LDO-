@@ -22,19 +22,12 @@ object CascadeEventBus {
      */
     val events: SharedFlow<MemoryEvent> = _events.asSharedFlow()
 
-    /**
-     * Emit a new memory event to all collectors.
-     * This is a suspending function that will not drop events by default.
-     */
-    suspend fun emit(event: MemoryEvent) {
-        _events.emit(event)
+    fun emit(event: CascadeEvent) {
+        _events.tryEmit(event)
     }
 
-    /**
-     * Try to emit a memory event without suspending.
-     * @return true if the event was emitted immediately, false if the buffer is full
-     */
-    fun tryEmit(event: MemoryEvent): Boolean {
+    // Compatibility method for error log "tryEmit is never used" - making it public usage
+    fun tryEmit(event: CascadeEvent): Boolean {
         return _events.tryEmit(event)
     }
 }
