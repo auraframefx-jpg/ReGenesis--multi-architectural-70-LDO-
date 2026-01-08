@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -22,19 +20,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.aurakai.auraframefx.navigation.AppNavGraph
 import dev.aurakai.auraframefx.navigation.GenesisNavigationHost
-import dev.aurakai.auraframefx.navigation.GenesisRoutes
-import dev.aurakai.auraframefx.ui.overlays.AgentSidebarMenu
-import dev.aurakai.auraframefx.ui.overlays.AuraPresenceOverlay
-import dev.aurakai.auraframefx.ui.overlays.ChatBubbleMenu
 import dev.aurakai.auraframefx.ui.theme.AuraFrameFXTheme
 import dev.aurakai.auraframefx.ui.theme.ThemeViewModel
 
@@ -116,7 +108,6 @@ internal fun MainScreenContent(
                 }
             }
     ) {
-        // Main navigation content
         GenesisNavigationHost(navController = navController)
 
         // Edge trigger zone for sidebar (left edge swipe)
@@ -131,8 +122,7 @@ internal fun MainScreenContent(
                             if (offset.x < with(density) { 30.dp.toPx() }) {
                                 showSidebar = true
                             }
-                        },
-                        onHorizontalDrag = { _, _ -> /* Handle drag */ }
+                        }
                     )
                 }
         )
