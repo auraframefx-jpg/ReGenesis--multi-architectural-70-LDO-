@@ -77,6 +77,7 @@ fun SphereGridScreen(navController: NavHostController) {
                         AgentSphereCard(
                             agent = agent,
                             isSelected = selectedAgent.value == agent,
+                            onClick = { selectedAgent.value = agent }
                         )
                     }
                 }
