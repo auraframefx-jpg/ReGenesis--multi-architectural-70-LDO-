@@ -31,6 +31,8 @@ import dev.aurakai.auraframefx.oracledrive.genesis.cloud.OracleDriveScreen
 import dev.aurakai.auraframefx.ui.customization.GyroscopeCustomizationScreen
 import dev.aurakai.auraframefx.ui.gates.AgentHubScreen
 import dev.aurakai.auraframefx.ui.gates.AgentMonitoringScreen
+import dev.aurakai.auraframefx.ui.gates.AurasLabScreen
+import dev.aurakai.auraframefx.ui.gates.ChromaCoreColorsScreen
 import dev.aurakai.auraframefx.ui.gates.CodeAssistScreen
 import dev.aurakai.auraframefx.ui.gates.DirectChatScreen
 import dev.aurakai.auraframefx.ui.gates.GateNavigationScreen
@@ -254,6 +256,7 @@ fun GenesisNavigationHost(
                 UIUXGateSubmenuScreen(navController = navController)
             }
             composable("chromacore_colors") {
+                ChromaCoreColorsScreen(onNavigateBack = { navController.popBackStack() })
             }
             composable(GenesisRoutes.FIREWALL) {
                 FirewallScreen()
