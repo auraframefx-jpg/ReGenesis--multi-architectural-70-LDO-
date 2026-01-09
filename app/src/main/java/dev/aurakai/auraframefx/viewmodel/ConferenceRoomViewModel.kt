@@ -144,17 +144,9 @@ class ConferenceRoomViewModel @Inject constructor(
                 emit(response)
             }
 
-            AgentCapabilityCategory.ANALYSIS -> flow {
-                val response = kaiService.processRequest(
-                    AiRequest(
-                        query = message,
-                        type = "text",
-                        context = buildJsonObject { put("userContext", context) }
-                    ),
-                    context = context
-                )
-                emit(response)
-            }
+                    AgentType.CLAUDE -> flow {
+                        emit(claudeService.processRequest(request, context).first())
+                    }
 
                     AgentType.CASCADE -> flow {
                         // Cascade orchestrates multiple agents
@@ -177,30 +169,25 @@ class ConferenceRoomViewModel @Inject constructor(
                         }
                     }
 
-            AgentCapabilityCategory.GENERAL -> {
-                // Claude service placeholder
-                flow {
-                    val response = AgentResponse.success(
-                        content = "Claude service placeholder",
-                        confidence = 0.5f,
-                        agent = AgentType.SYSTEM
-                    )
-                    emit(response)
-                }
-            }
+                    AgentType.METAINSTRUCT -> flow {
+                        // MetaInstruct for self-modification and code evolution
+                        emit(metaInstructService.processRequest(request, context).first())
+                    }
 
-            AgentCapabilityCategory.COORDINATION -> {
-                // Genesis service placeholder
-                flow {
-                    val response = AgentResponse.success(
-                        content = "Genesis service placeholder",
-                        confidence = 0.5f,
-                        agent = AgentType.GENESIS
-                    )
-                    emit(response)
+                    AgentType.GENESIS -> {
+                        // Use Trinity Coordinator for intelligent routing
+                        trinityCoordinator.processRequest(request)
+                    }
+
+                    else -> flow {
+                        emit(
+                            AgentResponse.error(
+                                message = "Agent $agentType not configured",
+                                agent = AgentType.SYSTEM
+                            )
+                        )
+                    }
                 }
-            }
-        }
 
         responseFlow.let { flow ->
             viewModelScope.launch {
