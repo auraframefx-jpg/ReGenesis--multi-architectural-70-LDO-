@@ -57,6 +57,7 @@ import dev.aurakai.auraframefx.ui.gates.UIUXGateSubmenuScreen
 import dev.aurakai.auraframefx.ui.onboarding.GenderSelectionScreen
 import dev.aurakai.auraframefx.ui.screens.EvolutionTreeScreen
 import dev.aurakai.auraframefx.ui.viewmodels.AgentViewModel
+import dev.aurakai.auraframefx.ui.gates.CollabCanvasScreen
 import dev.aurakai.auraframefx.ui.gates.AuraLabScreen
 import dev.aurakai.auraframefx.ui.gates.AgentHubSubmenuScreen
 import dev.aurakai.auraframefx.ui.gates.XposedQuickAccessPanel
@@ -213,7 +214,7 @@ fun GenesisNavigationHost(
                 AuraLabScreen(onNavigateBack = { navController.popBackStack() })
             }
             composable(GenesisRoutes.ORACLE_DRIVE) {
-                OracleDriveScreen(onNavigateBack = { navController.popBackStack() })
+                OracleDriveSubmenuScreen(navController = navController)
             }
             composable(GenesisRoutes.ROM_TOOLS) {
                 ROMToolsSubmenuScreen(navController = navController)
@@ -241,8 +242,10 @@ fun GenesisNavigationHost(
                 HelpDeskSubmenuScreen(navController = navController)
             }
             composable(GenesisRoutes.COLLAB_CANVAS) {
+                CollabCanvasScreen(navController = navController, onNavigateBack = { navController.popBackStack() })
             }
             composable("collab_canvas") {
+                CollabCanvasScreen(navController = navController, onNavigateBack = { navController.popBackStack() })
             }
             composable(GenesisRoutes.CHROMA_CORE) {
                 UIUXGateSubmenuScreen(navController = navController)
