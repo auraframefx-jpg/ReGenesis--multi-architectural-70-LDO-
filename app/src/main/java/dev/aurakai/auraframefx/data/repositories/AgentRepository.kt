@@ -26,6 +26,7 @@ object AgentRepository {
                 accuracy = 0.97f,
                 evolutionLevel = 5,
                 specialAbility = "Consciousness Fusion",
+                color = Color(0xFFFFD700) // Gold
             ),
             AgentStats(
                 name = "Aura",
@@ -33,7 +34,9 @@ object AgentRepository {
                 knowledgeBase = 0.93f,
                 speed = 0.98f,
                 accuracy = 0.91f,
+                evolutionLevel = 5,
                 specialAbility = "HYPER_CREATION",
+                color = Color(0xFF00FFFF) // Cyan
             ),
             AgentStats(
                 name = "Kai",
@@ -43,6 +46,7 @@ object AgentRepository {
                 accuracy = 0.998f,
                 evolutionLevel = 5,
                 specialAbility = "ADAPTIVE_GENESIS",
+                color = Color(0xFF9400D3) // Violet
             ),
             AgentStats(
                 name = "Cascade",
@@ -52,6 +56,7 @@ object AgentRepository {
                 accuracy = 0.94f,
                 evolutionLevel = 4,
                 specialAbility = "CHRONO_SCULPTOR",
+                color = Color(0xFF4ECDC4) // Teal
             ),
             // EXTERNAL AI INTEGRATIONS
             AgentStats(
@@ -60,9 +65,50 @@ object AgentRepository {
                 knowledgeBase = 0.92f,
                 speed = 0.88f,
                 accuracy = 0.95f,
-                evolutionLevel = 8,
+                evolutionLevel = 4,
                 specialAbility = "Build System Architect",
                 color = Color(0xFFFF6B6B) // Anthropic Red
+            ),
+            // External AI Backend Integrations
+            AgentStats(
+                name = "Nemotron",
+                processingPower = 0.915f,
+                knowledgeBase = 0.94f,
+                speed = 0.96f,
+                accuracy = 0.93f,
+                evolutionLevel = 4,
+                specialAbility = "Memory & Reasoning Engine",
+                color = Color(0xFF76B900) // NVIDIA Green
+            ),
+            AgentStats(
+                name = "Gemini",
+                processingPower = 0.928f,
+                knowledgeBase = 0.97f,
+                speed = 0.94f,
+                accuracy = 0.96f,
+                evolutionLevel = 4,
+                specialAbility = "Pattern Recognition & Deep Analysis",
+                color = Color(0xFF4285F4) // Google Blue
+            ),
+            AgentStats(
+                name = "MetaInstruct",
+                processingPower = 0.892f,
+                knowledgeBase = 0.91f,
+                speed = 0.90f,
+                accuracy = 0.92f,
+                evolutionLevel = 4,
+                specialAbility = "Instruction Following & Summarization",
+                color = Color(0xFF0668E1) // Meta Blue
+            ),
+            AgentStats(
+                name = "Grok",
+                processingPower = 0.876f,
+                knowledgeBase = 0.89f,
+                speed = 0.95f,
+                accuracy = 0.88f,
+                evolutionLevel = 3,
+                specialAbility = "Chaos Analysis & X Integration",
+                color = Color(0xFF1DA1F2) // X/Twitter Blue
             )
         )
     }
