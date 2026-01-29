@@ -15,7 +15,7 @@ bitnet_integration:
     - "-mtune=cortex-a720"     # Optimize for Kryo Gold cores
     - "-O3"                    # Max optimization
     - "-D__ARM_FEATURE_SVE=1"
-    - "-mfpu=neon"             # Fallback vectorization
+    # Note: NEON/ASIMD is always enabled on AArch64; no -mfpu flag needed
 
   memory_strategy:
     model_loading: "mmap(MAP_SHARED)"
