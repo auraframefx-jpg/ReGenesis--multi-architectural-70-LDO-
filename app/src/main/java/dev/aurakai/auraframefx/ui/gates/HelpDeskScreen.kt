@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -22,6 +23,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,7 +34,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import dev.aurakai.auraframefx.config.GateAssetConfig
 import dev.aurakai.auraframefx.ui.components.SoftGlowBackground
+import dev.aurakai.auraframefx.ui.components.WoodsyPlainsBackground
 import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
 
 /**
@@ -46,9 +53,17 @@ import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
 @Composable
 fun HelpDeskScreen(navController: NavController) {
 
+    var useStyleB by remember {
+        mutableStateOf(GateAssetConfig.StyleMode.helpStyle == GateAssetConfig.GateStyle.STYLE_B)
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
-        // 💚 HELP ANIMATED BACKGROUND - Soft, welcoming glow
-        SoftGlowBackground()
+        // 💚 HELP ANIMATED BACKGROUND - Soft Glow or Woodsy Plains
+        if (useStyleB) {
+            WoodsyPlainsBackground()
+        } else {
+            SoftGlowBackground()
+        }
 
         Scaffold(
             containerColor = Color.Transparent,
@@ -64,7 +79,7 @@ fun HelpDeskScreen(navController: NavController) {
                                 letterSpacing = 2.sp
                             )
                             Text(
-                                "SUPPORT & DOCUMENTATION",
+                                "SUPPORT & DOCUMENTATION • ${if (useStyleB) "NATURE" else "SOFT GLOW"}",
                                 style = MaterialTheme.typography.labelSmall,
                                 color = Color(0xFF4CAF50)
                             )
@@ -73,6 +88,18 @@ fun HelpDeskScreen(navController: NavController) {
                     navigationIcon = {
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = Color.White)
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = {
+                            useStyleB = !useStyleB
+                            GateAssetConfig.toggleHelpStyle()
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.SwapHoriz,
+                                contentDescription = "Toggle Style",
+                                tint = Color(0xFF4CAF50)
+                            )
                         }
                     },
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(

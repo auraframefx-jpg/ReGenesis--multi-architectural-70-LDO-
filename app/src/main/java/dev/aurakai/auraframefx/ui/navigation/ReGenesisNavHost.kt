@@ -15,9 +15,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import dev.aurakai.auraframefx.customization.CustomizationViewModel
 import dev.aurakai.auraframefx.navigation.NavDestination
+import dev.aurakai.auraframefx.ui.gates.AgentNexusHubScreen
 import dev.aurakai.auraframefx.ui.gates.AgentProfileScreen
 import dev.aurakai.auraframefx.ui.gates.ArkBuildScreen
+import dev.aurakai.auraframefx.ui.gates.AuraThemingHubScreen
 import dev.aurakai.auraframefx.ui.gates.FusionModeScreen
+import dev.aurakai.auraframefx.ui.gates.HelpDeskScreen
+import dev.aurakai.auraframefx.ui.gates.KaiSentinelHubScreen
+import dev.aurakai.auraframefx.ui.gates.OracleDriveHubScreen
 import dev.aurakai.auraframefx.ui.gates.SovereignMetaInstructScreen
 import dev.aurakai.auraframefx.ui.gates.TaskAssignmentScreen
 
@@ -111,6 +116,23 @@ fun ReGenesisNavHost(
         }
         composable(NavDestination.AgentMonitoring.route) {
             AgentProfileScreen(onNavigateBack = { navController.popBackStack() })
+        }
+
+        // --- LEVEL 2 DOMAIN HUBS ---
+        composable(NavDestination.AuraThemingHub.route) {
+            AuraThemingHubScreen(navController = navController)
+        }
+        composable(NavDestination.RomToolsHub.route) {
+            KaiSentinelHubScreen(navController = navController)
+        }
+        composable(NavDestination.OracleDriveHub.route) {
+            OracleDriveHubScreen(navController = navController)
+        }
+        composable(NavDestination.AgentNexusHub.route) {
+            AgentNexusHubScreen(navController = navController)
+        }
+        composable(NavDestination.HelpDesk.route) {
+            HelpDeskScreen(navController = navController)
         }
 
         composable("aura_lab") {

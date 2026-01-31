@@ -31,6 +31,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import dev.aurakai.auraframefx.R
+import dev.aurakai.auraframefx.config.GateAssetConfig
 import dev.aurakai.auraframefx.navigation.NavDestination
 import dev.aurakai.auraframefx.ui.components.IcyTundraBackground
 import dev.aurakai.auraframefx.ui.components.ShieldGridBackground
@@ -58,7 +63,7 @@ import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
 fun KaiSentinelHubScreen(navController: NavController) {
 
     var useStyleB by remember {
-        mutableStateOf(false) // Default to Icy Tundra
+        mutableStateOf(GateAssetConfig.StyleMode.kaiStyle == GateAssetConfig.GateStyle.STYLE_B)
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -102,9 +107,12 @@ fun KaiSentinelHubScreen(navController: NavController) {
                         }
                     },
                     actions = {
-                        IconButton(onClick = { useStyleB = !useStyleB }) {
+                        IconButton(onClick = {
+                            useStyleB = !useStyleB
+                            GateAssetConfig.toggleKaiStyle()
+                        }) {
                             Icon(
-                                imageVector = androidx.compose.material.icons.Icons.Default.SwapHoriz,
+                                imageVector = Icons.Default.SwapHoriz,
                                 contentDescription = "Toggle Style",
                                 tint = Color(0xFF00FF85)
                             )

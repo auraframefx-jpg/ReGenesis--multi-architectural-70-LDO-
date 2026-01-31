@@ -290,4 +290,9 @@ object GateAssetConfig {
         StyleMode.nexusStyle = if (StyleMode.nexusStyle == GateStyle.STYLE_A)
             GateStyle.STYLE_B else GateStyle.STYLE_A
     }
+
+    fun toggleHelpStyle() {
+        StyleMode.helpStyle = if (StyleMode.helpStyle == GateStyle.STYLE_A)
+            GateStyle.STYLE_B else GateStyle.STYLE_A
+    }
 }

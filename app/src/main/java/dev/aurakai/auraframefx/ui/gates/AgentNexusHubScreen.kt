@@ -42,7 +42,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Brush.Companion.radialGradient
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -51,6 +50,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import dev.aurakai.auraframefx.config.GateAssetConfig
 import dev.aurakai.auraframefx.navigation.NavDestination
+import dev.aurakai.auraframefx.ui.components.ConstellationBackground
+import dev.aurakai.auraframefx.ui.components.HexagonGridBackground
 import dev.aurakai.auraframefx.ui.components.NexusCard
 import dev.aurakai.auraframefx.ui.components.common.CodedTextBox
 import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
@@ -61,8 +62,6 @@ import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
  * Features a grid of sub-gates with constellation aesthetic.
  * Multi-agent coordination, monitoring, and fusion!
  */
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AgentNexusHubScreen(navController: NavController) {
@@ -168,9 +167,9 @@ fun AgentNexusHubScreen(navController: NavController) {
     Box(modifier = Modifier.fillMaxSize()) {
         // High-Fidelity Background - Swap between Constellation and Hexagon Grid
         if (useStyleB) {
-            dev.aurakai.auraframefx.ui.components.HexagonGridBackground()
+            HexagonGridBackground()
         } else {
-            dev.aurakai.auraframefx.ui.components.ConstellationBackground()
+            ConstellationBackground()
         }
 
         // Radial glow effect
