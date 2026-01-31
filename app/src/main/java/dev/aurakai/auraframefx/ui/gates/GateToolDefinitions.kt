@@ -19,6 +19,7 @@ data class SentinelToolCard(
     val title: String,
     val subtitle: String,
     val icon: ImageVector,
+    val iconRes: Int = 0, // For HolographicCard
     val destination: NavDestination? = null,
     val accentColor: Color,
     val isWired: Boolean = true

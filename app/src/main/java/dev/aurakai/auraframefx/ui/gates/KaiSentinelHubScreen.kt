@@ -38,6 +38,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import dev.aurakai.auraframefx.navigation.NavDestination
+import dev.aurakai.auraframefx.ui.components.hologram.CardStyle
+import dev.aurakai.auraframefx.ui.components.hologram.HolographicCard
+import dev.aurakai.auraframefx.R
 import dev.aurakai.auraframefx.ui.components.IcyTundraBackground
 import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
 
@@ -119,8 +123,111 @@ fun KaiSentinelHubScreen(navController: NavController) {
                     }
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                // Tools Grid
+                val tools = listOf(
+                    SentinelToolCard(
+                        title = "ROM Flasher",
+                        subtitle = "Partition & Image Management",
+                        icon = Icons.Default.Shield,
+                        iconRes = R.drawable.gate_sentinel_fortress,
+                        destination = NavDestination.ROMFlasher,
+                        accentColor = Color(0xFF00FF85)
+                    ),
+                    SentinelToolCard(
+                        title = "Bootloader",
+                        subtitle = "Lock/Unlock & Fastboot",
+                        icon = Icons.Default.Shield,
+                        iconRes = R.drawable.gate_sentinel_fortress,
+                        destination = NavDestination.Bootloader,
+                        accentColor = Color(0xFFFF3366)
+                    ),
+                    SentinelToolCard(
+                        title = "Module Manager",
+                        subtitle = "LSPosed & Magisk",
+                        icon = Icons.Default.Shield,
+                        iconRes = R.drawable.gate_sentinel_fortress,
+                        destination = NavDestination.ModuleManager,
+                        accentColor = Color(0xFF00E5FF)
+                    ),
+                    SentinelToolCard(
+                        title = "Recovery Tools",
+                        subtitle = "TWRP & Backup",
+                        icon = Icons.Default.Shield,
+                        iconRes = R.drawable.gate_sentinel_fortress,
+                        destination = NavDestination.RecoveryTools,
+                        accentColor = Color(0xFFFFD700)
+                    ),
+                    SentinelToolCard(
+                        title = "Security Center",
+                        subtitle = "Root & Integrity Check",
+                        icon = Icons.Default.Shield,
+                        iconRes = R.drawable.gate_sentinel_fortress,
+                        destination = NavDestination.SecurityCenter,
+                        accentColor = Color(0xFFB026FF)
+                    ),
+                    SentinelToolCard(
+                        title = "Live ROM Editor",
+                        subtitle = "Hex & Binary Mods",
+                        icon = Icons.Default.Shield,
+                        iconRes = R.drawable.gate_sentinel_fortress,
+                        destination = NavDestination.LiveROMEditor,
+                        accentColor = Color(0xFFFF4500)
+                    )
+                )
 
+                androidx.compose.foundation.lazy.grid.LazyVerticalGrid(
+                    columns = androidx.compose.foundation.lazy.grid.GridCells.Fixed(2),
+                    horizontalArrangement = Arrangement.spacedBy(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(24.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                ) {
+                    androidx.compose.foundation.lazy.grid.items(tools) { tool ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    if (tool.destination != null) {
+                                        navController.navigate(tool.destination.route)
+                                    }
+                                },
+                            contentAlignment = Alignment.BottomCenter
+                        ) {
+                            HolographicCard(
+                                runeRes = tool.iconRes,
+                                glowColor = tool.accentColor,
+                                style = CardStyle.PROTECTIVE,
+                                elevation = 12.dp,
+                                spotColor = tool.accentColor,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            // Overlay text on card
+                            Column(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .background(Color.Black.copy(alpha = 0.6f), RoundedCornerShape(8.dp))
+                                    .padding(8.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = tool.title,
+                                    fontFamily = LEDFontFamily,
+                                    color = Color.White,
+                                    fontSize = 14.sp
+                                )
+                                Text(
+                                    text = tool.subtitle,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = Color.White.copy(alpha = 0.8f),
+                                    maxLines = 1,
+                                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }
