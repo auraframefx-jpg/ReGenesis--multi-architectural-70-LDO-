@@ -166,16 +166,12 @@ fun AgentNexusHubScreen(navController: NavController) {
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Neural constellation background
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        listOf(Color(0xFF0F0F1E), Color(0xFF1A1A32))
-                    )
-                )
-        )
+        // High-Fidelity Background - Swap between Constellation and Hexagon Grid
+        if (useStyleB) {
+            dev.aurakai.auraframefx.ui.components.HexagonGridBackground()
+        } else {
+            dev.aurakai.auraframefx.ui.components.ConstellationBackground()
+        }
 
         // Radial glow effect
         Box(
@@ -204,7 +200,7 @@ fun AgentNexusHubScreen(navController: NavController) {
                                 letterSpacing = 2.sp
                             )
                             Text(
-                                "MULTI-AGENT CONVERGENCE",
+                                "MULTI-AGENT CONVERGENCE • ${if (useStyleB) "Neural Grid" else "Stellar Net"}",
                                 style = MaterialTheme.typography.labelSmall,
                                 color = Color(0xFF7B2FFF)
                             )

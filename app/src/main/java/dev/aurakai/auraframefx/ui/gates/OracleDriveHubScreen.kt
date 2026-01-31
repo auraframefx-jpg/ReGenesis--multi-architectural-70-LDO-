@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import dev.aurakai.auraframefx.config.GateAssetConfig
+import dev.aurakai.auraframefx.ui.components.CircuitPhoenixBackground
 import dev.aurakai.auraframefx.ui.components.LavaApocalypseBackground
 import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
 
@@ -61,14 +62,18 @@ fun OracleDriveHubScreen(navController: NavController) {
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // High-Fidelity Background
-        LavaApocalypseBackground()
+        // High-Fidelity Background - Swap between Lava Apocalypse and Circuit Phoenix
+        if (useStyleB) {
+            CircuitPhoenixBackground()
+        } else {
+            LavaApocalypseBackground()
+        }
 
         // Semi-transparent Overlay for "Command Center" feel
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.6f))
+                .background(Color.Black.copy(alpha = if (useStyleB) 0.5f else 0.6f))
         )
 
         Scaffold(
@@ -85,7 +90,7 @@ fun OracleDriveHubScreen(navController: NavController) {
                                 letterSpacing = 2.sp
                             )
                             Text(
-                                "GENESIS ORCHESTRATION SUITE",
+                                "GENESIS ORCHESTRATION SUITE • ${if (useStyleB) "Neural Phoenix" else "Divine Forge"}",
                                 style = MaterialTheme.typography.labelSmall,
                                 color = Color(0xFF00FF85)
                             )
