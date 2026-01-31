@@ -73,7 +73,7 @@ open class DiagnosticsViewModel @Inject constructor(
                     )
                     put(
                         "Offline AI Config Version (Timestamp)",
-                        if (offlineData.aiConfig`?.lastSyncTimestamp != null && offlineData.aiConfig.lastSyncTimestamp != 0L) {
+                        if (offlineData.aiConfig.lastSyncTimestamp != 0L) {
                             SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(
                                 Date(
                                     offlineData.aiConfig.lastSyncTimestamp

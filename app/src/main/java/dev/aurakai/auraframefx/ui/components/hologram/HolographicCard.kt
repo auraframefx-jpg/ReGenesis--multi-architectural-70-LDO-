@@ -1,30 +1,35 @@
 package dev.aurakai.auraframefx.ui.components.hologram
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.EaseInOutSine
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import dev.aurakai.auraframefx.R
-import dev.aurakai.auraframefx.ui.theme.ChessFontFamily
-import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
 
 enum class CardStyle {
     ARTSY,      // Aura: Paint splatter, messy, beautiful
@@ -44,7 +49,10 @@ fun HolographicCard(
     style: CardStyle = CardStyle.MYTHICAL,
     dangerLevel: Float = 0f,
     elevation: androidx.compose.ui.unit.Dp = 0.dp,
-    spotColor: Color = Color.Transparent
+    spotColor: Color = Color.Transparent,
+    width: androidx.compose.ui.unit.Dp = 280.dp,
+    height: androidx.compose.ui.unit.Dp = 400.dp,
+    iconSize: androidx.compose.ui.unit.Dp? = null
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "HologramRotation")
     val rotation by infiniteTransition.animateFloat(
@@ -68,11 +76,12 @@ fun HolographicCard(
     )
 
     val finalGlowColor = lerp(glowColor, Color.Red, dangerLevel)
+    val finalIconSize = iconSize ?: if (style == CardStyle.PROTECTIVE) 160.dp else 200.dp
 
     Box(
         modifier = modifier
-            .width(280.dp)
-            .height(400.dp)
+            .width(width)
+            .height(height)
             .offset(y = bounce.dp)
             .graphicsLayer {
                 this.shadowElevation = elevation.toPx()
@@ -87,7 +96,11 @@ fun HolographicCard(
         when (style) {
             CardStyle.ARTSY -> {
                 // AURA: Paint Splatter & Messy Beauty
-                Canvas(modifier = Modifier.fillMaxSize().padding(12.dp)) {
+                Canvas(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(12.dp)
+                ) {
                     // Draw random "splatter" blobs
                     val splatterColors = listOf(finalGlowColor, finalGlowColor.copy(alpha = 0.5f), Color.White.copy(alpha = 0.3f))
                     val random = kotlin.random.Random(42) // Consistent splatter
@@ -102,7 +115,7 @@ fun HolographicCard(
                             alpha = 0.4f
                         )
                     }
-                    
+
                     // Messy Border
                     drawRoundRect(
                         color = finalGlowColor,
@@ -176,7 +189,7 @@ fun HolographicCard(
             contentDescription = null,
             tint = finalGlowColor,
             modifier = Modifier
-                .size(if (style == CardStyle.PROTECTIVE) 160.dp else 200.dp) // Kai is tighter
+                .size(finalIconSize) // Kai is tighter
                 .graphicsLayer {
                     rotationY = rotation
                     cameraDistance = 12f * density

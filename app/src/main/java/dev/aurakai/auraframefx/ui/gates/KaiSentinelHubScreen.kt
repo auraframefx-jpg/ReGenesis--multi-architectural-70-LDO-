@@ -14,10 +14,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -38,11 +40,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import dev.aurakai.auraframefx.R
 import dev.aurakai.auraframefx.navigation.NavDestination
+import dev.aurakai.auraframefx.ui.components.IcyTundraBackground
+import dev.aurakai.auraframefx.ui.components.ShieldGridBackground
 import dev.aurakai.auraframefx.ui.components.hologram.CardStyle
 import dev.aurakai.auraframefx.ui.components.hologram.HolographicCard
-import dev.aurakai.auraframefx.R
-import dev.aurakai.auraframefx.ui.components.IcyTundraBackground
 import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
 
 /**
@@ -54,15 +57,23 @@ import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
 @Composable
 fun KaiSentinelHubScreen(navController: NavController) {
 
+    var useStyleB by remember {
+        mutableStateOf(false) // Default to Icy Tundra
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
-        // High-Fidelity Background
-        IcyTundraBackground()
+        // High-Fidelity Background - Swap between Icy Tundra and Shield Grid
+        if (useStyleB) {
+            ShieldGridBackground()
+        } else {
+            IcyTundraBackground()
+        }
 
         // Semi-transparent Overlay for "Fortress" feel
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.5f))
+                .background(Color.Black.copy(alpha = if (useStyleB) 0.6f else 0.5f))
         )
 
         Scaffold(
@@ -79,7 +90,7 @@ fun KaiSentinelHubScreen(navController: NavController) {
                                 letterSpacing = 2.sp
                             )
                             Text(
-                                "KAI'S SECURITY DOMAIN",
+                                "KAI'S SECURITY DOMAIN • ${if (useStyleB) "GRID PROTOCOL" else "ICY FORTRESS"}",
                                 style = MaterialTheme.typography.labelSmall,
                                 color = Color(0xFF00FF85)
                             )
@@ -88,6 +99,15 @@ fun KaiSentinelHubScreen(navController: NavController) {
                     navigationIcon = {
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = Color.White)
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = { useStyleB = !useStyleB }) {
+                            Icon(
+                                imageVector = androidx.compose.material.icons.Icons.Default.SwapHoriz,
+                                contentDescription = "Toggle Style",
+                                tint = Color(0xFF00FF85)
+                            )
                         }
                     },
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -183,7 +203,7 @@ fun KaiSentinelHubScreen(navController: NavController) {
                         .fillMaxSize()
                         .padding(16.dp)
                 ) {
-                    androidx.compose.foundation.lazy.grid.items(tools) { tool ->
+                    items(tools) { tool ->
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -200,7 +220,10 @@ fun KaiSentinelHubScreen(navController: NavController) {
                                 style = CardStyle.PROTECTIVE,
                                 elevation = 12.dp,
                                 spotColor = tool.accentColor,
-                                modifier = Modifier.fillMaxWidth()
+                                width = 160.dp,
+                                height = 220.dp,
+                                iconSize = 80.dp,
+                                modifier = Modifier
                             )
 
                             // Overlay text on card
