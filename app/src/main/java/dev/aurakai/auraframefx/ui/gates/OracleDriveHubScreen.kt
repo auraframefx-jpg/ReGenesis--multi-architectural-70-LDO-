@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -47,6 +50,7 @@ import androidx.navigation.NavController
 import dev.aurakai.auraframefx.config.GateAssetConfig
 import dev.aurakai.auraframefx.ui.components.CircuitPhoenixBackground
 import dev.aurakai.auraframefx.ui.components.NeuralNetworkBackground
+import dev.aurakai.auraframefx.ui.components.getGenesisSubGates
 import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
 
 /**
@@ -146,15 +150,39 @@ fun OracleDriveHubScreen(navController: NavController) {
                     }
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
+                val subGates = getGenesisSubGates()
+
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    items(subGates) { gate ->
+                        GenesisCard(
+                            title = gate.title,
+                            subtitle = gate.subtitle,
+                            accentColor = gate.accentColor,
+                            onClick = { navController.navigate(gate.route) }
+                        )
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun GenesisCard(tool: GenesisToolCard, onClick: () -> Unit) {
+fun GenesisCard(
+    title: String,
+    subtitle: String,
+    accentColor: Color,
+    onClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -164,7 +192,7 @@ fun GenesisCard(tool: GenesisToolCard, onClick: () -> Unit) {
             .border(
                 width = 1.dp,
                 brush = Brush.radialGradient(
-                    listOf(tool.accentColor.copy(alpha = 0.4f), Color.Transparent)
+                    listOf(accentColor.copy(alpha = 0.4f), Color.Transparent)
                 ),
                 shape = RoundedCornerShape(24.dp)
             ),
@@ -182,28 +210,28 @@ fun GenesisCard(tool: GenesisToolCard, onClick: () -> Unit) {
                 modifier = Modifier
                     .size(44.dp)
                     .clip(CircleShape)
-                    .background(tool.accentColor.copy(alpha = 0.1f))
-                    .border(1.dp, tool.accentColor.copy(alpha = 0.3f), CircleShape),
+                    .background(accentColor.copy(alpha = 0.1f))
+                    .border(1.dp, accentColor.copy(alpha = 0.3f), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    tool.icon,
+                    Icons.Default.AutoAwesome,
                     null,
-                    tint = tool.accentColor,
+                    tint = accentColor,
                     modifier = Modifier.size(24.dp)
                 )
             }
 
             Column {
                 Text(
-                    text = tool.title,
+                    text = title,
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.White,
                     fontWeight = FontWeight.ExtraBold,
                     letterSpacing = 0.5.sp
                 )
                 Text(
-                    text = tool.subtitle,
+                    text = subtitle,
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.White.copy(alpha = 0.5f),
                     lineHeight = 14.sp

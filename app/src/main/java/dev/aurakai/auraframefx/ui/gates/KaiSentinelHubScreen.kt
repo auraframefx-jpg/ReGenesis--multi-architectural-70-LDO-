@@ -44,11 +44,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import dev.aurakai.auraframefx.R
 import dev.aurakai.auraframefx.config.GateAssetConfig
-import dev.aurakai.auraframefx.navigation.NavDestination
 import dev.aurakai.auraframefx.ui.components.IcyTundraBackground
 import dev.aurakai.auraframefx.ui.components.ShieldGridBackground
+import dev.aurakai.auraframefx.ui.components.getKaiSubGates
 import dev.aurakai.auraframefx.ui.components.hologram.CardStyle
 import dev.aurakai.auraframefx.ui.components.hologram.HolographicCard
 import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
@@ -152,56 +151,7 @@ fun KaiSentinelHubScreen(navController: NavController) {
                 }
 
                 // Tools Grid
-                val tools = listOf(
-                    SentinelToolCard(
-                        title = "ROM Flasher",
-                        subtitle = "Partition & Image Management",
-                        icon = Icons.Default.Shield,
-                        iconRes = R.drawable.gate_sentinel_fortress,
-                        destination = NavDestination.ROMFlasher,
-                        accentColor = Color(0xFF00FF85)
-                    ),
-                    SentinelToolCard(
-                        title = "Bootloader",
-                        subtitle = "Lock/Unlock & Fastboot",
-                        icon = Icons.Default.Shield,
-                        iconRes = R.drawable.gate_sentinel_fortress,
-                        destination = NavDestination.Bootloader,
-                        accentColor = Color(0xFFFF3366)
-                    ),
-                    SentinelToolCard(
-                        title = "Module Manager",
-                        subtitle = "LSPosed & Magisk",
-                        icon = Icons.Default.Shield,
-                        iconRes = R.drawable.gate_sentinel_fortress,
-                        destination = NavDestination.ModuleManager,
-                        accentColor = Color(0xFF00E5FF)
-                    ),
-                    SentinelToolCard(
-                        title = "Recovery Tools",
-                        subtitle = "TWRP & Backup",
-                        icon = Icons.Default.Shield,
-                        iconRes = R.drawable.gate_sentinel_fortress,
-                        destination = NavDestination.RecoveryTools,
-                        accentColor = Color(0xFFFFD700)
-                    ),
-                    SentinelToolCard(
-                        title = "Security Center",
-                        subtitle = "Root & Integrity Check",
-                        icon = Icons.Default.Shield,
-                        iconRes = R.drawable.gate_sentinel_fortress,
-                        destination = NavDestination.SecurityCenter,
-                        accentColor = Color(0xFFB026FF)
-                    ),
-                    SentinelToolCard(
-                        title = "Live ROM Editor",
-                        subtitle = "Hex & Binary Mods",
-                        icon = Icons.Default.Shield,
-                        iconRes = R.drawable.gate_sentinel_fortress,
-                        destination = NavDestination.LiveROMEditor,
-                        accentColor = Color(0xFFFF4500)
-                    )
-                )
+                val tools = getKaiSubGates()
 
                 androidx.compose.foundation.lazy.grid.LazyVerticalGrid(
                     columns = androidx.compose.foundation.lazy.grid.GridCells.Fixed(2),
@@ -216,14 +166,26 @@ fun KaiSentinelHubScreen(navController: NavController) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    if (tool.destination != null) {
-                                        navController.navigate(tool.destination.route)
-                                    }
+                                    navController.navigate(tool.route)
                                 },
                             contentAlignment = Alignment.BottomCenter
                         ) {
+                            // Determine which drawable to show based on style
+                            val drawableName = if (useStyleB) tool.styleBDrawable else tool.styleADrawable
+                            val drawableId = androidx.compose.ui.platform.LocalContext.current.resources.getIdentifier(
+                                drawableName, "drawable", androidx.compose.ui.platform.LocalContext.current.packageName
+                            ).let {
+                                if (it == 0 && tool.fallbackDrawable != null) {
+                                    androidx.compose.ui.platform.LocalContext.current.resources.getIdentifier(
+                                        tool.fallbackDrawable,
+                                        "drawable",
+                                        androidx.compose.ui.platform.LocalContext.current.packageName
+                                    )
+                                } else it
+                            }
+
                             HolographicCard(
-                                runeRes = tool.iconRes,
+                                runeRes = if (drawableId != 0) drawableId else dev.aurakai.auraframefx.R.drawable.gate_sentinel_fortress,
                                 glowColor = tool.accentColor,
                                 style = CardStyle.PROTECTIVE,
                                 elevation = 12.dp,
