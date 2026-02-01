@@ -57,6 +57,13 @@ import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
  * The main control panel for the Sentinel Fortress ecosystem.
  * Consolidates ROM management, Bootloader, and Root protocols.
  */
+/**
+ * Displays the Kai Sentinel Hub screen with a toggleable visual style and an interactive grid of sentinel tools.
+ *
+ * The top app bar lets the user switch between two visual modes (Style A and Style B); switching updates local UI state and persists the choice via GateAssetConfig.toggleKaiStyle(). The screen shows a styled header and a LazyVerticalGrid of tools retrieved from getKaiSubGates(). Each tool card displays an accent-tinted holographic rune (with drawable selection and fallback) and navigates to the tool's route when tapped.
+ *
+ * @param navController Navigation controller used to handle back navigation and to navigate to tool routes.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun KaiSentinelHubScreen(navController: NavController) {

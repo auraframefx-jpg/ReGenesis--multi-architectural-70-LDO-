@@ -38,8 +38,22 @@ enum class CardStyle {
 }
 
 /**
- * 🌌 THE ARCHITECTURAL CARD ENGINE
- * Renders a holographic card tailored to the agent's persona.
+ * Renders a stylized holographic card containing a rotating, glowing rune and a style-specific frame.
+ *
+ * The glow color is interpolated toward red based on `dangerLevel`. The card supports three visual
+ * styles (ARTSY, PROTECTIVE, MYTHICAL), elevation and spot shadow customization, explicit card
+ * dimensions, and an optional override for the rune icon size.
+ *
+ * @param runeRes Resource ID of the rune drawable to display.
+ * @param glowColor Base color used for glow and frame accents.
+ * @param modifier Modifier applied to the card container.
+ * @param style Visual style of the card; determines framing and default icon sizing.
+ * @param dangerLevel Value from 0f to 1f that blends `glowColor` toward red as it increases.
+ * @param elevation Elevation used for the card's shadow.
+ * @param spotColor Color applied to spot and ambient shadows.
+ * @param width Card width.
+ * @param height Card height.
+ * @param iconSize Optional explicit size for the rune icon; if null, a style-specific default is used.
  */
 @Composable
 fun HolographicCard(

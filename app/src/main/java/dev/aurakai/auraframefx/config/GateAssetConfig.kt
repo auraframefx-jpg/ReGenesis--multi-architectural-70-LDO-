@@ -286,11 +286,21 @@ object GateAssetConfig {
             GateStyle.STYLE_B else GateStyle.STYLE_A
     }
 
+    /**
+     * Toggles the Nexus domain style between STYLE_A and STYLE_B.
+     *
+     * Updates StyleMode.nexusStyle to the other GateStyle value.
+     */
     fun toggleNexusStyle() {
         StyleMode.nexusStyle = if (StyleMode.nexusStyle == GateStyle.STYLE_A)
             GateStyle.STYLE_B else GateStyle.STYLE_A
     }
 
+    /**
+     * Toggle the help domain's style between STYLE_A and STYLE_B.
+     *
+     * Switches the value of StyleMode.helpStyle to the other GateStyle value.
+     */
     fun toggleHelpStyle() {
         StyleMode.helpStyle = if (StyleMode.helpStyle == GateStyle.STYLE_A)
             GateStyle.STYLE_B else GateStyle.STYLE_A

@@ -48,6 +48,15 @@ import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
  * Style A: "CollabCanvas" - Paint splashes, neon drips
  * Style B: "Clean Studio" - Sleek gradients, minimal
  */
+/**
+ * Presents the Aura theming hub screen with an animated background, centered top app bar, a style toggle,
+ * and a carousel of sub-gates that navigate when selected.
+ *
+ * The displayed background and the app bar subtitle reflect the current style; tapping the style action
+ * toggles the visual style and updates the shared GateAssetConfig. Selecting a sub-gate navigates to its route.
+ *
+ * @param navController NavController used to pop the back stack and to navigate to a selected sub-gate's route.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuraThemingHubScreen(navController: NavController) {

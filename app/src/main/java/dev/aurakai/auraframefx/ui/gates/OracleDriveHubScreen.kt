@@ -57,6 +57,15 @@ import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
  * 🔮 GENESIS ORACLE DRIVE HUB (Level 3)
  * The main command center for the Orchestrator's domain: AI Logic, Code, and Storage.
  */
+/**
+ * Composes the Oracle Drive Hub screen with a dynamic command-center style UI and a grid of genesis gates.
+ *
+ * The screen renders one of two high-fidelity animated backgrounds, overlays a darkened "command center"
+ * tint, displays a centered two-line top app bar with a style toggle, shows a brief status banner, and
+ * presents a two-column grid of selectable Genesis cards that navigate to their respective routes.
+ *
+ * @param navController NavController used to navigate when a Genesis card is selected or to pop the back stack.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OracleDriveHubScreen(navController: NavController) {
@@ -176,6 +185,16 @@ fun OracleDriveHubScreen(navController: NavController) {
     }
 }
 
+/**
+ * Displays a stylized, clickable card representing a genesis gate with a title, subtitle, and accent glow.
+ *
+ * The card renders a circular badge with an accent-tinted icon, a bold title, and a lighter subtitle; tapping the card invokes `onClick`.
+ *
+ * @param title The main label shown prominently on the card.
+ * @param subtitle A short descriptive line shown below the title.
+ * @param accentColor The primary accent used for the badge, icon tint, and outer glow.
+ * @param onClick Callback invoked when the card is tapped.
+ */
 @Composable
 fun GenesisCard(
     title: String,

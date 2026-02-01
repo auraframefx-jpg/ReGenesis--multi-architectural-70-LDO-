@@ -49,6 +49,16 @@ import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
  *
  * Single style - Help should always feel consistent and calm
  */
+/**
+ * Displays the Help Services hub with selectable help options and a toggleable visual style.
+ *
+ * Shows a full-screen scaffold with a dynamic background (two selectable styles), a centered top app
+ * bar (including back navigation and a style toggle), a header prompt, and four tappable help
+ * option cards. Selecting an option navigates to its corresponding route: "direct_chat",
+ * "documentation", "faq_browser", or "tutorial_videos". Tapping the style toggle flips the local
+ * display mode and calls GateAssetConfig.toggleHelpStyle(); the back button pops the navigation
+ * back stack.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HelpDeskScreen(navController: NavController) {

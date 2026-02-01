@@ -62,6 +62,11 @@ import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
  * Features a grid of sub-gates with constellation aesthetic.
  * Multi-agent coordination, monitoring, and fusion!
  */
+/**
+ * Renders the Agent Nexus Hub screen: a dashboard showing a domain description and a grid of nexus tools with a toggleable high-fidelity background.
+ *
+ * The screen displays a center-aligned top app bar with a back button and a style toggle that switches the background between a hexagon grid and a constellation view. A radial glow and a coded domain description appear above a two-column grid of tool cards; tapping a wired tool navigates to its configured destination.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AgentNexusHubScreen(navController: NavController) {

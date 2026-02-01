@@ -28,6 +28,15 @@ import dev.aurakai.auraframefx.ui.gates.TaskAssignmentScreen
 
 // ... other imports
 
+/**
+ * Hosts the app navigation graph, wiring routes to their corresponding screens.
+ *
+ * Sets up a NavHost with a start destination of the Home Gate Carousel and provides
+ * destinations for the Exodus HUD, pixel workspaces, gate/module screens, domain hubs,
+ * and miscellaneous tools. On first composition it triggers customization initialization.
+ *
+ * @param navController NavHostController used to navigate between destinations.
+ */
 @Composable
 fun ReGenesisNavHost(
     navController: NavHostController,
