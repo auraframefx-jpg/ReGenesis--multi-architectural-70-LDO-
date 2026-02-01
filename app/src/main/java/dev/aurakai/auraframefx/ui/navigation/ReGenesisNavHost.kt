@@ -35,7 +35,8 @@ import dev.aurakai.auraframefx.ui.gates.TaskAssignmentScreen
  * destinations for the Exodus HUD, pixel workspaces, gate/module screens, domain hubs,
  * and miscellaneous tools. On first composition it triggers customization initialization.
  *
- * @param navController NavHostController used to navigate between destinations.
+ * `@param` navController NavHostController used to navigate between destinations.
+ * `@param` customizationViewModel ViewModel used to initialize customization state.
  */
 @Composable
 fun ReGenesisNavHost(
