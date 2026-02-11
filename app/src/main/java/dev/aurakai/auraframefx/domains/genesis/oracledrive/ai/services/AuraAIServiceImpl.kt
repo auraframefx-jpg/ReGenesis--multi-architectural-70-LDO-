@@ -67,7 +67,7 @@ abstract class AuraAIServiceImpl(
     /**
      *
      */
-    suspend fun getAIResponse(prompt: String, options: Map<String, Any>?): String {
+    override suspend fun getAIResponse(prompt: String, options: Map<String, Any>?): String {
         return try {
             // Extract temperature and maxTokens from options if provided
             val temperature = (options?.get("temperature") as? Number)?.toFloat() ?: 0.7f
@@ -94,5 +94,3 @@ abstract class AuraAIServiceImpl(
         // TODO: Implement memory saving
     }
 }
-
-
