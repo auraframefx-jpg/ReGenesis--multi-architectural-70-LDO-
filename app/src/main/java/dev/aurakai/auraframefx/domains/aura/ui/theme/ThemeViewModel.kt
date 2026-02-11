@@ -15,6 +15,7 @@ import dev.aurakai.auraframefx.domains.aura.ui.theme.service.ThemeCommand
 @HiltViewModel
 class ThemeViewModel @Inject constructor(
     private val themeService: ThemeService,
+    private val themePrefs: ThemePrefs,
 ) : ViewModel() {
 
     private val _theme = MutableStateFlow(Theme.DARK)
@@ -23,11 +24,24 @@ class ThemeViewModel @Inject constructor(
     private val _color = MutableStateFlow(Color.BLUE)
     val color: StateFlow<Color> = _color
 
+    init {
+        viewModelScope.launch {
+            themePrefs.themeFlow.collect {
+                _theme.value = it
+            }
+        }
+        viewModelScope.launch {
+            themePrefs.colorFlow.collect {
+                _color.value = it
+            }
+        }
+    }
+
     fun processThemeCommand(command: String) {
         viewModelScope.launch {
             when (val themeCommand = themeService.parseThemeCommand(command)) {
-                is ThemeCommand.SetTheme -> _theme.value = themeCommand.theme
-                is ThemeCommand.SetColor -> _color.value = themeCommand.color
+                is ThemeCommand.SetTheme -> setTheme(themeCommand.theme)
+                is ThemeCommand.SetColor -> setColor(themeCommand.color)
                 ThemeCommand.Unknown -> { /* Do nothing */
                 }
             }
@@ -40,7 +54,7 @@ class ThemeViewModel @Inject constructor(
     fun setTheme(newTheme: Theme) {
         _theme.value = newTheme
         viewModelScope.launch {
-            // TODO: Persist to DataStore
+            themePrefs.saveTheme(newTheme)
         }
     }
 
@@ -50,8 +64,7 @@ class ThemeViewModel @Inject constructor(
     fun setColor(newColor: Color) {
         _color.value = newColor
         viewModelScope.launch {
-            // TODO: Persist to DataStore
+            themePrefs.saveColor(newColor)
         }
     }
 }
-
