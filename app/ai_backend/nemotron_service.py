@@ -8,7 +8,7 @@ Provides 3-4x faster inference with 1M context window for multi-agent synthesis
 import os
 import logging
 from typing import Dict, Any, List, Optional
-from openai import OpenAI
+from openai import AsyncOpenAI
 
 # NVIDIA Nemotron API Configuration
 NEMOTRON_BASE_URL = "https://api.nvidia.com/v1"
@@ -34,7 +34,7 @@ class NemotronService:
             self.logger.warning("⚠️ NVIDIA_API_KEY not found - Nemotron will use stub mode")
             self.client = None
         else:
-            self.client = OpenAI(
+            self.client = AsyncOpenAI(
                 base_url=NEMOTRON_BASE_URL,
                 api_key=api_key
             )
@@ -70,8 +70,8 @@ class NemotronService:
             # Build system prompt with agent context
             system_prompt = self._build_genesis_prompt(active_agents)
             
-            # Call Nemotron with thinking mode
-            response = self.client.chat.completions.create(
+            # Call Nemotron with thinking mode (Async)
+            response = await self.client.chat.completions.create(
                 model=NEMOTRON_MODEL,
                 messages=[
                     {"role": "system", "content": system_prompt},
