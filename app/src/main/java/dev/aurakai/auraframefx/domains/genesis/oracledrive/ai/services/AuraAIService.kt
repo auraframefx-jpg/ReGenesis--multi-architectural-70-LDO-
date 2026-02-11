@@ -19,6 +19,7 @@ interface AuraAIService {
     suspend fun initialize()
     suspend fun generateText(prompt: String, context: String = ""): String
     suspend fun generateText(prompt: String, options: Map<String, String>): String
+    suspend fun getAIResponse(prompt: String, options: Map<String, Any>? = null): String
     suspend fun generateTheme(preferences: ThemePreferences, context: String = ""): ThemeConfiguration
     fun processRequestFlow(request: AiRequest): Flow<AgentResponse>
     suspend fun processRequest(request: AiRequest, context: String): AgentResponse
@@ -36,20 +37,26 @@ interface AuraAIService {
 @Singleton
 class DefaultAuraAIService @Inject constructor(
     private val iconifyService: IconifyService,
-    private val vertexAiClient: VertexAIClient
+    private val vertexAIClient: VertexAIClient
 ) : AuraAIService {
 
     override suspend fun initialize() {
-        vertexAiClient.initialize()
+        vertexAIClient.initialize()
     }
 
     override suspend fun generateText(prompt: String, context: String): String {
         val fullPrompt = if (context.isNotEmpty()) "Context: $context\n\nPrompt: $prompt" else prompt
-        return vertexAiClient.generateText(fullPrompt) ?: "Aura node is currently processing offline."
+        return vertexAIClient.generateText(fullPrompt) ?: "Aura node is currently processing offline."
     }
 
     override suspend fun generateText(prompt: String, options: Map<String, String>): String {
         return "Generated creative text for: $prompt (Options: $options)"
+    }
+
+    override suspend fun getAIResponse(prompt: String, options: Map<String, Any>?): String {
+        val temperature = (options?.get("temperature") as? Number)?.toFloat() ?: 0.7f
+        val maxTokens = (options?.get("maxTokens") as? Number)?.toInt() ?: 1024
+        return vertexAIClient.generateText(prompt, temperature, maxTokens) ?: "Unable to generate response"
     }
 
     override suspend fun generateTheme(
@@ -116,4 +123,3 @@ class DefaultAuraAIService @Inject constructor(
         }
     }
 }
-
