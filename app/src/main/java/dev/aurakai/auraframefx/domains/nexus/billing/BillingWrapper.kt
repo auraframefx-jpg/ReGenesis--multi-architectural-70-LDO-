@@ -1,9 +1,8 @@
-package dev.aurakai.auraframefx.domains.nexus.billing
+package dev.aurakai.auraframefx.billing
 
 import androidx.compose.runtime.*
-import androidx.hilt.navigation.compose.hiltViewModel
-import dev.aurakai.auraframefx.domains.genesis.config.FeatureToggles
-import dev.aurakai.auraframefx.domains.cascade.utils.debug
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import dev.aurakai.auraframefx.debug.FeatureToggles
 
 /**
  * App-level billing wrapper

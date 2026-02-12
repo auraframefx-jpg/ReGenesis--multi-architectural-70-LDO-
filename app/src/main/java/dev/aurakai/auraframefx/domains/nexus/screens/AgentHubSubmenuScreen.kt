@@ -28,10 +28,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import dev.aurakai.auraframefx.navigation.ReGenesisNavHost
 import dev.aurakai.auraframefx.domains.aura.ui.components.SubmenuScaffold
-import dev.aurakai.auraframefx.navigation.gates.components.SubmenuItem
 import dev.aurakai.auraframefx.domains.aura.ui.viewmodels.AgentViewModel
+import dev.aurakai.auraframefx.navigation.ReGenesisNavHost
+import dev.aurakai.auraframefx.navigation.gates.components.SubmenuItem
 
 /**
  * Agent Hub Gate Submenu - NOW WIRED TO REAL AGENTS
@@ -118,7 +118,7 @@ fun AgentHubSubmenuScreen(
     val activeAgentCount = remember(allAgents, activeAgent) {
         allAgents.count { agent ->
             agent.name == activeAgent?.name ||
-            activeTasks.any { it.agentName == agent.name && it.status == AgentViewModel.AgentTaskStatus.IN_PROGRESS }
+                    activeTasks.any { it.agentName == agent.name && it.status == AgentViewModel.AgentTaskStatus.IN_PROGRESS }
         }
     }
 
