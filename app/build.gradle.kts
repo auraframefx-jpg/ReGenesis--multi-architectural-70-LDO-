@@ -90,6 +90,8 @@ extensions.configure<ApplicationExtension> {
             excludes += "/META-INF/NOTICE.md"
             excludes += "**/kotlin/**"
             excludes += "**/*.txt"
+            // YukiHook: Pick first occurrence of duplicate class
+            pickFirsts += "**/YukiHookAPIProperties.class"
         }
         jniLibs {
             useLegacyPackaging = false
@@ -139,6 +141,10 @@ extensions.configure<ApplicationExtension> {
         compose = true
         viewBinding = true
         aidl = true
+    }
+
+    ksp {
+        arg("yukihookapi.modulePackageName", "dev.aurakai.auraframefx.generated.app")
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -257,10 +263,12 @@ dependencies {
         exclude(group = "dev.rikka.rikkax.appcompat", module = "appcompat")
     }
 
-    // YukiHook API
-    compileOnly(libs.yukihookapi.api)
-    ksp(libs.yukihookapi.ksp)
-
+    // YukiHook: ONLY use api for runtime (contains all needed classes)
+    // ksp-xposed is ONLY for annotation processing at compile time
+    implementation("com.highcapable.yukihookapi:api:1.3.1") {
+        exclude(group = "com.highcapable.yukihookapi", module = "ksp-xposed")
+    }
+    ksp("com.highcapable.yukihookapi:ksp-xposed:1.3.1")
     // Force resolution of conflicting dependencies
     configurations.all {
          resolutionStrategy {
@@ -354,6 +362,12 @@ dependencies {
     implementation(project(":aura:reactivedesign:collabcanvas"))
     implementation(project(":aura:reactivedesign:chromacore"))
     implementation(project(":aura:reactivedesign:customization"))
+    implementation(project(":extendsysa"))
+    implementation(project(":extendsysb"))
+    implementation(project(":extendsysc"))
+    implementation(project(":extendsysd"))
+    implementation(project(":extendsyse"))
+    implementation(project(":extendsysf"))
 
     // Kai → SentinelsFortress (Security & Threat Monitoring)
     implementation(project(":kai:sentinelsfortress:security"))
@@ -382,14 +396,33 @@ dependencies {
     implementation(project(":core-module"))
 }
 
-// Force a single annotations artifact to avoid duplicate-class errors
+// Force a single annotations artifact and exclude YukiHook KSP from runtime to avoid duplicate-class errors
 configurations.all {
     // Skip androidTest configurations to avoid issues with local JARs
     if (name.contains("AndroidTest")) {
         return@all
     }
 
+    // Exclude YukiHook KSP processor from runtime classpaths to prevent collisions with the API
+    if (name.contains("RuntimeClasspath", ignoreCase = true)) {
+        exclude(group = "com.highcapable.yukihookapi", module = "ksp-xposed")
+    }
+
     resolutionStrategy {
         force("org.jetbrains:annotations:26.0.2-1")
     }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// YUKIHOOK DUPLICATE CLASS FIX
+// ═══════════════════════════════════════════════════════════════════════════
+// Both api and ksp-xposed contain YukiHookAPIProperties.class
+// ksp-xposed should ONLY be on the KSP processor classpath, NOT runtime/compile
+configurations.configureEach {
+    if (name.contains("runtimeClasspath", ignoreCase = true) ||
+        name.contains("compileClasspath", ignoreCase = true)
+    ) {
+        exclude(group = "com.highcapable.yukihookapi", module = "ksp-xposed")
+    }
+}
+

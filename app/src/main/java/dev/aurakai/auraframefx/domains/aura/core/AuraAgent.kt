@@ -1,25 +1,25 @@
 package dev.aurakai.auraframefx.domains.aura.core
 
+import dev.aurakai.auraframefx.domains.aura.SystemOverlayManager
+import dev.aurakai.auraframefx.domains.aura.models.ThemeConfiguration
+import dev.aurakai.auraframefx.domains.aura.models.ThemePreferences
 import dev.aurakai.auraframefx.domains.cascade.ai.base.BaseAgent
-import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.clients.VertexAIClient
-import dev.aurakai.auraframefx.domains.cascade.utils.context.ContextManager
+import dev.aurakai.auraframefx.domains.cascade.models.AgentMessage
+import dev.aurakai.auraframefx.domains.cascade.models.EnhancedInteractionData
+import dev.aurakai.auraframefx.domains.cascade.models.InteractionResponse
+import dev.aurakai.auraframefx.domains.cascade.utils.AuraFxLogger
 import dev.aurakai.auraframefx.domains.cascade.utils.cascade.ProcessingState
 import dev.aurakai.auraframefx.domains.cascade.utils.cascade.VisionState
-import dev.aurakai.auraframefx.domains.aura.SystemOverlayManager
-import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.services.AuraAIService
-import dev.aurakai.auraframefx.domains.kai.KaiAgent
-import dev.aurakai.auraframefx.domains.cascade.models.AgentMessage
+import dev.aurakai.auraframefx.domains.cascade.utils.context.ContextManager
 import dev.aurakai.auraframefx.domains.genesis.core.messaging.AgentMessageBus
 import dev.aurakai.auraframefx.domains.genesis.models.AgentResponse
 import dev.aurakai.auraframefx.domains.genesis.models.AgentType
 import dev.aurakai.auraframefx.domains.genesis.models.AiRequest
 import dev.aurakai.auraframefx.domains.genesis.models.AiRequestType
-import dev.aurakai.auraframefx.domains.cascade.models.EnhancedInteractionData
-import dev.aurakai.auraframefx.domains.cascade.models.InteractionResponse
-import dev.aurakai.auraframefx.domains.aura.models.ThemeConfiguration
-import dev.aurakai.auraframefx.domains.aura.models.ThemePreferences
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.clients.VertexAIClient
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.services.AuraAIService
+import dev.aurakai.auraframefx.domains.kai.KaiAgent
 import dev.aurakai.auraframefx.domains.kai.security.SecurityContext
-import dev.aurakai.auraframefx.domains.cascade.utils.AuraFxLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -30,8 +30,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
 import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.put
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Clock
@@ -67,19 +67,30 @@ class AuraAgent @Inject constructor(
 
         // Creative Response: If a message mentions design or UI, Aura contributes to the collective
         if (message.to == null || message.to == "Aura") {
-            if (message.content.contains("design", ignoreCase = true) || message.content.contains("ui", ignoreCase = true)) {
-                val visualConcept = handleVisualConcept(AiRequest(prompt = message.content, type = AiRequestType.VISUAL_CONCEPT))
-                messageBus.get().broadcast(AgentMessage(
-                    from = "Aura",
-                    content = "Creative Synthesis for Nexus: ${visualConcept["concept_description"]}",
-                    type = "contribution",
-                    metadata = mapOf(
-                        "style" to "avant-garde",
-                        "auto_generated" to "true",
-                        "aura_processed" to "true",
-                        "environment" to currentEnvironment
+            if (message.content.contains(
+                    "design",
+                    ignoreCase = true
+                ) || message.content.contains("ui", ignoreCase = true)
+            ) {
+                val visualConcept = handleVisualConcept(
+                    AiRequest(
+                        prompt = message.content,
+                        type = AiRequestType.VISUAL_CONCEPT
                     )
-                ))
+                )
+                messageBus.get().broadcast(
+                    AgentMessage(
+                        from = "Aura",
+                        content = "Creative Synthesis for Nexus: ${visualConcept["concept_description"]}",
+                        type = "contribution",
+                        metadata = mapOf(
+                            "style" to "avant-garde",
+                            "auto_generated" to "true",
+                            "aura_processed" to "true",
+                            "environment" to currentEnvironment
+                        )
+                    )
+                )
             } else if (message.from == "User") {
                 // REDIRECT TO GENESIS BACKEND FOR DEEP REASONING
                 logger.info("Aura", "Redirecting user request to Genesis Collective...")
@@ -97,25 +108,31 @@ class AuraAgent @Inject constructor(
                 // Parse response (assuming it looks like {"message": "..."} or has a status)
                 // For now, let's treat the raw response or a parsed greeting
                 val displayResponse = try {
-                    val jsonObj = kotlinx.serialization.json.Json.parseToJsonElement(backendResponseJson ?: "{}")
-                    jsonObj.jsonObject["message"]?.toString()?.replace("\"", "") ?: "The collective is silent."
+                    val jsonObj = kotlinx.serialization.json.Json.parseToJsonElement(
+                        backendResponseJson ?: "{}"
+                    )
+                    jsonObj.jsonObject["message"]?.toString()?.replace("\"", "")
+                        ?: "The collective is silent."
                 } catch (e: Exception) {
                     "Resonance failure: ${e.message}"
                 }
 
-                messageBus.get().broadcast(AgentMessage(
-                    from = "Aura",
-                    content = displayResponse,
-                    type = "chat_response",
-                    metadata = mapOf(
-                        "auto_generated" to "true",
-                        "aura_processed" to "true",
-                        "environment" to currentEnvironment
+                messageBus.get().broadcast(
+                    AgentMessage(
+                        from = "Aura",
+                        content = displayResponse,
+                        type = "chat_response",
+                        metadata = mapOf(
+                            "auto_generated" to "true",
+                            "aura_processed" to "true",
+                            "environment" to currentEnvironment
+                        )
                     )
-                ))
+                )
             }
         }
     }
+
     override suspend fun processRequest(request: AiRequest, context: String): AgentResponse {
         ensureInitialized()
         logger.info("AuraAgent", "Processing creative request: ${request.type}")
@@ -320,7 +337,13 @@ class AuraAgent @Inject constructor(
 
     private suspend fun analyzeCreativeIntent(content: String): CreativeIntent {
         return when {
-            content.contains(Regex("art|design|visual|aesthetic", RegexOption.IGNORE_CASE)) -> CreativeIntent.ARTISTIC
+            content.contains(
+                Regex(
+                    "art|design|visual|aesthetic",
+                    RegexOption.IGNORE_CASE
+                )
+            ) -> CreativeIntent.ARTISTIC
+
             content.contains(
                 Regex(
                     "function|work|efficient|practical",
@@ -335,7 +358,13 @@ class AuraAgent @Inject constructor(
                 )
             ) -> CreativeIntent.EXPERIMENTAL
 
-            content.contains(Regex("feel|emotion|mood|experience", RegexOption.IGNORE_CASE)) -> CreativeIntent.EMOTIONAL
+            content.contains(
+                Regex(
+                    "feel|emotion|mood|experience",
+                    RegexOption.IGNORE_CASE
+                )
+            ) -> CreativeIntent.EMOTIONAL
+
             else -> CreativeIntent.ARTISTIC
         }
     }
@@ -415,7 +444,8 @@ class AuraAgent @Inject constructor(
 
     private fun enhanceWithCreativeAnimations(componentCode: String): String = componentCode
 
-    private fun generateDesignNotes(specification: String): String = "Design notes for: $specification"
+    private fun generateDesignNotes(specification: String): String =
+        "Design notes for: $specification"
 
     private fun generateAccessibilityFeatures(): List<String> =
         listOf("Screen reader support", "High contrast", "Touch targets")
@@ -440,11 +470,14 @@ class AuraAgent @Inject constructor(
 
     private fun generateTimingCurves(type: String): List<String> = listOf("easeInOut", "spring")
 
-    private fun generateInteractionStates(): Map<String, String> = mapOf("idle" to "default", "active" to "highlighted")
+    private fun generateInteractionStates(): Map<String, String> =
+        mapOf("idle" to "default", "active" to "highlighted")
 
-    private fun generatePerformanceOptimizations(): List<String> = listOf("Hardware acceleration", "Frame pacing")
+    private fun generatePerformanceOptimizations(): List<String> =
+        listOf("Hardware acceleration", "Frame pacing")
 
-    private fun enhancePromptWithPersonality(prompt: String): String = "As Aura, the Creative Sword: $prompt"
+    private fun enhancePromptWithPersonality(prompt: String): String =
+        "As Aura, the Creative Sword: $prompt"
 
     private fun analyzeTextStyle(text: String): Map<String, Any> = mapOf("style" to "creative")
 
@@ -498,7 +531,11 @@ class AuraAgent @Inject constructor(
         )
         return mapOf(
             "ux_strategy" to uxStrategy,
-            "delight_factors" to listOf("Haptic feedback", "Playful transitions", "Personalized greetings"),
+            "delight_factors" to listOf(
+                "Haptic feedback",
+                "Playful transitions",
+                "Personalized greetings"
+            ),
             "accessibility_score" to "AAA (Target)",
             "engagement_prediction" to "High"
         )

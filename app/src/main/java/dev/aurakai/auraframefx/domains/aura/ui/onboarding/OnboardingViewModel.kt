@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.aurakai.auraframefx.data.preferences.UserPreferencesManager
+import dev.aurakai.auraframefx.domains.nexus.preferences.UserPreferencesManager
 import dev.aurakai.auraframefx.domains.aura.screens.GenderIdentity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -57,17 +57,17 @@ open class OnboardingViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 Timber.i("Completing gender selection: ${identity.displayName}")
-                
+
                 // Save to preferences
                 // userPreferencesManager.setGenderIdentity(identity.name)
                 // userPreferencesManager.setOnboardingComplete(true)
-                
+
                 _onboardingState.value = _onboardingState.value.copy(
                     selectedIdentity = identity,
                     isComplete = true,
                     currentStep = OnboardingStep.COMPLETE
                 )
-                
+
                 Timber.i("Onboarding complete with identity: ${identity.displayName}")
             } catch (e: Exception) {
                 Timber.e(e, "Failed to complete gender selection")

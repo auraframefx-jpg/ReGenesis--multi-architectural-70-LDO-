@@ -1,7 +1,6 @@
 package dev.aurakai.auraframefx.domains.aura.ui.components.overlay
 
 import androidx.compose.animation.AnimatedContent
-import dev.aurakai.auraframefx.domains.genesis.models.AgentType
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.EaseInOutSine
 import androidx.compose.animation.core.RepeatMode
@@ -68,6 +67,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.aurakai.auraframefx.R
 import dev.aurakai.auraframefx.domains.aura.ui.theme.LEDFontFamily
+import dev.aurakai.auraframefx.domains.genesis.models.AgentType
 
 /**
  * 🫧 ASSISTANT BUBBLE UI
@@ -150,7 +150,7 @@ fun AssistantBubbleUI(
                     Icon(
                         painter = painterResource(id = currentAgent.runeRes),
                         contentDescription = currentAgent.bubbleName,
-                        tint = Color.Unspecified, 
+                        tint = Color.Unspecified,
                         modifier = Modifier.size(40.dp)
                     )
                 }
@@ -244,7 +244,12 @@ private fun AssistantChatWindow(
                                     .background(agent.glowColor),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Icon(painterResource(agent.runeRes), null, tint = Color.White, modifier = Modifier.size(20.dp))
+                                Icon(
+                                    painterResource(agent.runeRes),
+                                    null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(20.dp)
+                                )
                             }
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
@@ -321,11 +326,15 @@ private fun AssistantChatWindow(
                             horizontalAlignment = if (isFromUser) Alignment.End else Alignment.Start
                         ) {
                             Surface(
-                                color = if (isFromUser) Color.White.copy(alpha = 0.1f) else agent.glowColor.copy(alpha = 0.15f),
+                                color = if (isFromUser) Color.White.copy(alpha = 0.1f) else agent.glowColor.copy(
+                                    alpha = 0.15f
+                                ),
                                 shape = RoundedCornerShape(12.dp),
                                 border = androidx.compose.foundation.BorderStroke(
                                     1.dp,
-                                    if (isFromUser) Color.White.copy(alpha = 0.1f) else agent.glowColor.copy(alpha = 0.3f)
+                                    if (isFromUser) Color.White.copy(alpha = 0.1f) else agent.glowColor.copy(
+                                        alpha = 0.3f
+                                    )
                                 )
                             ) {
                                 Column(modifier = Modifier.padding(12.dp)) {
@@ -366,7 +375,13 @@ private fun AssistantChatWindow(
                         value = chatText,
                         onValueChange = onChatTextChange,
                         modifier = Modifier.weight(1f),
-                        placeholder = { Text("Ask ${agent.bubbleName}...", fontSize = 14.sp, color = Color.Gray) },
+                        placeholder = {
+                            Text(
+                                "Ask ${agent.bubbleName}...",
+                                fontSize = 14.sp,
+                                color = Color.Gray
+                            )
+                        },
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.Transparent,
                             unfocusedContainerColor = Color.Transparent,
@@ -380,7 +395,11 @@ private fun AssistantChatWindow(
                         onClick = onSend,
                         enabled = chatText.isNotBlank()
                     ) {
-                        Icon(Icons.Default.Send, null, tint = if (chatText.isNotBlank()) agent.glowColor else Color.Gray)
+                        Icon(
+                            Icons.Default.Send,
+                            null,
+                            tint = if (chatText.isNotBlank()) agent.glowColor else Color.Gray
+                        )
                     }
                 }
             }

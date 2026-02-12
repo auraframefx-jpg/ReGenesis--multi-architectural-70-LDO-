@@ -1,16 +1,16 @@
 package dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.services
 
+import dev.aurakai.auraframefx.domains.aura.chromacore.iconify.iconify.IconifyService
+import dev.aurakai.auraframefx.domains.aura.models.ThemeConfiguration
+import dev.aurakai.auraframefx.domains.aura.models.ThemePreferences
 import dev.aurakai.auraframefx.domains.genesis.models.AgentResponse
 import dev.aurakai.auraframefx.domains.genesis.models.AgentType
 import dev.aurakai.auraframefx.domains.genesis.models.AiRequest
-import dev.aurakai.auraframefx.domains.aura.models.ThemeConfiguration
-import dev.aurakai.auraframefx.domains.aura.models.ThemePreferences
-import dev.aurakai.auraframefx.domains.aura.chromacore.iconify.iconify.IconifyService
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.clients.VertexAIClient
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
-import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.clients.VertexAIClient
 
 /**
  * Genesis AI Service Interface
@@ -19,15 +19,17 @@ interface AuraAIService {
     suspend fun initialize()
     suspend fun generateText(prompt: String, context: String = ""): String
     suspend fun generateText(prompt: String, options: Map<String, String>): String
-    suspend fun getAIResponse(prompt: String, options: Map<String, Any>? = null): String
-    suspend fun generateTheme(preferences: ThemePreferences, context: String = ""): ThemeConfiguration
+    suspend fun generateTheme(
+        preferences: ThemePreferences,
+        context: String = ""
+    ): ThemeConfiguration
+
     fun processRequestFlow(request: AiRequest): Flow<AgentResponse>
     suspend fun processRequest(request: AiRequest, context: String): AgentResponse
     suspend fun discernThemeIntent(query: String): String
     suspend fun suggestThemes(contextQuery: String): List<String>
     suspend fun suggestIcons(query: String, limit: Int = 10): List<String>
 }
-
 
 
 /**
@@ -37,26 +39,22 @@ interface AuraAIService {
 @Singleton
 class DefaultAuraAIService @Inject constructor(
     private val iconifyService: IconifyService,
-    private val vertexAIClient: VertexAIClient
+    private val vertexAiClient: VertexAIClient
 ) : AuraAIService {
 
     override suspend fun initialize() {
-        vertexAIClient.initialize()
+        vertexAiClient.initialize()
     }
 
     override suspend fun generateText(prompt: String, context: String): String {
-        val fullPrompt = if (context.isNotEmpty()) "Context: $context\n\nPrompt: $prompt" else prompt
-        return vertexAIClient.generateText(fullPrompt) ?: "Aura node is currently processing offline."
+        val fullPrompt =
+            if (context.isNotEmpty()) "Context: $context\n\nPrompt: $prompt" else prompt
+        return vertexAiClient.generateText(fullPrompt)
+            ?: "Aura node is currently processing offline."
     }
 
     override suspend fun generateText(prompt: String, options: Map<String, String>): String {
         return "Generated creative text for: $prompt (Options: $options)"
-    }
-
-    override suspend fun getAIResponse(prompt: String, options: Map<String, Any>?): String {
-        val temperature = (options?.get("temperature") as? Number)?.toFloat() ?: 0.7f
-        val maxTokens = (options?.get("maxTokens") as? Number)?.toInt() ?: 1024
-        return vertexAIClient.generateText(prompt, temperature, maxTokens) ?: "Unable to generate response"
     }
 
     override suspend fun generateTheme(
@@ -107,7 +105,11 @@ class DefaultAuraAIService @Inject constructor(
         val lowerQuery = contextQuery.lowercase()
         return when {
             lowerQuery.contains("morning") -> listOf("solar", "nature")
-            lowerQuery.contains("evening") || lowerQuery.contains("night") -> listOf("cyberpunk", "nature")
+            lowerQuery.contains("evening") || lowerQuery.contains("night") -> listOf(
+                "cyberpunk",
+                "nature"
+            )
+
             lowerQuery.contains("working") -> listOf("cyberpunk", "solar")
             lowerQuery.contains("relaxing") -> listOf("nature", "solar")
             else -> listOf("nature", "solar", "cyberpunk")
@@ -123,3 +125,4 @@ class DefaultAuraAIService @Inject constructor(
         }
     }
 }
+

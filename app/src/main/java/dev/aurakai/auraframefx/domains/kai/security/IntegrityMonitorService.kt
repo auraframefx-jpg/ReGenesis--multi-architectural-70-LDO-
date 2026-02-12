@@ -16,8 +16,8 @@ import dev.aurakai.auraframefx.domains.cascade.utils.cascade.DataPayload
 import dev.aurakai.auraframefx.domains.cascade.utils.cascade.DataveinConstructor
 import dev.aurakai.auraframefx.domains.cascade.utils.cascade.FlowPriority
 import dev.aurakai.auraframefx.domains.genesis.core.memory.NexusMemoryCore
-import dev.aurakai.auraframefx.domains.kai.models.ThreatLevel
 import dev.aurakai.auraframefx.domains.genesis.models.AgentType
+import dev.aurakai.auraframefx.domains.kai.models.ThreatLevel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -29,8 +29,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 import java.io.File
+import javax.inject.Inject
 
 /**
  * ╔════════════════════════════════════════════════════════════════╗
@@ -93,7 +93,8 @@ data class IntegrityHealth(
 class IntegrityMonitorService : Service() {
 
 
-    @Inject lateinit var trinityRepository: dev.aurakai.auraframefx.domains.cascade.utils.cascade.trinity.TrinityRepository
+    @Inject
+    lateinit var trinityRepository: dev.aurakai.auraframefx.domains.cascade.utils.cascade.trinity.TrinityRepository
 
     private val serviceScope = CoroutineScope(Dispatchers.IO + Job())
     private var monitoringJob: Job? = null
@@ -144,16 +145,16 @@ class IntegrityMonitorService : Service() {
 
         // Use appropriate foreground type if API 34+
         if (Build.VERSION.SDK_INT >= 34) {
-             try {
+            try {
                 startForeground(
                     1338,
                     notification,
                     ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
                 )
-             } catch (e: Exception) {
-                 Timber.e(e, "Failed to start foreground with specialUse type")
-                 startForeground(1338, notification)
-             }
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to start foreground with specialUse type")
+                startForeground(1338, notification)
+            }
         } else {
             startForeground(1338, notification)
         }
@@ -406,7 +407,7 @@ class IntegrityMonitorService : Service() {
             ThreatLevel.LOW -> Timber.i("ℹ️ LOW THREAT: $type - $description")
             ThreatLevel.INFO -> Timber.i("ℹ️ INFO: $type - $description")
             ThreatLevel.AI_ERROR -> Timber.e("🤖 AI ERROR: $type - $description")
-            ThreatLevel.NONE -> { }
+            ThreatLevel.NONE -> {}
             else -> Timber.d("Unknown threat level: $level")
         }
     }

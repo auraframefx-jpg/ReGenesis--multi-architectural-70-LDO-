@@ -2,8 +2,8 @@ package dev.aurakai.auraframefx.domains.cascade.utils.context
 
 // import kotlinx.serialization.Contextual // No longer needed for Instant here
 
-import dev.aurakai.auraframefx.domains.cascade.utils.memory.MemoryManager
 import dev.aurakai.auraframefx.domains.cascade.utils.cascade.pipeline.AIPipelineConfig
+import dev.aurakai.auraframefx.domains.cascade.utils.memory.MemoryManager
 import dev.aurakai.auraframefx.domains.genesis.models.AgentType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -86,7 +86,8 @@ class ContextManager @Inject constructor(
         agent: AgentType,
         metadata: Map<String, String> = emptyMap(),
     ): ContextChain {
-        val chain = _activeContexts.value[chainId] ?: throw IllegalStateException("Context chain not found")
+        val chain =
+            _activeContexts.value[chainId] ?: throw IllegalStateException("Context chain not found")
 
         val updatedChain = chain.copy(
             currentContext = newContext,
@@ -128,7 +129,11 @@ class ContextManager @Inject constructor(
     fun queryContext(query: ContextQuery): ContextChainResult {
         val chains = _activeContexts.value.values
             .filter { chain ->
-                query.agentFilter.isEmpty() || query.agentFilter.any { agent -> chain.agentContext.containsKey(agent) }
+                query.agentFilter.isEmpty() || query.agentFilter.any { agent ->
+                    chain.agentContext.containsKey(
+                        agent
+                    )
+                }
             }
             .sortedByDescending { it.lastUpdated }
             .take(query.maxChainLength)
