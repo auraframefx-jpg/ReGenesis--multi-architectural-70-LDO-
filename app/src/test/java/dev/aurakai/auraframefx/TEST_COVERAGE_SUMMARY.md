@@ -93,9 +93,7 @@ This document summarizes the comprehensive unit tests generated for the modified
 
 ### 4. Oracle Drive Utils Module
 
-#### NoopEncryptionManager.kt (
-
-`app/src/main/java/dev/aurakai/auraframefx/oracle/drive/utils/NoopEncryptionManager.kt`)
+#### EncryptionManager.kt (`app/src/main/java/dev/aurakai/auraframefx/oracle/drive/utils/EncryptionManager.kt`)
 **Test File:** `EncryptionManagerTest.kt`
 **Test Count:** 40+ tests
 **Coverage:**

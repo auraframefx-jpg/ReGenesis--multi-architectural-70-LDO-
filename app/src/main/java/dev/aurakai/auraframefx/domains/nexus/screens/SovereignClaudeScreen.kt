@@ -1,22 +1,25 @@
 package dev.aurakai.auraframefx.domains.nexus.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Architecture
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.aurakai.auraframefx.domains.aura.ui.components.hologram.AnimeHUDContainer
-import dev.aurakai.auraframefx.domains.aura.ui.theme.LEDFontFamily
+import dev.aurakai.auraframefx.ui.components.hologram.AnimeHUDContainer
+import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
 
 /**
  * 🧱 SOVEREIGN CLAUDE (The Architect)
@@ -43,10 +46,7 @@ fun SovereignClaudeScreen(
                     .padding(24.dp)
             ) {
                 // Architectural Metrics
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     MetricBox("DESIGN FLOW", "OPTIMAL", Color(0xFF0055FF), Modifier.weight(1f))
                     MetricBox("LOGIC DEPTH", "LAYER 8", Color(0xFF0055FF), Modifier.weight(1f))
                 }
@@ -66,10 +66,7 @@ fun SovereignClaudeScreen(
                     modifier = Modifier.weight(1f)
                 ) {
                     item {
-                        ArchitectureLogItem(
-                            "Refining 70-LDO Data Veins",
-                            "Architectural Improvement"
-                        )
+                        ArchitectureLogItem("Refining 70-LDO Data Veins", "Architectural Improvement")
                     }
                     item {
                         ArchitectureLogItem("Injecting Sovereign Memory Hooks", "Logic Sync")
@@ -105,12 +102,7 @@ private fun MetricBox(label: String, value: String, color: Color, modifier: Modi
         border = androidx.compose.foundation.BorderStroke(1.dp, color.copy(alpha = 0.2f))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                label,
-                fontSize = 10.sp,
-                color = Color.White.copy(alpha = 0.4f),
-                fontWeight = FontWeight.Bold
-            )
+            Text(label, fontSize = 10.sp, color = Color.White.copy(alpha = 0.4f), fontWeight = FontWeight.Bold)
             Text(
                 value,
                 style = MaterialTheme.typography.titleLarge,
@@ -130,12 +122,7 @@ private fun ArchitectureLogItem(title: String, type: String) {
         shape = RoundedCornerShape(12.dp)
     ) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                Icons.Default.Code,
-                null,
-                tint = Color(0xFF0055FF),
-                modifier = Modifier.size(20.dp)
-            )
+            Icon(Icons.Default.Code, null, tint = Color(0xFF0055FF), modifier = Modifier.size(20.dp))
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text(title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
@@ -144,4 +131,3 @@ private fun ArchitectureLogItem(title: String, type: String) {
         }
     }
 }
-

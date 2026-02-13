@@ -240,10 +240,7 @@ fun SwordNode(
             Box(
                 modifier = Modifier
                     .size(10.dp)
-                    .background(
-                        Color.Gray.copy(alpha = 0.2f),
-                        androidx.compose.foundation.shape.CircleShape
-                    )
+                    .background(Color.Gray.copy(alpha = 0.2f), androidx.compose.foundation.shape.CircleShape)
             )
         }
     }

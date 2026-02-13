@@ -1,6 +1,5 @@
 package dev.aurakai.auraframefx.ai.pipeline
 
-import dev.aurakai.auraframefx.domains.cascade.utils.pipeline.AIPipelineProcessor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
