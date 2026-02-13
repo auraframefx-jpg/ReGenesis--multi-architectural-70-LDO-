@@ -1,5 +1,7 @@
 @file:Suppress("SpellCheckingInspection")
 
+package dev.aurakai.auraframefx
+
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue

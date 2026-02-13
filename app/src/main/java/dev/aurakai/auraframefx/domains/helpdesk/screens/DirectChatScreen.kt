@@ -44,8 +44,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import dev.aurakai.auraframefx.domains.aura.ui.viewmodels.AgentViewModel
-import dev.aurakai.auraframefx.domains.genesis.repositories.AgentRepository
+import dev.aurakai.auraframefx.data.repositories.AgentRepository
+import dev.aurakai.auraframefx.ui.viewmodels.AgentViewModel
 
 /**
  * Direct Chat Screen
@@ -332,7 +332,7 @@ fun DirectChatScreen(
  * Message bubble component
  */
 @Composable
-private fun MessageBubble(message: dev.aurakai.auraframefx.domains.cascade.models.ChatMessage) {
+private fun MessageBubble(message: dev.aurakai.auraframefx.models.ChatMessage) {
     val isUser = message.isFromUser
 
     Row(
@@ -372,4 +372,3 @@ private fun MessageBubble(message: dev.aurakai.auraframefx.domains.cascade.model
         }
     }
 }
-

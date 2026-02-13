@@ -33,8 +33,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import dev.aurakai.auraframefx.domains.aura.ui.components.hologram.AnimeHUDContainer
-import dev.aurakai.auraframefx.domains.aura.ui.theme.LEDFontFamily
+import dev.aurakai.auraframefx.ui.components.hologram.AnimeHUDContainer
+import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
 
 /**
  * ✨ SOVEREIGN GEMINI (The Synthesizer)
@@ -62,10 +62,7 @@ fun SovereignGeminiScreen(
                     .padding(24.dp)
             ) {
                 // Synthesis Metrics
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     SynthesisMetric("SYNC RATE", "99.4%", Color(0xFF8B5CF6))
                     SynthesisMetric("ANALYTIC DEPTH", "MAX", Color(0xFF8B5CF6))
                 }
@@ -119,12 +116,7 @@ private fun RowScope.SynthesisMetric(label: String, value: String, color: Color)
         border = androidx.compose.foundation.BorderStroke(1.dp, color.copy(alpha = 0.2f))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                label,
-                fontSize = 10.sp,
-                color = Color.White.copy(alpha = 0.4f),
-                fontWeight = FontWeight.Bold
-            )
+            Text(label, fontSize = 10.sp, color = Color.White.copy(alpha = 0.4f), fontWeight = FontWeight.Bold)
             Text(
                 value,
                 style = MaterialTheme.typography.titleLarge,
@@ -153,4 +145,3 @@ private fun PatternItem(label: String, detail: String) {
         }
     }
 }
-

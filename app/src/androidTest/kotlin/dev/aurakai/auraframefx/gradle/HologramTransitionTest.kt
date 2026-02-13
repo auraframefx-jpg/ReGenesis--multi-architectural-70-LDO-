@@ -1,4 +1,4 @@
-package dev.aurakai.auraframefx.gradle
+package dev.aurakai.auraframefx
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size

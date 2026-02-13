@@ -1,3 +1,3 @@
-package test
+package dev.aurakai.auraframefx
 
 // ...existing code...

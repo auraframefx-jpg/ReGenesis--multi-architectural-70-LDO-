@@ -21,6 +21,5 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
     implementation(libs.kotlinx.serialization.json)
-    implementation(project(":kai:sentinelsfortress:security"))
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 }

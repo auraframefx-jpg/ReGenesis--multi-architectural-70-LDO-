@@ -1,11 +1,13 @@
 @file:Suppress("SpellCheckingInspection")
 
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Assertions.fail
+package buildscripts
+
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.io.File
+import java.nio.file.Path
 
 /**
  * Testing library and framework in use:
