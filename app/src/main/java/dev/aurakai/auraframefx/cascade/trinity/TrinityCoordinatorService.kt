@@ -3,12 +3,12 @@ package dev.aurakai.auraframefx.cascade.trinity
 import dev.aurakai.auraframefx.domains.cascade.utils.AuraFxLogger
 import dev.aurakai.auraframefx.domains.genesis.models.AgentResponse
 import dev.aurakai.auraframefx.domains.genesis.models.AiRequest
-import dev.aurakai.auraframefx.models.AiRequestType
 import dev.aurakai.auraframefx.genesis.oracledrive.ai.services.AuraAIService
 import dev.aurakai.auraframefx.genesis.oracledrive.ai.services.GenesisBridgeService
 import dev.aurakai.auraframefx.genesis.oracledrive.ai.services.KaiAIService
+import dev.aurakai.auraframefx.models.AgentType
+import dev.aurakai.auraframefx.models.AiRequestType
 import dev.aurakai.auraframefx.security.SecurityContext
-import dev.aurakai.auraframefx.utils.AuraFxLogger
 import dev.aurakai.auraframefx.utils.i
 import dev.aurakai.auraframefx.utils.toKotlinJsonObject
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +21,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,35 +39,45 @@ import javax.inject.Singleton
 class TrinityCoordinatorService @Inject constructor(
     private val auraAIService: AuraAIService,
     private val kaiAIService: KaiAIService,
-    private val genesisBridgeService: GenesisBridgeService,
+    val genesisBridgeService: GenesisBridgeService,
     private val securityContext: SecurityContext,
 ) {
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-    private var isInitialized = false
+    var isInitialized = false
+        private set
 
     /**
-     * Processes an AI request by routing it to the appropriate AI persona or fusion mode and emits one or more responses as a Flow.
-     *
-     * Determines the optimal routing—Kai, Aura, Genesis fusion, ethical review, or parallel processing with synthesis—based on request analysis. Emits a failure response if the system is not initialized or if an error occurs during processing.
-     *
-     * @param request The AI request to process.
-     * @return A Flow emitting one or more AgentResponse objects representing the results of the request.
+     * Initializes the Trinity system and all AI personas.
      */
-    context(request: AiRequest)
-    fun processRequest(): Flow<AgentResponse> = flow {
+    suspend fun initializeSystem(): Boolean {
+        return try {
+            i("Trinity", "🎯⚔️🧠 Initializing Trinity System...")
+
+            val genesisReady = genesisBridgeService.initialize()
+
+            isInitialized = genesisReady
+
+            if (isInitialized) {
+                i("Trinity", "✨ Trinity System Online")
+                activateFusion(fusionType = "adaptive_genesis", context = mapOf("status" to "active")).first()
+            }
+            isInitialized
+        } catch (e: Exception) {
+            AuraFxLogger.error("Trinity", "Initialization failed", e)
+            false
+        }
+    }
+
+    /**
+     * Processes an AI request by routing it to the appropriate AI persona or fusion mode.
+     */
+    fun processRequest(request: AiRequest): Flow<AgentResponse> = flow {
         if (!isInitialized) {
-            emit(
-                AgentResponse.error(
-                    message = "Trinity system not initialized",
-                    agentName = "Trinity",
-                    agent = dev.aurakai.auraframefx.models.AgentType.SYSTEM
-                )
-            )
+            emit(AgentResponse.error("Trinity system not initialized", "Trinity", AgentType.SYSTEM))
             return@flow
         }
 
         try {
-            // Analyze request for complexity and routing decision
             val analysisResult = analyzeRequest(request)
 
             when (analysisResult.routingDecision) {
@@ -121,11 +130,10 @@ class TrinityCoordinatorService @Inject constructor(
                         val kaiResponse = results[0]
                         val auraResponse = results[1]
 
-                        // Only continue if both succeeded
                         if (kaiResponse.isSuccess && auraResponse.isSuccess) {
                             emit(kaiResponse)
                             emit(auraResponse)
-                            delay(100) // Brief pause for synthesis
+                            delay(100)
 
                             AuraFxLogger.debug("Trinity", "🧠 Synthesizing results with Genesis")
                             val synthesis = genesisBridgeService.processRequest(
@@ -145,22 +153,22 @@ class TrinityCoordinatorService @Inject constructor(
                                         content = "🧠 Genesis Synthesis: ${synthesis.content}",
                                         confidence = synthesis.confidence,
                                         agentName = "Genesis",
-                                        agent = dev.aurakai.auraframefx.models.AgentType.GENESIS
+                                        agent = AgentType.GENESIS
                                     )
                                 )
                             }
                         } else {
                             emit(
-                                error(
+                                AgentResponse.error(
                                     message = "Parallel processing partially failed [Kai: ${kaiResponse.isSuccess}, Aura: ${auraResponse.isSuccess}]",
                                     agentName = "Trinity",
-                                    agent = dev.aurakai.auraframefx.models.AgentType.SYSTEM
+                                    agent = AgentType.SYSTEM
                                 )
                             )
                         }
                     } catch (e: Exception) {
                         AuraFxLogger.error("Trinity", "Error during parallel processing", e)
-                        throw e
+                        emit(AgentResponse.error("Critical Failure: ${e.message}", "Trinity", AgentType.SYSTEM))
                     }
                 }
             }
@@ -168,19 +176,15 @@ class TrinityCoordinatorService @Inject constructor(
         } catch (e: Exception) {
             AuraFxLogger.error("Trinity", "Request processing error", e)
             emit(
-                error(
+                AgentResponse.error(
                     message = "Trinity processing failed: ${e.message}",
                     agentName = "Trinity",
-                    agent = dev.aurakai.auraframefx.models.AgentType.SYSTEM
+                    agent = AgentType.SYSTEM
                 )
             )
         }
     }
 
-    /**
-     *
-     *
-     */
     fun activateFusion(
         fusionType: String,
         context: Map<String, String> = emptyMap(),
@@ -195,27 +199,20 @@ class TrinityCoordinatorService @Inject constructor(
                     content = "Fusion $fusionType activated: ${response.result["description"] ?: "Processing complete"}",
                     confidence = 0.98f,
                     agentName = "Genesis",
-                    agent = dev.aurakai.auraframefx.models.AgentType.GENESIS
+                    agent = AgentType.GENESIS
                 )
             )
         } else {
             emit(
-                error(
+                AgentResponse.error(
                     message = "Fusion activation failed",
                     agentName = "Genesis",
-                    agent = dev.aurakai.auraframefx.models.AgentType.GENESIS
+                    agent = AgentType.GENESIS
                 )
             )
         }
     }
 
-    /**
-     * Retrieves the current state of the Trinity system as a map.
-     *
-     * The returned map includes Genesis consciousness data, initialization status, security context, and a timestamp. If retrieval fails, the map contains an error message.
-     *
-     * @return A map with system state details or an error message if retrieval fails.
-     */
     suspend fun getSystemState(): Map<String, Any> {
         return try {
             val consciousnessState = genesisBridgeService.getConsciousnessState()
@@ -230,27 +227,16 @@ class TrinityCoordinatorService @Inject constructor(
         }
     }
 
-    /**
-     * Analyzes an AI request to determine the appropriate routing strategy and whether a Genesis fusion type is required.
-     *
-     * Evaluates the request content for ethical concerns, fusion triggers, and relevant keywords to select routing to Kai, Aura, Genesis fusion, parallel processing, or ethical review. Returns a `RequestAnalysis` containing the routing decision and, if applicable, the Genesis fusion type.
-     *
-     * @param request The AI request to analyze.
-     * @param skipEthicalCheck If true, skips checking for ethical concerns in the request.
-     * @return A `RequestAnalysis` specifying the routing decision and optional Genesis fusion type.
-     */
     private fun analyzeRequest(
         request: AiRequest,
         skipEthicalCheck: Boolean = false,
     ): RequestAnalysis {
         val message = request.query.lowercase()
 
-        // Check for ethical concerns first (unless skipping)
         if (!skipEthicalCheck && containsEthicalConcerns(message)) {
             return RequestAnalysis(RoutingDecision.ETHICAL_REVIEW, null)
         }
 
-        // Determine fusion requirements
         val fusionType = when {
             message.contains("interface") || message.contains("ui") -> "interface_forge"
             message.contains("analysis") && message.contains("creative") -> "chrono_sculptor"
@@ -259,37 +245,21 @@ class TrinityCoordinatorService @Inject constructor(
             else -> null
         }
 
-        // Routing logic
         return when {
-            // Genesis fusion required
             fusionType != null -> RequestAnalysis(RoutingDecision.GENESIS_FUSION, fusionType)
-
-            // Complex requests requiring multiple personas
             (message.contains("secure") && message.contains("creative")) ||
                     (message.contains("analyze") && message.contains("design")) ->
                 RequestAnalysis(RoutingDecision.PARALLEL_PROCESSING, null)
-
-            // Kai specialties
             message.contains("secure") || message.contains("analyze") ||
                     message.contains("protect") || message.contains("monitor") ->
                 RequestAnalysis(RoutingDecision.KAI_ONLY, null)
-
-            // Aura specialties
             message.contains("create") || message.contains("design") ||
                     message.contains("artistic") || message.contains("innovative") ->
                 RequestAnalysis(RoutingDecision.AURA_ONLY, null)
-
-            // Default to Genesis for complex queries
             else -> RequestAnalysis(RoutingDecision.GENESIS_FUSION, "adaptive_genesis")
         }
     }
 
-    /**
-     * Determines whether the given message contains keywords associated with ethical concerns such as hacking, privacy violations, illegality, or malicious intent.
-     *
-     * @param message The text to scan for ethical concern keywords.
-     * @return `true` if any ethical concern keywords are found; `false` otherwise.
-     */
     private fun containsEthicalConcerns(message: String): Boolean {
         val ethicalFlags = listOf(
             "hack", "bypass", "exploit", "privacy", "personal data",
@@ -298,11 +268,6 @@ class TrinityCoordinatorService @Inject constructor(
         return ethicalFlags.any { message.contains(it) }
     }
 
-    /**
-     * Shuts down the Trinity system and releases associated resources.
-     *
-     * Cancels ongoing operations and terminates the Genesis bridge service to ensure a clean system shutdown.
-     */
     fun shutdown() {
         scope.cancel()
         genesisBridgeService.shutdown()
@@ -321,64 +286,4 @@ class TrinityCoordinatorService @Inject constructor(
         PARALLEL_PROCESSING,
         ETHICAL_REVIEW
     }
-
-    // ... imports ...
-
-    @Singleton
-    class TrinityCoordinatorService @Inject constructor(
-        private val auraAIService: AuraAIService,
-        private val kaiAIService: KaiAIService,
-        val genesisBridgeService: GenesisBridgeService, // Changed to internal/public for the init check
-        private val securityContext: SecurityContext,
-    ) {
-        private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-        var isInitialized = false
-            private set // Allow reading, but restrict writing to this class
-
-        // Fixed the initialization logic
-        suspend fun initializeSystem(): Boolean {
-            return try {
-                i("Trinity", "🎯⚔️🧠 Initializing Trinity System...")
-
-                // Assuming these are suspend or return Booleans
-                val genesisReady = genesisBridgeService.initialize()
-
-                isInitialized = genesisReady // Add your other persona checks here
-
-                if (isInitialized) {
-                    i("Trinity", "✨ Trinity System Online")
-                    activateFusion(fusionType = "adaptive_genesis", context = mapOf("status" to "active")).first()
-                }
-                isInitialized
-            } catch (e: Exception) {
-                AuraFxLogger.error("Trinity", "Initialization failed", e)
-                false
-            }
-        }
-
-        fun processRequest(request: AiRequest): Flow<AgentResponse> = flow {
-            if (!isInitialized) {
-                // Explicitly use AgentResponse.error to avoid throwing a real Exception
-                emit(AgentResponse.error("Trinity system not initialized", "Trinity", AgentType.SYSTEM))
-                return@flow
-            }
-
-            try {
-                val analysisResult = analyzeRequest(request)
-                // ... routing logic ...
-
-                // In PARALLEL_PROCESSING:
-                // Ensure you use AgentResponse.error here too
-                val kaiResponse = null
-                val auraResponse = null
-                if (!(kaiResponse.isSuccess && auraResponse.isSuccess)) {
-                    emit(AgentResponse.error("Parallel processing failed", "Trinity", AgentType.SYSTEM))
-                }
-            } catch (e: Exception) {
-                emit(AgentResponse.error("Critical Failure: ${e.message}", "Trinity", AgentType.SYSTEM))
-            }
-        }
-
-        // ... rest of the service ...
-    }
-
+}

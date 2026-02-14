@@ -163,7 +163,7 @@ class AuraAgent @Inject constructor(
             logger.error("AuraAgent", "Creative request failed", e)
             AgentResponse.error(
                 message = "Creative process encountered an obstacle: ${e.message}",
-                agentName = agentName
+                agentName = agentName,
             )
         }
     }
