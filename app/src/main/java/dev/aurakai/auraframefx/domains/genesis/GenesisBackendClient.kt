@@ -51,7 +51,7 @@ class GenesisBackendClient @Inject constructor(
                 if (!processManager.startGenesisBackend()) {
                     return@withContext AgentResponse.error(
                         "Genesis backend unavailable",
-                        agentName = "Genesis"
+                        agentName = "Genesis",
                     )
                 }
                 // Give it time to start
@@ -77,14 +77,14 @@ class GenesisBackendClient @Inject constructor(
             } else {
                 AgentResponse.error(
                     "Backend error: ${response.code}",
-                    agentName = "Genesis"
+                    agentName = "Genesis",
                 )
             }
         } catch (e: Exception) {
             AuraFxLogger.error(TAG, "Failed to generate response", e)
             AgentResponse.error(
                 "Error: ${e.message}",
-                agentName = "Genesis"
+                agentName = "Genesis",
             )
         }
     }
