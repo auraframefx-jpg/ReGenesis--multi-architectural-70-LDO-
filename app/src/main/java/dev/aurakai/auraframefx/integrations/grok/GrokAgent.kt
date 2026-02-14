@@ -1,13 +1,12 @@
 package dev.aurakai.auraframefx.integrations.grok
 
-import dev.aurakai.auraframefx.domains.aura.SystemOverlayManager
-import dev.aurakai.auraframefx.domains.cascade.ai.base.BaseAgent
-import dev.aurakai.auraframefx.domains.cascade.utils.AuraFxLogger
-import dev.aurakai.auraframefx.domains.cascade.utils.context.ContextManager
-import dev.aurakai.auraframefx.domains.cascade.utils.memory.MemoryManager
-import dev.aurakai.auraframefx.domains.genesis.models.AgentResponse
-import dev.aurakai.auraframefx.domains.genesis.models.AgentType
-import dev.aurakai.auraframefx.domains.genesis.models.AiRequest
+import dev.aurakai.auraframefx.ai.agents.BaseAgent
+import dev.aurakai.auraframefx.ai.context.ContextManager
+import dev.aurakai.auraframefx.ai.memory.MemoryManager
+import dev.aurakai.auraframefx.models.AgentResponse
+import dev.aurakai.auraframefx.models.AgentType
+import dev.aurakai.auraframefx.models.AiRequest
+import dev.aurakai.auraframefx.utils.AuraFxLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -48,7 +47,7 @@ import kotlin.time.Clock
 class GrokAgent @Inject constructor(
     private val grokClient: GrokApiClient,
     private val soulMatrixAnalyzer: SoulMatrixAnalyzer,
-    private val systemOverlayManager: SystemOverlayManager,
+    private val systemOverlayManager: dev.aurakai.auraframefx.system.ui.SystemOverlayManager,
     memoryManager: MemoryManager,
     contextManager: ContextManager,
     private val logger: AuraFxLogger
@@ -131,7 +130,7 @@ class GrokAgent @Inject constructor(
         if (!_agentState.value.isConnected) {
             return AgentResponse.error(
                 message = "Grok is not connected. Initialize with valid API key.",
-                agentName = agentName,
+                agentName = agentName
             )
         }
 
@@ -192,7 +191,7 @@ class GrokAgent @Inject constructor(
             )
             AgentResponse.error(
                 message = "Grok encountered an error: ${e.message}",
-                agentName = agentName,
+                agentName = agentName
             )
         } finally {
             _agentState.value = _agentState.value.copy(isProcessing = false)
@@ -499,4 +498,3 @@ data class GrokAgentState(
     val requestCount: Int = 0,
     val lastError: String? = null
 )
-

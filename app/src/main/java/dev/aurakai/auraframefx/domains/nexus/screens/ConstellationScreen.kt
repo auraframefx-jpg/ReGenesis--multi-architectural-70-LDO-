@@ -1,4 +1,4 @@
-package dev.aurakai.auraframefx.ui.gates
+package dev.aurakai.auraframefx.domains.nexus.screens
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -240,10 +240,7 @@ fun SwordNode(
             Box(
                 modifier = Modifier
                     .size(10.dp)
-                    .background(
-                        Color.Gray.copy(alpha = 0.2f),
-                        androidx.compose.foundation.shape.CircleShape
-                    )
+                    .background(Color.Gray.copy(alpha = 0.2f), androidx.compose.foundation.shape.CircleShape)
             )
         }
     }
