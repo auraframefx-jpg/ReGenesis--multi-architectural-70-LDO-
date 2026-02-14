@@ -41,10 +41,10 @@ class AuraAgent : OrchestratableAgent, BaseAgent() { // Inherit from BaseAgent
 
     override suspend fun initialize(scope: CoroutineScope) {
         Log.i(TAG, "AuraAgent: initialize() called.")
-        if (!BaseAgent.isOrchestratorInitialized) {
+        if (!isOrchestratorInitialized) {
             this.agentScope = scope
             setupAuraSystems()
-            BaseAgent.isOrchestratorInitialized = true // Set the unified flag
+            isOrchestratorInitialized = true // Set the unified flag
             Log.d(TAG, "AuraAgent: Orchestrator initialized.")
         } else {
             Log.i(TAG, "AuraAgent: Orchestrator already initialized. Skipping.")
@@ -53,7 +53,7 @@ class AuraAgent : OrchestratableAgent, BaseAgent() { // Inherit from BaseAgent
 
     override suspend fun start() {
         Log.i(TAG, "AuraAgent: start() called.")
-        if (BaseAgent.isOrchestratorInitialized) {
+        if (isOrchestratorInitialized) {
             agentScope?.launch(Dispatchers.Default) {
                 startAuraProcessing()
             } ?: Log.e(TAG, "AuraAgent: agentScope is null. Cannot start processing.")
