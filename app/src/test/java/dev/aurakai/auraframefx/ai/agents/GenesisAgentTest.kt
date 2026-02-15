@@ -1,9 +1,9 @@
 package dev.aurakai.auraframefx.ai.agents
 
 import dev.aurakai.auraframefx.domains.aura.GenesisAgent
-import dev.aurakai.auraframefx.models.AgentResponse
-import dev.aurakai.auraframefx.models.AgentType
-import dev.aurakai.auraframefx.models.AiRequest
+import dev.aurakai.auraframefx.domains.genesis.models.AgentResponse
+import dev.aurakai.auraframefx.domains.genesis.models.AgentType
+import dev.aurakai.auraframefx.domains.genesis.models.AiRequest
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.verify
