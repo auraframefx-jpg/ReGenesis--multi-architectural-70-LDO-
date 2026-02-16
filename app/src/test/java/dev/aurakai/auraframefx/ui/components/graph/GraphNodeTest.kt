@@ -7,7 +7,7 @@ import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import dev.aurakai.auraframefx.ui.debug.model.*
+import dev.aurakai.auraframefx.domains.aura.ui.components.graph.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName

@@ -109,7 +109,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 <<<<<<<< HEAD:app/src/main/java/dev/aurakai/auraframefx/domains/aura/screens/HolographicMenuScreen.kt
-import dev.aurakai.auraframefx.data.AuraKaiModules
+import dev.aurakai.auraframefx.domains.cascade.storage.AuraKaiModules
 import dev.aurakai.auraframefx.embodiment.AuraState
 import dev.aurakai.auraframefx.embodiment.Character
 import dev.aurakai.auraframefx.embodiment.KaiState

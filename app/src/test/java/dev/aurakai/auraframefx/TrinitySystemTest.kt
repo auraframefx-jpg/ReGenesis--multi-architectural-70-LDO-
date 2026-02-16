@@ -1,6 +1,6 @@
 package dev.aurakai.auraframefx
 
-import dev.aurakai.auraframefx.models.AiRequest
+import dev.aurakai.auraframefx.domains.genesis.models.AiRequest
 import dev.aurakai.auraframefx.security.SecurityContext
 import org.junit.Assert.assertEquals
 import org.junit.Test

@@ -78,11 +78,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import dev.aurakai.auraframefx.ui.customization.ComponentEditor
-import dev.aurakai.auraframefx.ui.customization.ComponentType
-import dev.aurakai.auraframefx.ui.customization.CustomizationState
-import dev.aurakai.auraframefx.ui.customization.CustomizationViewModel
-import dev.aurakai.auraframefx.ui.customization.UIComponent
+import dev.aurakai.auraframefx.domains.aura.ui.customization.ComponentEditor
+import dev.aurakai.auraframefx.domains.aura.ui.customization.ComponentType
+import dev.aurakai.auraframefx.domains.aura.lab.CustomizationState
+import dev.aurakai.auraframefx.domains.aura.lab.CustomizationViewModel
+import dev.aurakai.auraframefx.domains.aura.ui.customization.UIComponent
 import dev.aurakai.auraframefx.ui.theme.CyberpunkCyan
 import dev.aurakai.auraframefx.ui.theme.CyberpunkPink
 import dev.aurakai.auraframefx.ui.theme.CyberpunkPurple
