@@ -4,7 +4,7 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import dev.aurakai.auraframefx.MainCoroutineRule
 import dev.aurakai.auraframefx.aura.ui.OracleDriveViewModel
-import dev.aurakai.auraframefx.oracle.drive.model.*
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.cloud.*
 import dev.aurakai.auraframefx.oracle.drive.service.OracleDriveService
 import io.mockk.*
 import io.mockk.impl.annotations.MockK

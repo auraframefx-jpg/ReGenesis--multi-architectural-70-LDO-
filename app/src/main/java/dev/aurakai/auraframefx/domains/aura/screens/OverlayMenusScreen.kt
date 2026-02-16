@@ -46,7 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import dev.aurakai.auraframefx.ui.components.common.CodedTextBox
+import dev.aurakai.auraframefx.domains.aura.ui.components.common.CodedTextBox
 
 /**
  * Overlay Menus Customization Screen
