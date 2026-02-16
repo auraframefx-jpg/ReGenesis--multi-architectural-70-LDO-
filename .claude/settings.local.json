@@ -45,7 +45,8 @@
       "Bash(echo:*)",
       "Bash(powershell -Command:*)",
       "Bash(powershell:*)",
-      "Bash(while read f)"
+      "Bash(while read f)",
+      "Bash(gh pr create --base Matrix --title \"chore: Update Claude Code bash permissions\" --body \"$\\(cat <<''EOF''\n## Summary\n- Updated `.claude/settings.local.json` to add permission for `while read` bash loop pattern\n- This allows Claude Code to use additional bash patterns for file processing workflows\n\n## Test plan\n- [x] Verified settings file is valid JSON\n- [x] Confirmed bash permission is correctly formatted\n- [x] Build passes with updated settings\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\nEOF\n\\)\")"
     ]
   }
 }
