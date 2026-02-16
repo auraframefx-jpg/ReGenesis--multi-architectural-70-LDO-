@@ -1,9 +1,8 @@
 package dev.aurakai.auraframefx.romtools
 
 import android.content.Context
+import android.os.Build
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dev.aurakai.auraframefx.domains.genesis.models.AgentResponse
-import dev.aurakai.auraframefx.domains.genesis.models.AgentType
 import dev.aurakai.auraframefx.romtools.bootloader.BootloaderManager
 import dev.aurakai.auraframefx.romtools.bootloader.BootloaderSafetyManager
 import dev.aurakai.auraframefx.romtools.retention.AurakaiRetentionManager
@@ -16,11 +15,12 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
+
 /**
  * Implementation of RomToolsManager that coordinates all ROM-related operations.
  */
 @Singleton
-class RomToolsManagerImpl @Inject constructor(
+class RomToolsManagerImpl @Inject private constructor(
     @ApplicationContext private val context: Context,
     private val bootloaderManager: BootloaderManager,
     private val bootloaderSafetyManager: BootloaderSafetyManager,
@@ -29,10 +29,21 @@ class RomToolsManagerImpl @Inject constructor(
     private val backupManager: BackupManager,
     private val systemModificationManager: SystemModificationManager,
     private val romVerificationManager: RomVerificationManager,
-    private val retentionManager: AurakaiRetentionManager
-) : RomToolsManager {
+    private val retentionManager: AurakaiRetentionManager,
+    verificationManager: RomVerificationManager,
+    safetyManager: BootloaderSafetyManager
+) : RomToolsManager(
+    bootloaderManager,
+    recoveryManager,
+    systemModificationManager,
+    flashManager,
+    verificationManager,
+    backupManager,
+    retentionManager,
+    safetyManager
+) {
 
-    private val _romToolsState = MutableStateFlow(RomToolsState())
+    override val _romToolsState = MutableStateFlow(RomToolsState())
     override val romToolsState: StateFlow<RomToolsState> = _romToolsState.asStateFlow()
 
     private val _operationProgress = MutableStateFlow<OperationProgress?>(null)
@@ -50,14 +61,14 @@ class RomToolsManagerImpl @Inject constructor(
                 hasRecoveryAccess = recoveryManager.checkRecoveryAccess(),
                 hasSystemWriteAccess = systemModificationManager.checkSystemWriteAccess(),
                 supportedArchitectures = getSupportedArchitectures(),
-                deviceModel = android.os.Build.MODEL,
-                androidVersion = android.os.Build.VERSION.RELEASE,
-                securityPatchLevel = android.os.Build.VERSION.SECURITY_PATCH
+                deviceModel = Build.MODEL,
+                androidVersion = Build.VERSION.RELEASE,
+                securityPatchLevel = Build.VERSION.SECURITY_PATCH
             )
 
             _romToolsState.value = RomToolsState(
+                capabilities = capabilities,
                 isInitialized = true,
-                capabilities = capabilities
             )
 
             Timber.i("ROM Tools initialized successfully: $capabilities")
@@ -68,6 +79,10 @@ class RomToolsManagerImpl @Inject constructor(
                 lastError = e.message
             )
         }
+    }
+
+    private fun RomToolsState(capabilities: RomCapabilities, isInitialized: Boolean) {
+        TODO("Not yet implemented")
     }
 
     override suspend fun processRomOperation(request: RomOperationRequest): AgentResponse {
@@ -205,7 +220,7 @@ class RomToolsManagerImpl @Inject constructor(
         }
     }
 
-    override suspend fun installRecovery(): Result<Unit> {
+  override suspend fun installRecovery(): Result<Unit> {
         return try {
             updateProgress("Installing Recovery", 0f, "Installing...")
             val result = recoveryManager.installCustomRecovery()
@@ -235,7 +250,7 @@ class RomToolsManagerImpl @Inject constructor(
     }
 
     private fun updateProgress(operation: String, progress: Float, status: String) {
-        _operationProgress.value = OperationProgress(
+        OperationProgress(
             operation = operation,
             progress = progress,
             status = status,
@@ -243,7 +258,15 @@ class RomToolsManagerImpl @Inject constructor(
         )
     }
 
+    private fun OperationProgress(operation: String, progress: Float, status: String, isIndeterminate: Boolean) {
+        TODO("Not yet implemented")
+    }
+
     private fun clearProgress() {
         _operationProgress.value = null
     }
+}
+
+class RomOperationRequest {
+
 }

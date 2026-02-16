@@ -3,6 +3,7 @@ package dev.aurakai.auraframefx.romtools
 
 import android.os.Build
 import dev.aurakai.auraframefx.romtools.bootloader.BootloaderManager
+import dev.aurakai.auraframefx.romtools.bootloader.BootloaderOperation
 import dev.aurakai.auraframefx.romtools.retention.AurakaiRetentionManager
 import dev.aurakai.auraframefx.romtools.retention.RetentionStatus
 import kotlinx.coroutines.flow.Flow
@@ -32,7 +33,12 @@ open class RomToolsManager @Inject constructor(
     private val safetyManager: dev.aurakai.auraframefx.romtools.bootloader.BootloaderSafetyManager
 ) {
 
-    protected val _romToolsState = MutableStateFlow(RomToolsState())
+    protected open val _romToolsState = MutableStateFlow(RomToolsState())
+
+    protected fun RomToolsState(): RomToolsState {
+        TODO("Not yet implemented")
+    }
+
     open val romToolsState: StateFlow<RomToolsState> = _romToolsState
 
     private val _operationProgress = MutableStateFlow<OperationProgress?>(null)
@@ -80,7 +86,7 @@ open class RomToolsManager @Inject constructor(
      * @param romFile Metadata for the ROM to flash (name, path, size, checksum).
      * @return `Result.success(Unit)` if the flash and subsequent restoration complete successfully; `Result.failure(exception)` containing the encountered exception otherwise.
      */
-    suspend fun flashRom(romFile: RomFile): Result<Unit> {
+    open suspend fun flashRom(romFile: RomFile): Result<Unit> {
         return try {
             updateOperationProgress(RomOperation.FLASHING_ROM, 0f)
 
@@ -91,14 +97,14 @@ open class RomToolsManager @Inject constructor(
 
             // Step 0.5: 🛡️ Perform Pre-Flight Safety Checks
             updateOperationProgress(RomOperation.VERIFYING_ROM, 7f)
-            val safetyResult = safetyManager.performPreFlightChecks(dev.aurakai.auraframefx.romtools.bootloader.BootloaderOperation.FLASH_PARTITION)
+            val safetyResult = safetyManager.performPreFlightChecks(BootloaderOperation.FLASH_PARTITION)
             if (!safetyResult.passed) {
                 throw IllegalStateException("Safety Check Failed: ${safetyResult.criticalIssues.joinToString()}")
             }
             if (safetyResult.warnings.isNotEmpty()) {
                 Timber.w("Safety Warnings: ${safetyResult.warnings.joinToString()}")
             }
-            
+
             // Create a safety checkpoint
             safetyManager.createSafetyCheckpoint()
 
@@ -159,7 +165,7 @@ open class RomToolsManager @Inject constructor(
      * @param backupName The name to assign to the backup.
      * @return The created [BackupInfo] on success; a failed [Result] containing the exception on error.
      */
-    suspend fun createNandroidBackup(backupName: String): Result<BackupInfo> {
+    open suspend fun createNandroidBackup(backupName: String): Result<BackupInfo> {
         return try {
             updateOperationProgress(RomOperation.CREATING_BACKUP, 0f)
 
@@ -187,7 +193,7 @@ open class RomToolsManager @Inject constructor(
      * @param backupInfo The backup metadata and location to restore.
      * @return A Result containing `Unit` on success, or a failure with the thrown exception.
      */
-    suspend fun restoreNandroidBackup(backupInfo: BackupInfo): Result<Unit> {
+    open suspend fun restoreNandroidBackup(backupInfo: BackupInfo): Result<Unit> {
         return try {
             updateOperationProgress(RomOperation.RESTORING_BACKUP, 0f)
 
@@ -216,7 +222,7 @@ open class RomToolsManager @Inject constructor(
      *
      * @return A Result containing `Unit` on success, or a failure containing the thrown exception.
      */
-    suspend fun installGenesisOptimizations(): Result<Unit> {
+    open suspend fun installGenesisOptimizations(): Result<Unit> {
         return try {
             updateOperationProgress(RomOperation.APPLYING_OPTIMIZATIONS, 0f)
 
@@ -245,7 +251,7 @@ open class RomToolsManager @Inject constructor(
      *
      * @return A `Result` containing the list of compatible `AvailableRom` on success, or a failure with the underlying exception.
      */
-    fun getAvailableRoms(): Result<List<AvailableRom>> {
+    open fun getAvailableRoms(): Result<List<AvailableRom>> {
         return try {
             val deviceModel = romToolsState.value.capabilities?.deviceModel ?: "unknown"
             val roms = romRepository.getCompatibleRoms(deviceModel)
@@ -262,7 +268,7 @@ open class RomToolsManager @Inject constructor(
      * @param rom The ROM metadata to download.
      * @return A flow that emits `DownloadProgress` updates reflecting bytes downloaded, total bytes, progress, speed, and completion state.
      */
-    fun downloadRom(rom: AvailableRom): Flow<DownloadProgress> {
+    open fun downloadRom(rom: AvailableRom): Flow<DownloadProgress> {
         return flashManager.downloadRom(rom)
     }
 
@@ -273,7 +279,7 @@ open class RomToolsManager @Inject constructor(
      *
      * @return A Result containing the configured `RetentionStatus` on success, or a failure with the encountered exception.
      */
-    suspend fun setupAurakaiRetention(): Result<RetentionStatus> {
+    open suspend fun setupAurakaiRetention(): Result<RetentionStatus> {
         return try {
             updateOperationProgress(RomOperation.SETTING_UP_RETENTION, 0f)
 
@@ -300,7 +306,7 @@ open class RomToolsManager @Inject constructor(
      *
      * @return A Result containing `Unit` on success, or a failure with the encountered exception.
      */
-    suspend fun unlockBootloader(): Result<Unit> {
+    open suspend fun unlockBootloader(): Result<Unit> {
         return try {
             updateOperationProgress(RomOperation.UNLOCKING_BOOTLOADER, 0f)
 
@@ -333,7 +339,7 @@ open class RomToolsManager @Inject constructor(
      *
      * @return A Result containing `Unit` on success, or a failure with the encountered exception.
      */
-    suspend fun installRecovery(): Result<Unit> {
+    open suspend fun installRecovery(): Result<Unit> {
         return try {
             updateOperationProgress(RomOperation.INSTALLING_RECOVERY, 0f)
 
@@ -362,7 +368,15 @@ open class RomToolsManager @Inject constructor(
      * @param progress Completion progress as a float between 0.0 and 1.0.
      */
     private fun updateOperationProgress(operation: RomOperation, progress: Float) {
-        _operationProgress.value = OperationProgress(operation, progress)
+        _operationProgress.value =
+            dev.aurakai.auraframefx.romtools.RomToolsManager.OperationProgress(operation, operation, progress,)
+    }
+
+    private fun OperationProgress(
+        operation: RomOperation,
+        operation2: RomOperation,
+        progress: Float
+    ) {
     }
 
     /**
@@ -399,15 +413,28 @@ open class RomToolsManager @Inject constructor(
     companion object {
         private val romRepository = RomRepository()
     }
+
+    open suspend fun processRomOperation(request: RomOperationRequest): AgentResponse {
+        TODO("Not yet implemented")
+    }
 }
+
+annotation class OperationProgress(
+    val operation: RomOperation,
+    val operation2: RomOperation,
+    val progress: Float
+)
+
+annotation class AgentResponse
 
 // Data classes
 data class RomToolsState(
-val capabilities: RomCapabilities? = null,
-val isInitialized: Boolean = false,
-val settings: RomToolsSettings = RomToolsSettings(),
-val availableRoms: List<AvailableRom> = emptyList(),
-val backups: List<BackupInfo> = emptyList()
+    val capabilities: RomCapabilities? = null,
+    val isInitialized: Boolean = false,
+    val settings: RomToolsSettings = RomToolsSettings(),
+    val availableRoms: List<AvailableRom> = emptyList(),
+    val backups: List<BackupInfo> = emptyList(),
+    val lastError: String?
 )
 
 data class RomCapabilities(
@@ -430,8 +457,10 @@ val downloadDirectory: String = ""
 )
 
 data class OperationProgress(
-val operation: RomOperation,
-val progress: Float
+    val operation1: String,
+    val operation: RomOperation,
+    val progress: Float,
+    val isIndeterminate: Boolean
 )
 
 /**

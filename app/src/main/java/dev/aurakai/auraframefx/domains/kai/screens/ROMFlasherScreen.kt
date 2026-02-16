@@ -36,6 +36,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.aurakai.auraframefx.romtools.AvailableRom
+import dev.aurakai.auraframefx.romtools.BackupInfo
 import dev.aurakai.auraframefx.romtools.RomFile
 import dev.aurakai.auraframefx.romtools.RomToolsManager
 import dev.aurakai.auraframefx.ui.components.unified.AuraColors
@@ -239,7 +240,7 @@ data class ROMFlasherState(
     val isCreatingBackup: Boolean = false,
     val backupCreated: Boolean = false,
     val backupProgress: Float = 0f,
-    val backupInfo: dev.aurakai.auraframefx.romtools.BackupInfo? = null,
+    val backupInfo: BackupInfo? = null,
 
     // Retention
     val isSettingUpRetention: Boolean = false,

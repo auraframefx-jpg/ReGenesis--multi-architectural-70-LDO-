@@ -6,7 +6,6 @@ import dev.aurakai.auraframefx.romtools.retention.RetentionMechanism
 import dev.aurakai.auraframefx.romtools.retention.RetentionStatus
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -38,7 +37,7 @@ class RomToolsManagerTest {
         mockVerificationManager = mockk(relaxed = true)
         mockBackupManager = mockk(relaxed = true)
         mockRetentionManager = mockk(relaxed = true)
-        
+
         romToolsManager = RomToolsManager(
             bootloaderManager = mockBootloaderManager,
             recoveryManager = mockRecoveryManager,
