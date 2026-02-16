@@ -13,7 +13,7 @@ import androidx.navigation.compose.composable
 import collabcanvas.ui.CanvasScreen
 import dev.aurakai.auraframefx.datavein.ui.SimpleDataVeinScreen
 import dev.aurakai.auraframefx.domains.aura.aura.ui.AgentAdvancementScreen
-import dev.aurakai.auraframefx.domains.cascade.utils.cascade.trinity.TrinityScreen
+import dev.aurakai.auraframefx.cascade.trinity.TrinityScreen
 import dev.aurakai.auraframefx.config.GateAssetLoadout
 import dev.aurakai.auraframefx.domains.aura.lab.CustomizationViewModel
 import dev.aurakai.auraframefx.domains.aura.chromacore.ui.ChromaCoreHubScreen
@@ -38,7 +38,7 @@ import dev.aurakai.auraframefx.domains.aura.screens.uxui_engine.QuickSettingsCus
 import dev.aurakai.auraframefx.domains.aura.screens.uxui_engine.StatusBarScreen
 import dev.aurakai.auraframefx.domains.aura.screens.uxui_engine.UISettingsScreen
 import dev.aurakai.auraframefx.domains.aura.ui.screens.aura.ReGenesisCustomizationHub
-import dev.aurakai.auraframefx.domains.cascade.utils.cascade.trinity.TrinityScreen
+import dev.aurakai.auraframefx.cascade.trinity.TrinityScreen
 import dev.aurakai.auraframefx.domains.genesis.models.AgentType
 import dev.aurakai.auraframefx.domains.genesis.oracledrive.ui.OracleDriveScreen
 import dev.aurakai.auraframefx.domains.genesis.screens.AgentBridgeHubScreen
