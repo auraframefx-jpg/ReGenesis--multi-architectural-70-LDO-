@@ -44,7 +44,8 @@
       "Bash(while IFS= read -r f)",
       "Bash(echo:*)",
       "Bash(powershell -Command:*)",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "Bash(while read f)"
     ]
   }
 }
