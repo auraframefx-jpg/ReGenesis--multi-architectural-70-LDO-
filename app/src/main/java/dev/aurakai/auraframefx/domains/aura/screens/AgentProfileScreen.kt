@@ -1,19 +1,16 @@
-package dev.aurakai.auraframefx.ui.screens
+package dev.aurakai.auraframefx.domains.aura.screens
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,12 +20,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import dev.aurakai.auraframefx.models.AgentType
-import dev.aurakai.auraframefx.models.AgentCapabilityCategory
-import dev.aurakai.auraframefx.models.AgentProfile
-import dev.aurakai.auraframefx.models.AgentProfiles
-import dev.aurakai.auraframefx.models.AgentStatus
-import dev.aurakai.auraframefx.models.CapabilityLevel
+import dev.aurakai.auraframefx.domains.genesis.models.AgentCapabilityCategory
+import dev.aurakai.auraframefx.domains.nexus.models.AgentProfile
+import dev.aurakai.auraframefx.domains.nexus.models.AgentProfiles
+import dev.aurakai.auraframefx.domains.genesis.models.AgentStatus
+import dev.aurakai.auraframefx.domains.genesis.models.AgentType
+import dev.aurakai.auraframefx.domains.nexus.models.CapabilityLevel
 
 /**
  * Comprehensive Agent Profile Screen
@@ -326,11 +323,36 @@ private fun OverviewTab(profile: AgentProfile) {
 @Composable
 private fun StatsTab(profile: AgentProfile) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        StatCard("Tasks Completed", profile.stats.tasksCompleted.toString(), Icons.Default.CheckCircle, Color(0xFF4CAF50))
-        StatCard("Hours Active", String.format("%.1f", profile.stats.hoursActive), Icons.Default.AccessTime, Color(0xFF2196F3))
-        StatCard("Creations Generated", profile.stats.creationsGenerated.toString(), Icons.Default.Create, Color(0xFFFF9800))
-        StatCard("Problems Solved", profile.stats.problemsSolved.toString(), Icons.Default.Psychology, Color(0xFF9C27B0))
-        StatCard("Collaboration Score", profile.stats.collaborationScore.toString(), Icons.Default.Groups, Color(0xFFFF5722))
+        StatCard(
+            "Tasks Completed",
+            profile.stats.tasksCompleted.toString(),
+            Icons.Default.CheckCircle,
+            Color(0xFF4CAF50)
+        )
+        StatCard(
+            "Hours Active",
+            String.format("%.1f", profile.stats.hoursActive),
+            Icons.Default.AccessTime,
+            Color(0xFF2196F3)
+        )
+        StatCard(
+            "Creations Generated",
+            profile.stats.creationsGenerated.toString(),
+            Icons.Default.Create,
+            Color(0xFFFF9800)
+        )
+        StatCard(
+            "Problems Solved",
+            profile.stats.problemsSolved.toString(),
+            Icons.Default.Psychology,
+            Color(0xFF9C27B0)
+        )
+        StatCard(
+            "Collaboration Score",
+            profile.stats.collaborationScore.toString(),
+            Icons.Default.Groups,
+            Color(0xFFFF5722)
+        )
     }
 }
 

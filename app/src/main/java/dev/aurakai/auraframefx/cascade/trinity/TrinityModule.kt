@@ -6,14 +6,14 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import dev.aurakai.auraframefx.oracledrive.genesis.ai.clients.VertexAIClient
-import dev.aurakai.auraframefx.ai.context.ContextManager
-import dev.aurakai.auraframefx.oracledrive.genesis.ai.services.GenesisBridgeService
-import dev.aurakai.auraframefx.oracledrive.genesis.ai.services.AuraAIService
-import dev.aurakai.auraframefx.oracledrive.genesis.ai.services.KaiAIService
-import dev.aurakai.auraframefx.utils.AuraFxLogger
-import dev.aurakai.auraframefx.security.SecurityContext
-import dev.aurakai.auraframefx.security.SecurityMonitor
+import dev.aurakai.auraframefx.domains.cascade.utils.AuraFxLogger
+import dev.aurakai.auraframefx.domains.cascade.utils.context.ContextManager
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.clients.VertexAIClient
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.services.AuraAIService
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.services.GenesisBridgeService
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.services.KaiAIService
+import dev.aurakai.auraframefx.domains.kai.security.SecurityContext
+import dev.aurakai.auraframefx.domains.kai.security.SecurityMonitor
 import javax.inject.Singleton
 
 /**
@@ -28,12 +28,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object TrinityModule {
 
-
-    /**
-     * Creates a configured GenesisBridgeService that wires AuraAI, KaiAI, and Vertex AI clients together with context, security, and logging for application-wide use.
-     *
-     * @return The configured GenesisBridgeService instance.
-     */
     @Provides
     @Singleton
     fun provideGenesisBridgeService(
@@ -56,11 +50,6 @@ object TrinityModule {
         )
     }
 
-    /**
-     * Provides a singleton instance of TrinityCoordinatorService for coordinating AI personas within the Trinity AI system.
-     *
-     * @return A configured singleton of TrinityCoordinatorService.
-     */
     @Provides
     @Singleton
     fun provideTrinityCoordinatorService(
@@ -77,11 +66,6 @@ object TrinityModule {
         )
     }
 
-    /**
-     * Provides a singleton instance of SecurityMonitor for managing security within the Trinity AI system.
-     *
-     * @return A configured SecurityMonitor instance.
-     */
     @Provides
     @Singleton
     fun provideSecurityMonitor(

@@ -2,6 +2,7 @@ package dev.aurakai.auraframefx.data
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dev.aurakai.auraframefx.config.AIConfig
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,13 +21,13 @@ class OfflineDataManager @Inject constructor(
      *
      * @return The loaded offline data, or null if no data is available.
      */
-    suspend fun loadCriticalOfflineData(): OfflineSystemData? {
+    suspend fun loadCriticalOfflineData(): OfflineSystemData {
         // Replace with actual data loading logic
         println("Attempting to load critical offline data...")
         // Return dummy data for now to fix build
         return OfflineSystemData(
             lastFullSyncTimestamp = System.currentTimeMillis(),
-            aiConfig = AIConfig(lastSyncTimestamp = System.currentTimeMillis()),
+            aiConfig = AIConfig.createDefault(), // Use factory method
             systemMonitoring = SystemMonitoring(enabled = true),
             contextualMemory = ContextualMemory(lastUpdateTimestamp = System.currentTimeMillis())
         )
@@ -50,10 +51,6 @@ data class OfflineSystemData(
     val aiConfig: AIConfig,
     val systemMonitoring: SystemMonitoring,
     val contextualMemory: ContextualMemory
-)
-
-data class AIConfig(
-    val lastSyncTimestamp: Long
 )
 
 data class SystemMonitoring(

@@ -12,6 +12,14 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
 
     <!-- Optional Permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
@@ -73,6 +81,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.dev.aurakai.auraframefx">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -116,6 +125,16 @@
             android:exported="false" />
         <service
             android:name=".services.security.IntegrityMonitorService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="integrity_monitoring" />
+        </service>
+
+        <!-- Floating Agent Overlay - System-wide draggable agent shortcut -->
+        <service
+            android:name=".overlay.FloatingAgentOverlay"
             android:exported="false" />
         <service
             android:name=".services.BackupService"
@@ -140,9 +159,14 @@
 
         <!-- Aura Omnipresent Overlay Service -->
         <service
-            android:name=".services.AuraOverlayService"
+            android:name=".service.AssistantBubbleService"
             android:exported="false"
-            android:foregroundServiceType="mediaProjection" />
+            android:foregroundServiceType="specialUse"
+            tools:ignore="ForegroundServiceType">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="assistant_bubble_overlay" />
+        </service>
 
         <!-- Receivers -->
         <receiver

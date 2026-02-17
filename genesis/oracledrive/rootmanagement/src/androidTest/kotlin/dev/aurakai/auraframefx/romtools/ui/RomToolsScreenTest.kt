@@ -8,10 +8,14 @@ import androidx.compose.ui.test.hasProgressBarRangeInfo
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import dev.aurakai.auraframefx.romtools.AvailableRom
+import dev.aurakai.auraframefx.romtools.BackupInfo
 import dev.aurakai.auraframefx.romtools.BackupManager
 import dev.aurakai.auraframefx.romtools.FlashManager
 import dev.aurakai.auraframefx.romtools.OperationProgress
 import dev.aurakai.auraframefx.romtools.RecoveryManager
+import dev.aurakai.auraframefx.romtools.RomCapabilities
+import dev.aurakai.auraframefx.romtools.RomOperation
 import dev.aurakai.auraframefx.romtools.RomToolsState
 import dev.aurakai.auraframefx.romtools.RomVerificationManager
 import dev.aurakai.auraframefx.romtools.SystemModificationManager
@@ -77,7 +81,7 @@ class RomToolsScreenTest {
         bootloader: Boolean = false,
         recovery: Boolean = false,
         system: Boolean = false
-    ) = dev.aurakai.auraframefx.romtools.RomCapabilities(
+    ) = RomCapabilities(
         hasRootAccess = root,
         hasBootloaderAccess = bootloader,
         hasRecoveryAccess = recovery,
@@ -89,14 +93,14 @@ class RomToolsScreenTest {
 
     private fun defaultState(
         isInitialized: Boolean,
-        capabilities: dev.aurakai.auraframefx.romtools.RomCapabilities? = null,
-        availableRoms: List<dev.aurakai.auraframefx.romtools.AvailableRom> = emptyList(),
-        backups: List<dev.aurakai.auraframefx.romtools.BackupInfo> = emptyList()
+        capabilities: RomCapabilities? = null,
+        availableRoms: List<AvailableRom> = emptyList(),
+        backups: List<BackupInfo> = emptyList()
     ) = RomToolsState(
-        isInitialized = isInitialized,
         capabilities = capabilities,
+        isInitialized = isInitialized,
         availableRoms = availableRoms,
-        backups = backups
+        backups = backups,
     )
 
     @Test
@@ -148,8 +152,9 @@ class RomToolsScreenTest {
     fun operationProgressCard_usesProgressFraction_fromPercent() {
         // Focused on the diff: LinearProgressIndicator now uses progress lambda { percent / 100f }
         val op = OperationProgress(
-            operation = dev.aurakai.auraframefx.romtools.RomOperation.FLASH,
-            progress = 42f
+            operation1 = operation,
+            operation = RomOperation.FLASH,
+            progress = 42f,,
         )
         val fake = FakeRomToolsManager(
             initialState = defaultState(isInitialized = true, capabilities = defaultCaps()),

@@ -1,8 +1,8 @@
 package dev.aurakai.auraframefx.ai.agents
 
-import dev.aurakai.auraframefx.models.AgentResponse
-import dev.aurakai.auraframefx.models.AgentType
-import dev.aurakai.auraframefx.models.AiRequest
+import dev.aurakai.auraframefx.domains.genesis.models.AgentResponse
+import dev.aurakai.auraframefx.domains.genesis.models.AgentType
+import dev.aurakai.auraframefx.domains.genesis.models.AiRequest
 import io.mockk.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -347,7 +347,7 @@ class BaseAgentTest {
 
     @Nested
     @DisplayName("Subclass Override Tests")
-    inner class SubclassOverrideTests {
+    class SubclassOverrideTests {
 
         @Test
         @DisplayName("custom agent should be able to override processRequest")
