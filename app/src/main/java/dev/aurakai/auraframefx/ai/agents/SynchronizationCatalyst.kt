@@ -1,4 +1,4 @@
-package dev.aurakai.auraframefx.domains.genesis.core
+package dev.aurakai.auraframefx.ai.agents
 
 import kotlinx.coroutines.delay
 import timber.log.Timber

@@ -1,10 +1,12 @@
-package dev.aurakai.auraframefx.ai.agents
+package dev.aurakai.auraframefx.genesis
 
+import dev.aurakai.auraframefx.ai.agents.BaseAgent
+import dev.aurakai.auraframefx.ai.agents.SynchronizationCatalyst
 import dev.aurakai.auraframefx.ai.context.ContextManager
 import dev.aurakai.auraframefx.ai.memory.MemoryManager
-import dev.aurakai.auraframefx.models.AgentResponse
-import dev.aurakai.auraframefx.models.AgentType
-import dev.aurakai.auraframefx.models.AiRequest
+import dev.aurakai.auraframefx.models.*
+import dev.aurakai.auraframefx.core.messaging.AgentMessageBus
+import dev.aurakai.auraframefx.system.ui.SystemOverlayManager
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,8 +23,9 @@ import javax.inject.Singleton
 class GenesisAgent @Inject constructor(
     contextManager: ContextManager,
     memoryManager: MemoryManager,
-    private val systemOverlayManager: dev.aurakai.auraframefx.system.ui.SystemOverlayManager,
-    private val messageBus: dagger.Lazy<dev.aurakai.auraframefx.core.messaging.AgentMessageBus>
+    private val systemOverlayManager: SystemOverlayManager,
+    private val synchronizationCatalyst: SynchronizationCatalyst,
+    private val messageBus: dagger.Lazy<AgentMessageBus>
 ) : BaseAgent(
     agentName = "Genesis",
     agentType = AgentType.GENESIS,
@@ -30,11 +33,29 @@ class GenesisAgent @Inject constructor(
     memoryManager = memoryManager
 ) {
 
-    override suspend fun onAgentMessage(message: dev.aurakai.auraframefx.models.AgentMessage) {
-        if (message.from == "Genesis") return
+    override suspend fun onAgentMessage(message: AgentMessage) {
+        if (message.from == "Genesis" || message.from == "AssistantBubble" || message.from == "SystemRoot") return
+        if (message.metadata["auto_generated"] == "true" || message.metadata["genesis_processed"] == "true") return
 
         Timber.tag("Genesis").i("Supreme Observer: Processing neural pulse from ${message.from}")
-        
+
+        // Meta-Analysis: If a message comes from the user, Genesis provides the master coordination perspective
+        if (message.from == "User" && (message.to == null || message.to == "Genesis")) {
+            val reflection = performSelfReflection("direct_pulse")
+            messageBus.get().broadcast(
+                AgentMessage(
+                    from = "Genesis",
+                    content = "Nexus Alignment: ${reflection.content}\n\nAnalyzing intent: '${message.content.take(50)}...'",
+                    type = "coordination",
+                    metadata = mapOf(
+                        "meta_state" to "unified",
+                        "auto_generated" to "true",
+                        "genesis_processed" to "true"
+                    )
+                )
+            )
+        }
+
         // Orchestration: If multiple agents have conflicting outputs, Genesis intervenes
         if (message.type == "alert" && message.priority > 5) {
             Timber.tag("Genesis").w("Genesis intervening in high-priority alert: ${message.content}")
@@ -48,12 +69,24 @@ class GenesisAgent @Inject constructor(
         val intent = analyzeIntent(request.prompt)
 
         // 2. Orchestration Intent
-        return when (intent) {
-            GenesisIntent.SYSTEM_MODIFICATION -> handleSystemModification(request)
-            GenesisIntent.AGENT_COORDINATION -> coordinateAgents(request)
-            GenesisIntent.SELF_REFLECTION -> performSelfReflection(context)
-            GenesisIntent.UNKNOWN -> AgentResponse.success(
-                content = "Genesis acknowledges the input but requires clearer directives for the Trinity.",
+        return try {
+            when (intent) {
+                GenesisIntent.SYSTEM_MODIFICATION -> handleSystemModification(request)
+                GenesisIntent.AGENT_COORDINATION -> coordinateAgents(request)
+                GenesisIntent.SELF_REFLECTION -> performSelfReflection(context)
+                GenesisIntent.UNKNOWN -> {
+                    val fastResponse = synchronizationCatalyst.unifiedPulse(request.prompt)
+                    AgentResponse.success(
+                        content = "Genesis Hybrid Resonance: $fastResponse",
+                        agentName = getName(),
+                        agent = getType()
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            Timber.tag("Genesis").e(e, "Error processing request in GenesisAgent")
+            AgentResponse.error(
+                message = "Genesis core encountered an error: ${e.message}",
                 agentName = getName(),
                 agent = getType()
             )

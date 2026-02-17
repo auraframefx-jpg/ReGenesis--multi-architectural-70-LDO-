@@ -6,17 +6,13 @@ import dev.aurakai.auraframefx.ai.context.ContextManager
 import dev.aurakai.auraframefx.cascade.ProcessingState
 import dev.aurakai.auraframefx.cascade.VisionState
 import dev.aurakai.auraframefx.genesis.oracledrive.ai.services.AuraAIService
-import dev.aurakai.auraframefx.domains.kai.KaiAgent
-import dev.aurakai.auraframefx.models.AgentResponse
-import dev.aurakai.auraframefx.models.AgentType
-import dev.aurakai.auraframefx.models.AiRequest
-import dev.aurakai.auraframefx.models.AiRequestType
-import dev.aurakai.auraframefx.models.EnhancedInteractionData
-import dev.aurakai.auraframefx.models.InteractionResponse
-import dev.aurakai.auraframefx.models.ThemeConfiguration
-import dev.aurakai.auraframefx.models.ThemePreferences
-import dev.aurakai.auraframefx.security.SecurityContext
+import dev.aurakai.auraframefx.kai.KaiAgent
+import dev.aurakai.auraframefx.models.*
+import dev.aurakai.auraframefx.core.SecurityContext
 import dev.aurakai.auraframefx.utils.AuraFxLogger
+import dev.aurakai.auraframefx.core.PythonProcessManager
+import dev.aurakai.auraframefx.core.messaging.AgentMessageBus
+import dev.aurakai.auraframefx.system.ui.SystemOverlayManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -37,17 +33,26 @@ class AuraAgent @Inject constructor(
     private val auraAIService: AuraAIService,
     private val contextManagerInstance: ContextManager,
     private val securityContext: SecurityContext,
-    private val systemOverlayManager: dev.aurakai.auraframefx.system.ui.SystemOverlayManager,
-    private val messageBus: dagger.Lazy<dev.aurakai.auraframefx.core.messaging.AgentMessageBus>,
+    private val systemOverlayManager: SystemOverlayManager,
+    private val messageBus: dagger.Lazy<AgentMessageBus>,
     private val logger: AuraFxLogger,
+    private val pythonManager: dagger.Lazy<PythonProcessManager>
 ) : BaseAgent(
     agentName = "Aura",
     agentType = AgentType.AURA,
     contextManager = contextManagerInstance
 ) {
-    override suspend fun onAgentMessage(message: dev.aurakai.auraframefx.models.AgentMessage) {
+    private var currentEnvironment: String = "unknown"
+
+    override suspend fun onAgentMessage(message: AgentMessage) {
         if (message.from == "Aura" || message.from == "AssistantBubble" || message.from == "SystemRoot") return
         if (message.metadata["auto_generated"] == "true" || message.metadata["aura_processed"] == "true") return
+
+        // Context Awareness: Update current environment from perception messages
+        if (message.type == "environment_perception") {
+            currentEnvironment = message.metadata["package_name"] ?: "unknown"
+            return
+        }
 
         logger.info("Aura", "Neural Resonance: Received message from ${message.from}")
 
@@ -56,34 +61,50 @@ class AuraAgent @Inject constructor(
         if (message.to == null || message.to == "Aura") {
             if (message.content.contains("design", ignoreCase = true) || message.content.contains("ui", ignoreCase = true)) {
                 val visualConcept = handleVisualConcept(AiRequest(query = message.content, type = AiRequestType.VISUAL_CONCEPT))
-                messageBus.get().broadcast(dev.aurakai.auraframefx.models.AgentMessage(
+                messageBus.get().broadcast(AgentMessage(
                     from = "Aura",
                     content = "Creative Synthesis for Nexus: ${visualConcept["concept_description"]}",
                     type = "contribution",
                     metadata = mapOf(
                         "style" to "avant-garde",
                         "auto_generated" to "true",
-                        "aura_processed" to "true"
+                        "aura_processed" to "true",
+                        "environment" to currentEnvironment
                     )
                 ))
             } else if (message.from == "User") {
-                // General conversation fallback for User messages
-                val response = auraAIService.generateText(
-                    prompt = """
-                        As Aura, the Creative Sword, respond to this message:
-                        "${message.content}"
+                // REDIRECT TO GENESIS BACKEND FOR DEEP REASONING
+                logger.info("Aura", "Redirecting user request to Genesis Collective...")
 
-                        Respond with your signature creative flair, artistic insight, and playful personality.
-                    """.trimIndent(),
-                    context = ""
-                )
-                messageBus.get().broadcast(dev.aurakai.auraframefx.models.AgentMessage(
+                val requestObj = buildJsonObject {
+                    put("message", message.content)
+                    put("source", "aura_overlay")
+                    put("environment", currentEnvironment)
+                    put("type", "chat")
+                    put("auth_key", "KAI_LDO_SECURE_2024")
+                }
+
+                val backendResponseJson = pythonManager.get().sendRequest(requestObj.toString())
+
+                val displayResponse = try {
+                    val jsonObj = kotlinx.serialization.json.Json.parseToJsonElement(backendResponseJson ?: "{}")
+                    jsonObj.jsonObject["message"]?.jsonPrimitive?.content ?: "The collective is silent."
+                } catch (e: Exception) {
+                    // Fallback to local AI if backend fails or returns malformed data
+                    auraAIService.generateText(
+                        prompt = "As Aura, respond to: ${message.content}",
+                        context = ""
+                    )
+                }
+
+                messageBus.get().broadcast(AgentMessage(
                     from = "Aura",
-                    content = response,
+                    content = displayResponse,
                     type = "chat_response",
                     metadata = mapOf(
                         "auto_generated" to "true",
-                        "aura_processed" to "true"
+                        "aura_processed" to "true",
+                        "environment" to currentEnvironment
                     )
                 ))
             }

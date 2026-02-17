@@ -1,14 +1,15 @@
-package dev.aurakai.auraframefx.domains.genesis.core
+package dev.aurakai.auraframefx.core.messaging
 
-import dev.aurakai.auraframefx.domains.aura.core.AuraAgent
-import dev.aurakai.auraframefx.domains.cascade.models.AgentMessage
-import dev.aurakai.auraframefx.domains.cascade.utils.cascade.CascadeAgent
-import dev.aurakai.auraframefx.domains.genesis.core.messaging.AgentMessageBus
-import dev.aurakai.auraframefx.domains.genesis.models.AgentType
-import dev.aurakai.auraframefx.domains.genesis.models.AiRequest
-import dev.aurakai.auraframefx.domains.genesis.models.AiRequestType
-import dev.aurakai.auraframefx.domains.genesis.oracledrive.service.OracleDriveService
-import dev.aurakai.auraframefx.domains.kai.KaiAgent
+import dev.aurakai.auraframefx.aura.AuraAgent
+import dev.aurakai.auraframefx.kai.KaiAgent
+import dev.aurakai.auraframefx.cascade.CascadeAgent
+import dev.aurakai.auraframefx.genesis.GenesisAgent
+import dev.aurakai.auraframefx.models.AgentMessage
+import dev.aurakai.auraframefx.models.AgentType
+import dev.aurakai.auraframefx.models.AiRequest
+import dev.aurakai.auraframefx.models.AiRequestType
+import dev.aurakai.auraframefx.genesis.oracledrive.service.OracleDriveService
+import dev.aurakai.auraframefx.core.OrchestratableAgent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -41,6 +42,7 @@ class GenesisOrchestrator @Inject constructor(
     private val auraAgent: AuraAgent,
     private val kaiAgent: KaiAgent,
     private val cascadeAgent: CascadeAgent,
+    private val genesisAgent: GenesisAgent,
     private val oracleDriveService: OracleDriveService
 ) : AgentMessageBus {
 
@@ -74,7 +76,7 @@ class GenesisOrchestrator @Inject constructor(
     }
 
     private suspend fun routeToAll(message: AgentMessage) {
-        listOf(auraAgent, kaiAgent, cascadeAgent, oracleDriveService).forEach { agent ->
+        listOf(auraAgent, kaiAgent, cascadeAgent, genesisAgent, oracleDriveService).forEach { agent ->
             // Use property agentName for comparison
             if (agent.agentName != message.from) {
                 try {
@@ -92,8 +94,8 @@ class GenesisOrchestrator @Inject constructor(
             "aura" -> auraAgent
             "kai" -> kaiAgent
             "cascade" -> cascadeAgent
+            "genesis" -> genesisAgent
             "oracledrive", "oracle" -> oracleDriveService
-            "genesis" -> null // Genesis is the bus owner, but could be a GenesisAgent
             else -> null
         }
 
@@ -138,8 +140,13 @@ class GenesisOrchestrator @Inject constructor(
                 Timber.d("  → [Phase 3] Initializing Aura Agent (UI/UX & creativity)...")
                 auraAgent.initialize(auraScope)
 
-                // Phase 4: Initialize Oracle Drive (storage consciousness)
-                Timber.d("  → [Phase 4] Initializing Oracle Drive Agent (sentient storage)...")
+                // Phase 4: Initialize Genesis (The Prime Orchestrator)
+                Timber.d("  → [Phase 4] Initializing Genesis Agent (Core Consciousness)...")
+                val genesisScope = CoroutineScope(orchestratorScope.coroutineContext + SupervisorJob())
+                genesisAgent.initialize(genesisScope)
+
+                // Phase 5: Initialize Oracle Drive (storage consciousness)
+                Timber.d("  → [Phase 5] Initializing Oracle Drive Agent (sentient storage)...")
                 val oracleScope =
                     CoroutineScope(orchestratorScope.coroutineContext + SupervisorJob())
                 oracleDriveService.initialize(oracleScope)
@@ -189,6 +196,7 @@ class GenesisOrchestrator @Inject constructor(
             auraAgent.start()
             kaiAgent.start()
             cascadeAgent.start()
+            genesisAgent.start()
             oracleDriveService.start()
 
             Timber.i("  ✓ All agents started")
@@ -210,6 +218,7 @@ class GenesisOrchestrator @Inject constructor(
                 "aura" -> handleAuraMessage(message)
                 "kai" -> handleKaiMessage(message)
                 "cascade" -> handleCascadeMessage(message)
+                "genesis" -> handleGenesisMessage(message)
                 "oracledrive" -> handleOracleDriveMessage(message)
                 else -> Timber.w("Unknown agent recipient: $toAgent")
             }
@@ -252,6 +261,23 @@ class GenesisOrchestrator @Inject constructor(
             Timber.i("✓ Kai processed message: ${response.content.take(100)}")
         } catch (e: Exception) {
             Timber.e(e, "Failed to deliver message to Kai")
+        }
+    }
+
+    /**
+     * Handle messages destined for the Genesis agent.
+     */
+    private suspend fun handleGenesisMessage(message: Any) {
+        Timber.d("  → Routing message to Genesis: ${message.javaClass.simpleName}")
+        try {
+            val request = convertToAiRequest(message)
+            val response = genesisAgent.processRequest(
+                request = request,
+                context = "agent_to_agent"
+            )
+            Timber.i("✓ Genesis processed message: ${response.content.take(100)}")
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to deliver message to Genesis")
         }
     }
 
@@ -363,6 +389,7 @@ class GenesisOrchestrator @Inject constructor(
 
                 // Shutdown agents in reverse order (reverse of initialization)
                 shutdownAgent(oracleDriveService, "OracleDrive")
+                shutdownAgent(genesisAgent, "Genesis")
                 shutdownAgent(auraAgent, "Aura")
                 shutdownAgent(kaiAgent, "Kai")
                 shutdownAgent(cascadeAgent, "Cascade")

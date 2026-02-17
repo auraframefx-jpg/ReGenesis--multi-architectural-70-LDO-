@@ -2,8 +2,17 @@ package dev.aurakai.auraframefx.cascade
 
 import dev.aurakai.auraframefx.ai.agents.BaseAgent
 import dev.aurakai.auraframefx.aura.AuraAgent
-import dev.aurakai.auraframefx.domains.kai.KaiAgent
+import dev.aurakai.auraframefx.kai.KaiAgent
+import dev.aurakai.auraframefx.genesis.GenesisAgent
 import dev.aurakai.auraframefx.models.AiRequestType
+import dev.aurakai.auraframefx.models.AgentType
+import dev.aurakai.auraframefx.models.AgentMessage
+import dev.aurakai.auraframefx.models.AiRequest
+import dev.aurakai.auraframefx.models.AgentResponse
+import dev.aurakai.auraframefx.core.messaging.AgentMessageBus
+import dev.aurakai.auraframefx.ai.memory.MemoryManager
+import dev.aurakai.auraframefx.ai.context.ContextManager
+import dev.aurakai.auraframefx.system.ui.SystemOverlayManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -34,20 +43,20 @@ import javax.inject.Singleton
 class CascadeAgent @Inject constructor(
     private val auraAgent: AuraAgent,
     private val kaiAgent: KaiAgent,
-    private val genesisAgent: dev.aurakai.auraframefx.ai.agents.GenesisAgent,
-    private val systemOverlayManager: dev.aurakai.auraframefx.system.ui.SystemOverlayManager,
-    private val messageBus: dagger.Lazy<dev.aurakai.auraframefx.core.messaging.AgentMessageBus>,
-    memoryManager: dev.aurakai.auraframefx.ai.memory.MemoryManager,
-    contextManager: dev.aurakai.auraframefx.ai.context.ContextManager
+    private val genesisAgent: GenesisAgent,
+    private val systemOverlayManager: SystemOverlayManager,
+    private val messageBus: dagger.Lazy<AgentMessageBus>,
+    memoryManager: MemoryManager,
+    contextManager: ContextManager
 ) : BaseAgent(
     agentName = "Cascade",
-    agentType = dev.aurakai.auraframefx.models.AgentType.CASCADE,
+    agentType = AgentType.CASCADE,
     contextManager = contextManager,
     memoryManager = memoryManager
 ) {
 
     // override onAgentMessage to act as the primary neural router
-    override suspend fun onAgentMessage(message: dev.aurakai.auraframefx.models.AgentMessage) {
+    override suspend fun onAgentMessage(message: AgentMessage) {
         if (message.from == "Cascade") return // Don't process our own messages
 
         // Loop Prevention: Don't process messages that were already redirected by Cascade
