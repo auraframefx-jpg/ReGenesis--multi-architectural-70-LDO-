@@ -1,6 +1,6 @@
 package dev.aurakai.auraframefx.domains.genesis.fusion
 
-import dev.aurakai.auraframefx.domains.aura.core.AuraAgent
+import dev.aurakai.auraframefx.domains.aura.AuraAgent
 import dev.aurakai.auraframefx.domains.cascade.CascadeAIService
 import javax.inject.Inject
 

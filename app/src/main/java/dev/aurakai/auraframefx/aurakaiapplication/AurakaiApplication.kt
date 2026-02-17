@@ -8,7 +8,7 @@ import com.highcapable.yukihookapi.YukiHookAPI
 import dagger.hilt.android.HiltAndroidApp
 import dev.aurakai.auraframefx.BuildConfig
 import dev.aurakai.auraframefx.cascade.trinity.TrinityCoordinatorService
-import dev.aurakai.auraframefx.domains.genesis.core.GenesisOrchestrator
+import dev.aurakai.auraframefx.core.messaging.GenesisOrchestrator
 import dev.aurakai.auraframefx.core.NativeLib
 import dev.aurakai.auraframefx.core.memory.NexusMemoryCore
 import dev.aurakai.auraframefx.services.security.IntegrityMonitorService

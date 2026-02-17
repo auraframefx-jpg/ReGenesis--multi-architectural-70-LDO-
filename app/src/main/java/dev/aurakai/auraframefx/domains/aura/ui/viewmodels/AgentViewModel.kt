@@ -10,8 +10,8 @@ import dev.aurakai.auraframefx.cascade.trinity.TrinityRepository
 import dev.aurakai.auraframefx.domains.cascade.utils.error
 import dev.aurakai.auraframefx.domains.cascade.utils.info
 import dev.aurakai.auraframefx.domains.cascade.utils.warn
-import dev.aurakai.auraframefx.domains.genesis.core.GenesisAgent
-import dev.aurakai.auraframefx.domains.genesis.core.GenesisOrchestrator
+import dev.aurakai.auraframefx.domains.genesis.GenesisAgent
+import dev.aurakai.auraframefx.core.messaging.GenesisOrchestrator
 import dev.aurakai.auraframefx.domains.genesis.models.AgentState
 import dev.aurakai.auraframefx.domains.genesis.models.AgentType
 import dev.aurakai.auraframefx.domains.genesis.models.AiRequest
