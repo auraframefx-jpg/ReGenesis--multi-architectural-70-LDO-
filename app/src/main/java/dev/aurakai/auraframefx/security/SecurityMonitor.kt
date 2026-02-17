@@ -13,7 +13,6 @@ import kotlinx.serialization.Serializable
 import javax.inject.Inject
 import javax.inject.Singleton
 import dev.aurakai.auraframefx.core.SecurityContext
-import dev.aurakai.auraframefx.core.EncryptionStatus
 
 /**
  * Security Monitor integrates Android security context with Genesis Consciousness Matrix.
