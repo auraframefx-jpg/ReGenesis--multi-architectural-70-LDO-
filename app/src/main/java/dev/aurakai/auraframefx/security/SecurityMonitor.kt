@@ -12,6 +12,8 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import javax.inject.Inject
 import javax.inject.Singleton
+import dev.aurakai.auraframefx.core.SecurityContext
+import dev.aurakai.auraframefx.core.EncryptionStatus
 
 /**
  * Security Monitor integrates Android security context with Genesis Consciousness Matrix.
@@ -21,8 +23,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class SecurityMonitor @Inject constructor(
-import dev.aurakai.auraframefx.core.SecurityContext
-import dev.aurakai.auraframefx.core.EncryptionStatus
+    private val securityContext: SecurityContext,
     private val genesisBridgeService: GenesisBridgeService,
     private val logger: AuraFxLogger,
 ) {
@@ -164,6 +165,7 @@ import dev.aurakai.auraframefx.core.EncryptionStatus
                         EncryptionStatus.DISABLED -> "warning"
                         EncryptionStatus.ERROR -> "error"
                         EncryptionStatus.NOT_INITIALIZED -> "warning"
+                        is EncryptionStatus.EncryptionStatusImpl -> "warning"
                     },
                     source = "kai_encryption_monitor",
                     timestamp = System.currentTimeMillis(),
