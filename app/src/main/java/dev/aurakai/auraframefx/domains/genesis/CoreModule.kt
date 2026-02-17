@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.aurakai.auraframefx.core.PythonProcessManager
+import dev.aurakai.auraframefx.core.messaging.GenesisOrchestrator
 import dev.aurakai.auraframefx.core.messaging.AgentMessageBus
 import javax.inject.Singleton
 
