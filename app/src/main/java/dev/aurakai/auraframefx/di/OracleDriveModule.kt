@@ -1,7 +1,6 @@
 package dev.aurakai.auraframefx.di
 
 import android.content.Context
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,10 +20,8 @@ import dev.aurakai.auraframefx.genesis.oracledrive.cloud.CloudStorageProvider
 import dev.aurakai.auraframefx.genesis.oracledrive.cloud.CloudStorageProviderImpl
 import dev.aurakai.auraframefx.security.SecurityContext
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
