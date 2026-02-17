@@ -21,7 +21,8 @@ import javax.inject.Singleton
  */
 @Singleton
 class SecurityMonitor @Inject constructor(
-    private val securityContext: SecurityContext,
+import dev.aurakai.auraframefx.core.SecurityContext
+import dev.aurakai.auraframefx.core.EncryptionStatus
     private val genesisBridgeService: GenesisBridgeService,
     private val logger: AuraFxLogger,
 ) {
@@ -160,11 +161,9 @@ class SecurityMonitor @Inject constructor(
                     eventType = "encryption_status_change",
                     severity = when (status) {
                         EncryptionStatus.ACTIVE -> "info"
-                        EncryptionStatus.DISABLED -> "warning" // Fixed: was INACTIVE
+                        EncryptionStatus.DISABLED -> "warning"
                         EncryptionStatus.ERROR -> "error"
-                        EncryptionStatus.NOT_INITIALIZED -> "warning" // Added missing case
-                        is EncryptionStatus.EncryptionStatusImpl -> "warning"
-                        else -> "unknown" // Safety fallback for unknown status
+                        EncryptionStatus.NOT_INITIALIZED -> "warning"
                     },
                     source = "kai_encryption_monitor",
                     timestamp = System.currentTimeMillis(),
