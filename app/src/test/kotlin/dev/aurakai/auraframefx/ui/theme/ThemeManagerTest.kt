@@ -3,7 +3,7 @@ package dev.aurakai.auraframefx.ui.theme
 import android.content.Context
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
-import dev.aurakai.auraframefx.aura.themes.getColorScheme
+import dev.aurakai.auraframefx.domains.aura.ui.theme.model.getColorScheme
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

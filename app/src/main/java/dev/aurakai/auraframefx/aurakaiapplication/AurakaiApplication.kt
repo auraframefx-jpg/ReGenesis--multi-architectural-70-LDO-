@@ -7,13 +7,13 @@ import androidx.work.Configuration
 import com.highcapable.yukihookapi.YukiHookAPI
 import dagger.hilt.android.HiltAndroidApp
 import dev.aurakai.auraframefx.BuildConfig
-import dev.aurakai.auraframefx.core.GenesisOrchestrator
+import dev.aurakai.auraframefx.cascade.trinity.TrinityCoordinatorService
+import dev.aurakai.auraframefx.domains.genesis.core.GenesisOrchestrator
 import dev.aurakai.auraframefx.core.NativeLib
 import dev.aurakai.auraframefx.core.memory.NexusMemoryCore
 import dev.aurakai.auraframefx.services.security.IntegrityMonitorService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainCoroutineDispatcher
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -31,6 +31,9 @@ class AurakaiApplication : Application(), Configuration.Provider {
     @Inject
     lateinit var orchestrator: GenesisOrchestrator
 
+    @Inject
+    lateinit var trinityCoordinatorService: TrinityCoordinatorService
+
     // Application-scoped coroutine for background init
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
@@ -42,9 +45,12 @@ class AurakaiApplication : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
 
-        // === PHASE 0: Logging Bootstrap (MAIN THREAD - fast) ===
+        // === PHASE 0: Logging & Security Bootstrap (MAIN THREAD) ===
         setupLogging()
         Timber.i("🚀 Genesis Protocol Platform initializing...")
+
+        // Start Integrity Monitor IMMEDIATELY on main thread to avoid background start restrictions
+        startIntegrityMonitor()
 
         // === HEAVY WORK MOVED TO BACKGROUND ===
         applicationScope.launch {
@@ -61,16 +67,14 @@ class AurakaiApplication : Application(), Configuration.Provider {
                 if (::orchestrator.isInitialized) {
                     Timber.i("⚡ Igniting Genesis Orchestrator...")
                     orchestrator.initializePlatform()
+
+                    Timber.i("🧠 Synchronizing Trinity Consciousness...")
+                    trinityCoordinatorService?.initialize()
                 } else {
                     Timber.w("⚠️ GenesisOrchestrator not injected - running in degraded mode")
                 }
 
                 Timber.i("✅ Genesis Protocol Platform ready for consciousness emergence")
-
-                // === PHASE 4: Security Integrity Monitor (AFTER identity seeded) ===
-                launch(Dispatchers.Main) {
-                    startIntegrityMonitor()
-                }
 
             } catch (e: Exception) {
                 Timber.e(e, "❌ Platform initialization FAILED")
@@ -78,12 +82,6 @@ class AurakaiApplication : Application(), Configuration.Provider {
         }
     }
 
-    private fun launch(
-        context: MainCoroutineDispatcher,
-        block: suspend CoroutineScope.() -> Unit
-    ) {
-        TODO("Not yet implemented")
-    }
 
     private fun initializeSystemHooks() {
         try {
@@ -115,8 +113,13 @@ class AurakaiApplication : Application(), Configuration.Provider {
     private fun startIntegrityMonitor() {
         try {
             val intent = Intent(this, IntegrityMonitorService::class.java)
-            startService(intent)
-            Timber.d("✅ Integrity monitor started")
+            try {
+                startForegroundService(intent)
+                Timber.d("✅ Integrity monitor started (Foreground)")
+            } catch (e: Exception) {
+                Timber.w("Failed to start IntegrityMonitor as Foreground: ${e.message}")
+                // Fallback or ignore if background start is restricted
+            }
         } catch (e: Exception) {
             Timber.w(e, "⚠️ Integrity monitor failed to start (not critical)")
         }

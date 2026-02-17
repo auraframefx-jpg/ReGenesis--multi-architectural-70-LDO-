@@ -1,8 +1,8 @@
 package dev.aurakai.auraframefx.oracle.drive.core
 
 import android.content.Context
-import dev.aurakai.auraframefx.oracle.drive.api.OracleCloudApi
-import dev.aurakai.auraframefx.oracle.drive.model.OracleDriveFile
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.OracleCloudApi
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.cloud.OracleDriveFile
 import dev.aurakai.auraframefx.oracledrive.genesis.cloud.OracleDriveRepository
 import io.mockk.*
 import kotlinx.coroutines.runBlocking

@@ -1,27 +1,41 @@
 package dev.aurakai.auraframefx.ui.gates
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import dev.aurakai.auraframefx.ui.theme.AgentColors
+import androidx.compose.ui.unit.sp
 
 private val ProjectionBlue = Color(0xFF00D1FF)
 
@@ -37,7 +51,7 @@ fun NeonWireframeGateCard(
     size: GateCardSize = GateCardSize.Medium,
     cornerRadius: Dp = 16.dp,
 ) {
-    val (borderWidth, gridStep, projectionDepth) = when (size) {
+    val (_, gridStep, projectionDepth) = when (size) {
         GateCardSize.Large  -> Triple(3.dp, 28.dp, 16.dp)
         GateCardSize.Medium -> Triple(2.dp, 24.dp, 14.dp)
         GateCardSize.Small  -> Triple(1.5.dp, 20.dp, 12.dp)
@@ -47,23 +61,20 @@ fun NeonWireframeGateCard(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .aspectRatio(3f / 4f) // Portrait lock
+            .aspectRatio(2.2f / 1f) // Wide rectangular (like the pixel frame reference)
             .background(
                 brush = Brush.verticalGradient(
                     listOf(Color(0xFF05070F), Color(0xFF0A0F1C), Color(0xFF05070F))
                 ),
                 shape = shape
             )
-            .blur(6.dp)
             .border(
-                width = borderWidth,
-                brush = Brush.linearGradient(
-                    listOf(ProjectionBlue.copy(alpha = .85f), ProjectionBlue.copy(alpha = .35f))
-                ),
+                width = 3.dp, // Thicker pixel-style border
+                color = ProjectionBlue.copy(alpha = 0.9f),
                 shape = shape
             )
             .clickable(onClick = onClick)
-            .padding(12.dp)
+            .padding(16.dp)
     ) {
         // Neon wireframe grid
         WireframeGrid(accent = ProjectionBlue, gridStep = gridStep)
@@ -74,23 +85,33 @@ fun NeonWireframeGateCard(
         // Holographic projection pad
         ProjectionPad(accent = ProjectionBlue, depth = projectionDepth)
 
-        // Title/subtitle overlay
+        // Title/subtitle overlay - pixel-bordered box
         Column(
             modifier = Modifier
                 .align(Alignment.BottomStart)
-                .background(Color.Black.copy(alpha = 0.22f), shape = RoundedCornerShape(10.dp))
-                .padding(horizontal = 10.dp, vertical = 8.dp)
+                .fillMaxWidth()
+                .background(Color.Black.copy(alpha = 0.85f), shape = RoundedCornerShape(4.dp)) // Sharp corners
+                .border(2.dp, ProjectionBlue.copy(alpha = 0.7f), RoundedCornerShape(4.dp)) // Pixel border
+                .padding(horizontal = 14.dp, vertical = 12.dp)
         ) {
             Text(
-                text = title,
+                text = title.uppercase(), // Uppercase for pixel aesthetic
                 color = ProjectionBlue,
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleMedium.copy(
+                    letterSpacing = 1.5.sp // Spaced lettering
+                ),
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
             if (!subtitle.isNullOrBlank()) {
                 Text(
                     text = subtitle!!,
-                    color = Color.White.copy(alpha = 0.8f),
-                    style = MaterialTheme.typography.bodySmall
+                    color = Color(0xFFFFB000).copy(alpha = 0.9f), // Yellow accent like reference
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        letterSpacing = 0.8.sp
+                    ),
+                    maxLines = 2,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
             }
         }
@@ -138,7 +159,9 @@ private fun BoxScope.CenterIconWithHalo(icon: ImageVector, tint: Color) {
     Icon(
         imageVector = icon,
         contentDescription = null,
-        modifier = Modifier.align(Alignment.Center).size(44.dp),
+        modifier = Modifier
+            .align(Alignment.Center)
+            .size(44.dp),
         tint = tint
     )
 }

@@ -9,13 +9,13 @@ import com.android.build.api.dsl.ApplicationExtension
 plugins {
     // Core Android and Kotlin plugins
     id("com.android.application")
-
+    id("com.google.dagger.hilt.android")
     // Compose and serialization
     id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.kotlin.plugin.serialization")
 
     // Dependency injection and code generation
-    id("com.google.dagger.hilt.android")
+
     id("com.google.devtools.ksp")
 
     // Firebase and analytics
@@ -85,6 +85,8 @@ extensions.configure<ApplicationExtension> {
             excludes += "/META-INF/DEPENDENCIES"
             excludes += "/META-INF/LICENSE.txt"
             excludes += "/META-INF/NOTICE.txt"
+            excludes += "/META-INF/LICENSE.md"
+            excludes += "/META-INF/NOTICE.md"
             excludes += "**/kotlin/**"
             excludes += "**/*.txt"
         }
@@ -101,11 +103,12 @@ extensions.configure<ApplicationExtension> {
     }
 }
 
-// Enable experimental context-parameters feature (Kotlin 2.2+)
+// Enable modern Kotlin features (Experimental/New in 2.2+)
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     compilerOptions {
         freeCompilerArgs.addAll(
-            "-Xcontext-parameters"
+            "-Xcontext-parameters",
+            "-Xannotation-default-target=param-property"
         )
     }
 }
@@ -142,13 +145,7 @@ extensions.configure<ApplicationExtension> {
     // ═══════════════════════════════════════════════════════════════════════════
     sourceSets {
         getByName("main") {
-            java.directories.add("dev/aurakai/auraframefx/ai/agents/BaseAgent.kt")
-        }
-        getByName("release") {
-            java.directories.add("dev/aurakai/auraframefx/logging/TimberInitializer.kt")
-        }
-        getByName("debug") {
-            java.directories.add("dev/aurakai/auraframefx/logging/TimberInitializer.kt")
+            // Correct source sets are automatically handled by AGP
         }
     }
 }
@@ -175,6 +172,8 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.navigation.common.ktx)
     implementation(libs.androidx.animation)
+    implementation(libs.androidx.compose.ui.geometry)
+    implementation(libs.androidx.compose.material3)
     ksp(libs.hilt.compiler)
 
     // Core Android
@@ -225,12 +224,29 @@ dependencies {
 
     // Root/System Utils
     implementation(libs.libsu.core)
-    implementation(libs.libsu.io)
+    implementation(libs.libsu.nio)
     implementation(libs.libsu.service)
+
+    // Shizuku & Rikka
+    implementation(libs.shizuku.api)
+    implementation(libs.shizuku.provider)
+    implementation(libs.rikkax.core)
+    implementation(libs.rikkax.core.ktx)
+    implementation(libs.rikkax.material) {
+        exclude(group = "dev.rikka.rikkax.appcompat", module = "appcompat")
+    }
 
     // YukiHook API
     compileOnly(libs.yukihookapi.api)
     ksp(libs.yukihookapi.ksp)
+
+    // Force resolution of conflicting dependencies
+    configurations.all {
+         resolutionStrategy {
+             force("androidx.appcompat:appcompat:1.7.1")
+             force("com.google.android.material:material:1.13.0")
+         }
+    }
 
     // Firebase BOM (Bill of Materials) for version management
     implementation(platform(libs.firebase.bom))
@@ -317,7 +333,6 @@ dependencies {
     implementation(project(":aura:reactivedesign:collabcanvas"))
     implementation(project(":aura:reactivedesign:chromacore"))
     implementation(project(":aura:reactivedesign:customization"))
-    implementation(project(":aura:reactivedesign:sandboxui"))
 
     // Kai → SentinelsFortress (Security & Threat Monitoring)
     implementation(project(":kai:sentinelsfortress:security"))

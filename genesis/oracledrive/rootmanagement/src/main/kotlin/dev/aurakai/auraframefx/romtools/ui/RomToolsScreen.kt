@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.aurakai.auraframefx.romtools.AvailableRom
 import dev.aurakai.auraframefx.romtools.backdrop.BackdropState
 import dev.aurakai.auraframefx.romtools.backdrop.CardExplosionEffect
 import dev.aurakai.auraframefx.romtools.backdrop.MegaManBackdropRenderer
@@ -441,7 +442,7 @@ private fun MainContentPreview() {
         capabilities = capabilities,
         isInitialized = true,
         availableRoms = listOf(
-            dev.aurakai.auraframefx.romtools.AvailableRom(
+            AvailableRom(
                 name = "AuraOS",
                 version = "1.0",
                 androidVersion = "14",
@@ -463,11 +464,12 @@ private fun MainContentPreview() {
                 androidVersion = "14",
                 partitions = listOf("system", "boot", "data")
             )
-        )
+        ),
     )
     val operationProgress = OperationProgress(
+        operation1 = operation,
         operation = RomOperation.FLASHING_ROM,
-        progress = 75f
+        progress = 75f,,
     )
     MainContent(romToolsState = romToolsState, operationProgress = operationProgress)
 }
@@ -487,7 +489,7 @@ private fun MainContentNoProgressPreview() {
     )
     val romToolsState = RomToolsState(
         capabilities = capabilities,
-        isInitialized = true
+        isInitialized = true,
     )
     MainContent(romToolsState = romToolsState, operationProgress = null)
 }
@@ -657,8 +659,9 @@ private fun OperationProgressCard(
 @Composable
 private fun OperationProgressCardPreview() {
     val operationProgress = OperationProgress(
+        operation1 = operation,
         operation = RomOperation.FLASHING_ROM,
-        progress = 75f
+        progress = 75f,,
     )
     OperationProgressCard(operation = operationProgress)
 }

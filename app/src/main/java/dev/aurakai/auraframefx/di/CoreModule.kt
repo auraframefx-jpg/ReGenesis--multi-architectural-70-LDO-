@@ -13,14 +13,20 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object CoreModule {
-    
+
     @Provides
     @Singleton
     fun providePythonProcessManager(
         @ApplicationContext context: Context
     ): PythonProcessManager = PythonProcessManager(context)
-    
+
     @Provides
     @Singleton
     fun provideLogger(): AuraFxLogger = AuraFxLogger()
+
+    @Provides
+    @Singleton
+    fun provideAgentMessageBus(
+        orchestrator: dagger.Lazy<dev.aurakai.auraframefx.domains.genesis.core.GenesisOrchestrator>
+    ): dev.aurakai.auraframefx.core.messaging.AgentMessageBus = orchestrator.get()
 }
