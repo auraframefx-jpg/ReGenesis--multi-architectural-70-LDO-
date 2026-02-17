@@ -43,7 +43,7 @@ typealias NeuralWhisper = dev.aurakai.auraframefx.service.NeuralWhisper
 // Network Aliases
 // ============================================================================
 
-typealias BaseUrl = dev.aurakai.auraframefx.network.qualifiers.BaseUrl
+typealias BaseUrl = dev.aurakai.auraframefx.di.BaseUrl
 typealias MultiValueMap = MutableMap<String, List<String>>
 
 // ============================================================================

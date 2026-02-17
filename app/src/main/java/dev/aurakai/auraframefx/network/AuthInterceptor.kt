@@ -1,6 +1,9 @@
 package dev.aurakai.auraframefx.network
 
-import dev.aurakai.auraframefx.auth.TokenManager
+import dev.aurakai.auraframefx.domains.kai.security.auth.TokenManager
+import dev.aurakai.auraframefx.network.api.AuthApi
+import dev.aurakai.auraframefx.network.api.RefreshTokenRequest
+import dev.aurakai.auraframefx.network.api.TokenResponse
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request
@@ -113,19 +116,3 @@ class AuthInterceptor @Inject constructor(
     }
 }
 
-/**
- * Data class for refresh token request.
- */
-data class RefreshTokenRequest(
-    val refreshToken: String,
-)
-
-/**
- * Data class for token response.
- */
-data class TokenResponse(
-    val accessToken: String,
-    val refreshToken: String,
-    val tokenType: String = "Bearer",
-    val expiresIn: Long = 3600,
-)

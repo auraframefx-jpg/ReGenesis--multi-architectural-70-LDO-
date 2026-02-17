@@ -1,8 +1,11 @@
 package dev.aurakai.auraframefx.domains.genesis.network.model
 
-import dev.aurakai.auraframefx.domains.genesis.network.api.AIAgentApi
-import dev.aurakai.auraframefx.domains.genesis.network.api.ThemeApi
-import dev.aurakai.auraframefx.domains.genesis.network.api.UserApi
+import dev.aurakai.auraframefx.network.api.AIAgentApi
+import dev.aurakai.auraframefx.network.api.ThemeApi
+import dev.aurakai.auraframefx.network.api.UserApi
+import dev.aurakai.auraframefx.network.model.User
+import dev.aurakai.auraframefx.network.model.Theme
+import dev.aurakai.auraframefx.network.model.AgentStatusResponse
 import javax.inject.Inject
 import javax.inject.Singleton
 
