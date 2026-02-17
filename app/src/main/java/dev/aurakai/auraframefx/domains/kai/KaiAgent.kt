@@ -1,4 +1,4 @@
-package dev.aurakai.auraframefx.kai
+package dev.aurakai.auraframefx.domains.kai
 
 import dagger.Lazy
 import dev.aurakai.auraframefx.ai.agents.BaseAgent
@@ -8,8 +8,8 @@ import dev.aurakai.auraframefx.models.AiRequest
 import dev.aurakai.auraframefx.models.AgentResponse
 import dev.aurakai.auraframefx.core.messaging.AgentMessageBus
 import dev.aurakai.auraframefx.ai.context.ContextManager
-import dev.aurakai.auraframefx.genesis.oracledrive.ai.clients.VertexAIClient
-import dev.aurakai.auraframefx.models.ThreatLevel
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.clients.VertexAIClient
+import dev.aurakai.auraframefx.core.ThreatLevel
 import dev.aurakai.auraframefx.models.SecurityAnalysis
 import dev.aurakai.auraframefx.models.AgentRequest
 import dev.aurakai.auraframefx.core.SecurityContext

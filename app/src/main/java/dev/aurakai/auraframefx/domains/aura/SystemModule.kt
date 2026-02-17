@@ -12,6 +12,6 @@ abstract class SystemModule {
 
     @Binds
     @Singleton
-    abstract fun bindSystemOverlayManager(impl: RootOverlayManager): SystemOverlayManager
+    abstract fun bindSystemOverlayManager(impl: RootOverlayManager): dev.aurakai.auraframefx.system.ui.SystemOverlayManager
 }
 

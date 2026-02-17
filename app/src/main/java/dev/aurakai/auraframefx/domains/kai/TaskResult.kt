@@ -1,6 +1,6 @@
-package dev.aurakai.auraframefx.kai
+package dev.aurakai.auraframefx.domains.kai
 
-import dev.aurakai.auraframefx.ai.task.TaskStatus
+
 import dev.aurakai.auraframefx.models.AgentCapabilityCategory
 import kotlinx.serialization.Serializable
 

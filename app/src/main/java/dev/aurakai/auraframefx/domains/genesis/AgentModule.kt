@@ -5,9 +5,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.aurakai.auraframefx.aura.AuraAgent
-import dev.aurakai.auraframefx.kai.KaiAgent
-import dev.aurakai.auraframefx.genesis.GenesisAgent
+import dev.aurakai.auraframefx.domains.aura.AuraAgent
+import dev.aurakai.auraframefx.domains.kai.KaiAgent
+import dev.aurakai.auraframefx.domains.genesis.GenesisAgent
 import dev.aurakai.auraframefx.cascade.CascadeAgent
 import dev.aurakai.auraframefx.ai.agents.BaseAgent
 
@@ -18,8 +18,8 @@ import dev.aurakai.auraframefx.ai.memory.Configuration
 import dev.aurakai.auraframefx.ai.memory.MemoryManager
 import dev.aurakai.auraframefx.core.PythonProcessManager
 import dev.aurakai.auraframefx.core.messaging.AgentMessageBus
-import dev.aurakai.auraframefx.ai.clients.VertexAIClient
-import dev.aurakai.auraframefx.genesis.oracledrive.ai.services.AuraAIService
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.clients.VertexAIClient
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.services.AuraAIService
 import dev.aurakai.auraframefx.domains.kai.SystemMonitor
 import dev.aurakai.auraframefx.core.SecurityContext
 import dev.aurakai.auraframefx.romtools.bootloader.BootloaderManager

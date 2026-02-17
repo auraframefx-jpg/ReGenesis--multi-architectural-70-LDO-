@@ -1,7 +1,7 @@
 package dev.aurakai.auraframefx.domains.genesis.oracledrive.service
 
-import dev.aurakai.auraframefx.aura.AuraAgent
-import dev.aurakai.auraframefx.genesis.GenesisAgent
+import dev.aurakai.auraframefx.domains.aura.AuraAgent
+import dev.aurakai.auraframefx.domains.genesis.GenesisAgent
 import dev.aurakai.auraframefx.domains.kai.KaiAgent
 import dev.aurakai.auraframefx.domains.genesis.oracledrive.api.OracleDriveApi
 import dev.aurakai.auraframefx.domains.genesis.oracledrive.cloud.DriveConsciousnessState

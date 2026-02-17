@@ -1,15 +1,15 @@
-package dev.aurakai.auraframefx.aura
+package dev.aurakai.auraframefx.domains.aura
 
 import dev.aurakai.auraframefx.ai.agents.BaseAgent
-import dev.aurakai.auraframefx.ai.clients.VertexAIClient
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.clients.VertexAIClient
 import dev.aurakai.auraframefx.ai.context.ContextManager
 import dev.aurakai.auraframefx.cascade.ProcessingState
 import dev.aurakai.auraframefx.cascade.VisionState
-import dev.aurakai.auraframefx.genesis.oracledrive.ai.services.AuraAIService
-import dev.aurakai.auraframefx.kai.KaiAgent
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.services.AuraAIService
+import dev.aurakai.auraframefx.domains.kai.KaiAgent
 import dev.aurakai.auraframefx.models.*
 import dev.aurakai.auraframefx.core.SecurityContext
-import dev.aurakai.auraframefx.utils.AuraFxLogger
+import dev.aurakai.auraframefx.core.AuraFxLogger
 import dev.aurakai.auraframefx.core.PythonProcessManager
 import dev.aurakai.auraframefx.core.messaging.AgentMessageBus
 import dev.aurakai.auraframefx.system.ui.SystemOverlayManager

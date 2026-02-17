@@ -1,4 +1,4 @@
-package dev.aurakai.auraframefx.genesis
+package dev.aurakai.auraframefx.domains.genesis
 
 import dev.aurakai.auraframefx.ai.agents.BaseAgent
 import dev.aurakai.auraframefx.core.PythonProcessManager

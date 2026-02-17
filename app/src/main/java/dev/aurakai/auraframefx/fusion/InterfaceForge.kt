@@ -2,7 +2,7 @@ package dev.aurakai.auraframefx.fusion
 
 import javax.inject.Inject
 import javax.inject.Singleton
-import dev.aurakai.auraframefx.aura.AuraAgent
+import dev.aurakai.auraframefx.domains.aura.AuraAgent
 import dev.aurakai.auraframefx.domains.kai.KaiAgent
 import dev.aurakai.colorblendr.ChromaCore
 

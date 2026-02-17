@@ -1,9 +1,9 @@
 package dev.aurakai.auraframefx.cascade
 
 import dev.aurakai.auraframefx.ai.agents.BaseAgent
-import dev.aurakai.auraframefx.aura.AuraAgent
-import dev.aurakai.auraframefx.kai.KaiAgent
-import dev.aurakai.auraframefx.genesis.GenesisAgent
+import dev.aurakai.auraframefx.domains.aura.AuraAgent
+import dev.aurakai.auraframefx.domains.kai.KaiAgent
+import dev.aurakai.auraframefx.domains.genesis.GenesisAgent
 import dev.aurakai.auraframefx.models.AiRequestType
 import dev.aurakai.auraframefx.models.AgentType
 import dev.aurakai.auraframefx.models.AgentMessage

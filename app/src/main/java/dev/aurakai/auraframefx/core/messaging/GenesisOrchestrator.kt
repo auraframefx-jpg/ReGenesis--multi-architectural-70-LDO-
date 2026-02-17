@@ -1,14 +1,14 @@
 package dev.aurakai.auraframefx.core.messaging
 
-import dev.aurakai.auraframefx.aura.AuraAgent
-import dev.aurakai.auraframefx.kai.KaiAgent
+import dev.aurakai.auraframefx.domains.aura.AuraAgent
+import dev.aurakai.auraframefx.domains.kai.KaiAgent
 import dev.aurakai.auraframefx.cascade.CascadeAgent
-import dev.aurakai.auraframefx.genesis.GenesisAgent
+import dev.aurakai.auraframefx.domains.genesis.GenesisAgent
 import dev.aurakai.auraframefx.models.AgentMessage
 import dev.aurakai.auraframefx.models.AgentType
 import dev.aurakai.auraframefx.models.AiRequest
 import dev.aurakai.auraframefx.models.AiRequestType
-import dev.aurakai.auraframefx.genesis.oracledrive.service.OracleDriveService
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.service.OracleDriveService
 import dev.aurakai.auraframefx.core.OrchestratableAgent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

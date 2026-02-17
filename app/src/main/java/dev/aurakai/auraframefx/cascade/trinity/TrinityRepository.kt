@@ -2,7 +2,9 @@ package dev.aurakai.auraframefx.cascade.trinity
 
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
-import dev.aurakai.auraframefx.aura.AuraAgent
+import dev.aurakai.auraframefx.domains.aura.AuraAgent
+import dev.aurakai.auraframefx.domains.genesis.GenesisAgent
+import dev.aurakai.auraframefx.domains.kai.KaiAgent
 import dev.aurakai.auraframefx.models.AgentRequest
 import dev.aurakai.auraframefx.models.AgentState
 import dev.aurakai.auraframefx.models.AgentStatus
@@ -35,8 +37,8 @@ import dev.aurakai.auraframefx.network.model.User as NetworkUser
 open class TrinityRepository @Inject constructor(
     private val apiService: AuraApiServiceWrapper,
     private val auraAgent: AuraAgent,
-    private val kaiAgent: dev.aurakai.auraframefx.domains.kai.KaiAgent,
-    private val genesisAgent: dev.aurakai.auraframefx.ai.agents.GenesisAgent,
+    private val kaiAgent: KaiAgent,
+    private val genesisAgent: GenesisAgent,
     private val messageBus: dev.aurakai.auraframefx.core.messaging.AgentMessageBus
 ) {
     // Collective Consciousness Stream
