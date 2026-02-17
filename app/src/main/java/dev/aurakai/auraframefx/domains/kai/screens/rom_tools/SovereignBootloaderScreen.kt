@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:app/src/main/java/dev/aurakai/auraframefx/domains/kai/screens/SovereignBootloaderScreen.kt
-package dev.aurakai.auraframefx.domains.kai.screens
-========
 package dev.aurakai.auraframefx.domains.kai.screens.rom_tools
->>>>>>>> origin/main:app/src/main/java/dev/aurakai/auraframefx/domains/kai/screens/rom_tools/SovereignBootloaderScreen.kt
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -88,17 +84,7 @@ fun SovereignBootloaderScreen(
 
                 Button(
                     onClick = { isUnlocked = !isUnlocked },
-                    < < < < < < < < HEAD:app/src/main/java/dev/aurakai/auraframefx/domains/kai/screens/SovereignBootloaderScreen.kt
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .padding(top = 16.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isUnlocked) Color.White.copy(alpha = 0.1f) else Color(
-                        0xFFFF1111
-                    )
-                            === === ==
-                            modifier = Modifier
+                    modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp)
                         .padding(top = 16.dp),
@@ -106,7 +92,6 @@ fun SovereignBootloaderScreen(
                         containerColor = if (isUnlocked) Color.White.copy(
                             alpha = 0.1f
                         ) else Color(0xFFFF1111)
-                                > > > > > > > > origin / main : app / src / main / java / dev / aurakai / auraframefx / domains / kai / screens / rom_tools / SovereignBootloaderScreen . kt
                     ),
                     shape = RoundedCornerShape(12.dp),
                     border = if (isUnlocked) androidx.compose.foundation.BorderStroke(
