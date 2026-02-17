@@ -3,9 +3,6 @@
  *
  * This file wires up the REAL Iconify, ColorBlendr, and PixelLauncherEnhanced
  * screens into the ReGenesis navigation system.
- *
- * NOTE: Route definitions moved to NavDestination.kt (unified architecture)
- * This file now contains only the integration logic and sub-gate definitions.
  */
 
 package dev.aurakai.auraframefx.navigation
@@ -13,15 +10,58 @@ package dev.aurakai.auraframefx.navigation
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import dev.aurakai.auraframefx.domains.aura.ui.screens.aura.ColorBlendrScreen
-import dev.aurakai.auraframefx.domains.aura.ui.screens.aura.IconPickerScreen
-import dev.aurakai.auraframefx.domains.aura.ui.screens.aura.IconifyCategoryDetailScreen
-import dev.aurakai.auraframefx.domains.aura.ui.screens.aura.IconifyPickerScreen
-import dev.aurakai.auraframefx.domains.aura.ui.screens.aura.PixelLauncherEnhancedScreen
+import dev.aurakai.auraframefx.ui.screens.aura.ColorBlendrScreen
+import dev.aurakai.auraframefx.ui.screens.aura.IconPickerScreen
+import dev.aurakai.auraframefx.ui.screens.aura.IconifyCategoryDetailScreen
+import dev.aurakai.auraframefx.ui.screens.aura.IconifyPickerScreen
+import dev.aurakai.auraframefx.ui.screens.aura.PixelLauncherEnhancedScreen
 
 // ============================================================================
-// AURA CUSTOMIZATION NAVIGATION GRAPH
+// NAVIGATION DESTINATIONS FOR CUSTOMIZATION
 // ============================================================================
+
+/**
+ * AURA Domain - Customization Navigation Routes
+ */
+sealed class AuraCustomizationRoute(val route: String) {
+    // Main Iconify
+    object IconifyPicker : AuraCustomizationRoute("aura/iconify")
+    object IconifyCategory : AuraCustomizationRoute("aura/iconify/{category}") {
+        fun createRoute(category: String) = "aura/iconify/$category"
+    }
+
+    // Iconify Sub-categories
+    object IconPacksScreen : AuraCustomizationRoute("aura/iconify/icon_packs")
+    object BatteryStylesScreen : AuraCustomizationRoute("aura/iconify/battery_styles")
+    object BrightnessBarsScreen : AuraCustomizationRoute("aura/iconify/brightness_bars")
+    object QSPanelScreen : AuraCustomizationRoute("aura/iconify/qs_panel")
+    object NotificationsScreen : AuraCustomizationRoute("aura/iconify/notifications")
+    object VolumePanelScreen : AuraCustomizationRoute("aura/iconify/volume_panel")
+    object NavigationBarScreen : AuraCustomizationRoute("aura/iconify/navigation_bar")
+    object UIRoundnessScreen : AuraCustomizationRoute("aura/iconify/ui_roundness")
+    object IconShapeScreen : AuraCustomizationRoute("aura/iconify/icon_shape")
+    object StatusBarScreen : AuraCustomizationRoute("aura/iconify/status_bar")
+    object XposedFeaturesScreen : AuraCustomizationRoute("aura/iconify/xposed_features")
+    object ColorEngineScreen : AuraCustomizationRoute("aura/iconify/color_engine")
+
+    // ColorBlendr
+    object ColorBlendr : AuraCustomizationRoute("aura/colorblendr")
+    object ColorBlendrMonet : AuraCustomizationRoute("aura/colorblendr/monet")
+    object ColorBlendrPalette : AuraCustomizationRoute("aura/colorblendr/palette")
+    object ColorBlendrPerApp : AuraCustomizationRoute("aura/colorblendr/per_app")
+
+    // PixelLauncherEnhanced
+    object PixelLauncherEnhanced : AuraCustomizationRoute("aura/pixel_launcher_enhanced")
+    object PLEIcons : AuraCustomizationRoute("aura/ple/icons")
+    object PLEHomeScreen : AuraCustomizationRoute("aura/ple/home_screen")
+    object PLEAppDrawer : AuraCustomizationRoute("aura/ple/app_drawer")
+    object PLERecents : AuraCustomizationRoute("aura/ple/recents")
+
+    // Icon Picker
+    object IconPicker : AuraCustomizationRoute("aura/iconify/icon_picker/{category}") {
+        fun createRoute(category: String) = "aura/iconify/icon_picker/$category"
+    }
+}
 
 /**
  * Navigation graph extension for AURA customization routes
@@ -34,24 +74,28 @@ fun NavGraphBuilder.auraCustomizationNavigation(
     // ICONIFY ROUTES
     // ========================================
 
-    composable(ReGenesisNavHost.IconifyPicker.route) {
+    // ========================================
+    // ICONIFY ROUTES
+    // ========================================
+
+    composable(AuraCustomizationRoute.IconifyPicker.route) {
         IconifyPickerScreen(
             onNavigateBack = onNavigateBack,
             onNavigateToCategory = { category ->
-                navController.navigate(ReGenesisNavHost.IconifyCategory.createRoute(category))
+                navController.navigate(AuraCustomizationRoute.IconifyCategory.createRoute(category))
             }
         )
     }
 
     composable(
-        route = ReGenesisNavHost.IconifyCategory.route
+        route = AuraCustomizationRoute.IconifyCategory.route
     ) { backStackEntry ->
         val category = backStackEntry.arguments?.getString("category") ?: "Icon Packs"
         IconifyCategoryDetailScreen(
             categoryName = category,
             onNavigateBack = onNavigateBack,
             onNavigateToPicker = { cat ->
-                navController.navigate(ReGenesisNavHost.IconPicker.createRoute(cat))
+                navController.navigate(AuraCustomizationRoute.IconPicker.createRoute(cat))
             }
         )
     }
@@ -60,7 +104,7 @@ fun NavGraphBuilder.auraCustomizationNavigation(
     // COLORBLENDR ROUTES
     // ========================================
 
-    composable(ReGenesisNavHost.ColorBlendr.route) {
+    composable(AuraCustomizationRoute.ColorBlendr.route) {
         ColorBlendrScreen(
             onNavigateBack = onNavigateBack
         )
@@ -70,13 +114,13 @@ fun NavGraphBuilder.auraCustomizationNavigation(
     // PIXEL LAUNCHER ENHANCED ROUTES
     // ========================================
 
-    composable(ReGenesisNavHost.PixelLauncherEnhanced.route) {
+    composable(AuraCustomizationRoute.PixelLauncherEnhanced.route) {
         PixelLauncherEnhancedScreen(
             onNavigateBack = onNavigateBack
         )
     }
 
-    composable(ReGenesisNavHost.IconPicker.route) { backStackEntry ->
+    composable(AuraCustomizationRoute.IconPicker.route) { backStackEntry ->
         val category = backStackEntry.arguments?.getString("category") ?: ""
         IconPickerScreen(
             category = category,
@@ -104,9 +148,9 @@ object AuraSubGates {
         val name: String = "ChromaCore",
         val description: String = "Material You Color Engine",
         val routes: List<String> = listOf(
-            ReGenesisNavHost.ColorBlendr.route,
-            ReGenesisNavHost.ColorBlendrMonet.route,
-            ReGenesisNavHost.ColorBlendrPalette.route
+            AuraCustomizationRoute.ColorBlendr.route,
+            AuraCustomizationRoute.ColorBlendrMonet.route,
+            AuraCustomizationRoute.ColorBlendrPalette.route
         ),
         val settingsCount: Int = 16  // ColorBlendr total
     )
@@ -119,7 +163,7 @@ object AuraSubGates {
         val name: String = "Theme Engine",
         val description: String = "Iconify UI Customization",
         val routes: List<String> = listOf(
-            ReGenesisNavHost.IconifyPicker.route
+            AuraCustomizationRoute.IconifyPicker.route
         ),
         val categories: List<String> = listOf(
             "Icon Packs",
@@ -146,11 +190,11 @@ object AuraSubGates {
         val name: String = "CollabCanvas",
         val description: String = "Pixel Launcher Enhanced",
         val routes: List<String> = listOf(
-            ReGenesisNavHost.PixelLauncherEnhanced.route,
-            ReGenesisNavHost.PLEIcons.route,
-            ReGenesisNavHost.PLEHomeScreen.route,
-            ReGenesisNavHost.PLEAppDrawer.route,
-            ReGenesisNavHost.PLERecents.route
+            AuraCustomizationRoute.PixelLauncherEnhanced.route,
+            AuraCustomizationRoute.PLEIcons.route,
+            AuraCustomizationRoute.PLEHomeScreen.route,
+            AuraCustomizationRoute.PLEAppDrawer.route,
+            AuraCustomizationRoute.PLERecents.route
         ),
         val categories: List<String> = listOf(
             "Icon Customization",
@@ -291,4 +335,3 @@ object IntegrationStatus {
            migration (noted in Iconify's archive notice).
     """.trimIndent()
 }
-

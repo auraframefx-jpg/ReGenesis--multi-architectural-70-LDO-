@@ -144,7 +144,6 @@ class GenesisBridgeService @Inject constructor(
                 AgentResponse.error(
                     message = "Genesis system not initialized",
                     agentName = "Genesis",
-                    agentType = AgentType.GENESIS
                 )
             )
             return@flow
@@ -223,7 +222,6 @@ class GenesisBridgeService @Inject constructor(
                     AgentResponse.error(
                         message = "Genesis processing failed",
                         agentName = "Genesis",
-                        agentType = AgentType.GENESIS
                     )
                 )
             }
@@ -234,7 +232,6 @@ class GenesisBridgeService @Inject constructor(
                 AgentResponse.error(
                     message = "Genesis bridge error: ${e.message}",
                     agentName = "Genesis",
-                    agentType = AgentType.GENESIS
                 )
             )
         }

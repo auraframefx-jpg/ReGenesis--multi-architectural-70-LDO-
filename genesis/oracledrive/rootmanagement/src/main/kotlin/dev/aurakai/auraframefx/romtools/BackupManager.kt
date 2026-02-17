@@ -1,6 +1,7 @@
 package dev.aurakai.auraframefx.romtools
 
 import android.content.Context
+import android.os.Build
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -157,8 +158,8 @@ class BackupManagerImpl @Inject constructor(
                 path = backupDir.absolutePath,
                 size = totalSize,
                 createdAt = System.currentTimeMillis(),
-                deviceModel = android.os.Build.MODEL,
-                androidVersion = android.os.Build.VERSION.RELEASE,
+                deviceModel = Build.MODEL,
+                androidVersion = Build.VERSION.RELEASE,
                 partitions = partitions
             )
 
@@ -278,8 +279,8 @@ class BackupManagerImpl @Inject constructor(
                 path = backupDir.absolutePath,
                 size = totalSize,
                 createdAt = System.currentTimeMillis(),
-                deviceModel = android.os.Build.MODEL,
-                androidVersion = android.os.Build.VERSION.RELEASE,
+                deviceModel = Build.MODEL,
+                androidVersion = Build.VERSION.RELEASE,
                 partitions = partitions
             )
 
@@ -441,8 +442,8 @@ class BackupManagerImpl @Inject constructor(
                         path = backupDir.absolutePath,
                         size = size,
                         createdAt = backupDir.lastModified(),
-                        deviceModel = android.os.Build.MODEL,
-                        androidVersion = android.os.Build.VERSION.RELEASE,
+                        deviceModel = Build.MODEL,
+                        androidVersion = Build.VERSION.RELEASE,
                         partitions = backupDir.listFiles()?.map { it.nameWithoutExtension } ?: emptyList()
                     ))
                 }

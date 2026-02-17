@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:app/src/main/java/dev/aurakai/auraframefx/domains/aura/screens/WorkingLabScreen.kt
-package dev.aurakai.auraframefx.domains.aura.screens
-========
 package dev.aurakai.auraframefx.domains.aura.ui.screens
->>>>>>>> origin/main:app/src/main/java/dev/aurakai/auraframefx/domains/aura/ui/screens/WorkingLabScreen.kt
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

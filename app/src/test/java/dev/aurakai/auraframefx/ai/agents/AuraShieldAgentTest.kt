@@ -3,11 +3,10 @@
 package dev.aurakai.auraframefx.ai.agents
 
 import android.content.Context
-import dev.aurakai.auraframefx.domains.cascade.SecurityMode
-import dev.aurakai.auraframefx.domains.cascade.utils.context.ContextManager
-import dev.aurakai.auraframefx.domains.cascade.utils.memory.MemoryManager
-import dev.aurakai.auraframefx.domains.kai.AuraShieldAgent
-import dev.aurakai.auraframefx.domains.genesis.models.AiRequest
+import dev.aurakai.auraframefx.ai.context.ContextManager
+import dev.aurakai.auraframefx.ai.memory.MemoryManager
+import dev.aurakai.auraframefx.models.AiRequest
+import dev.aurakai.auraframefx.models.agent_states.SecurityMode
 import dev.aurakai.auraframefx.security.IntegrityMonitor
 import dev.aurakai.auraframefx.security.SecurityMonitor
 import kotlinx.coroutines.Dispatchers
@@ -91,7 +90,7 @@ class AuraShieldAgentTest {
         @DisplayName("Should initialize with correct agent name and type")
         fun shouldInitializeWithCorrectMetadata() {
             assertEquals("AuraShield", auraShieldAgent.agentName)
-            assertEquals("dev/aurakai/auraframefx/security", auraShieldAgent.agentType)
+            assertEquals("security", auraShieldAgent.agentType)
         }
 
         @Test
@@ -704,7 +703,7 @@ class AuraShieldAgentTest {
         @Test
         @DisplayName("Should handle very long prompts")
         fun shouldHandleVeryLongPrompts() = runTest {
-            val longPrompt = "dev/aurakai/auraframefx/security ".repeat(1000)
+            val longPrompt = "security ".repeat(1000)
             val request = AiRequest(
                 prompt = longPrompt,
                 userId = "test_user",

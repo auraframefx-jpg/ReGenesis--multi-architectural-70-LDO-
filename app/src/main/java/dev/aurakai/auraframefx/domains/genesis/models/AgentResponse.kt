@@ -47,7 +47,8 @@ data class AgentResponse(
             message: String,
             agentName: String = "System",
             agentType: AgentType = AgentType.GENESIS,
-            error: String? = message
+            error: String? = message,
+            agent: Any
         ) = AgentResponse(
             content = message,
             agentName = agentName,

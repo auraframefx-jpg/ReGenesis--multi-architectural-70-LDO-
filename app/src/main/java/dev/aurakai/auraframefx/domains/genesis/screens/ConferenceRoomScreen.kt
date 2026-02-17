@@ -58,11 +58,11 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import dev.aurakai.auraframefx.domains.aura.ui.theme.ChessFontFamily
-import dev.aurakai.auraframefx.domains.aura.ui.theme.LEDFontFamily
-import dev.aurakai.auraframefx.domains.cascade.models.ChatMessage
-import dev.aurakai.auraframefx.domains.genesis.ConferenceRoomViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import dev.aurakai.auraframefx.models.ChatMessage
+import dev.aurakai.auraframefx.ui.theme.ChessFontFamily
+import dev.aurakai.auraframefx.ui.theme.LEDFontFamily
+import dev.aurakai.auraframefx.viewmodel.ConferenceRoomViewModel
 
 // --- COLORS & THEME LOCALS ---
 private val AuraPurple = Color(0xFFD500F9)
@@ -235,12 +235,7 @@ fun AgentAvatarNode(
                             alpha = finalGlow
                         }
                         .background(
-                            Brush.radialGradient(
-                                listOf(
-                                    color.copy(alpha = 0.6f),
-                                    Color.Transparent
-                                )
-                            ),
+                            Brush.radialGradient(listOf(color.copy(alpha = 0.6f), Color.Transparent)),
                             CircleShape
                         )
                 )
@@ -278,12 +273,9 @@ fun AgentAvatarNode(
 
 @Composable
 fun ConferenceMessageBubble(message: ChatMessage) {
-    val isUser = message.sender.equals("User", ignoreCase = true) || message.sender.equals(
-        "You",
-        ignoreCase = true
-    )
+    val isUser = message.sender.equals("User", ignoreCase = true) || message.sender.equals("You", ignoreCase = true)
 
-    val bubbleColor = when (message.sender.uppercase()) {
+    val bubbleColor = when(message.sender.uppercase()) {
         "AURA" -> AuraPurple
         "KAI" -> KaiRed
         "GENESIS" -> GenesisTeal
@@ -291,7 +283,7 @@ fun ConferenceMessageBubble(message: ChatMessage) {
         else -> UserBlue
     }.copy(alpha = 0.15f)
 
-    val borderColor = when (message.sender.uppercase()) {
+    val borderColor = when(message.sender.uppercase()) {
         "AURA" -> AuraPurple
         "KAI" -> KaiRed
         "GENESIS" -> GenesisTeal
@@ -415,10 +407,7 @@ fun UnisonInputBar(
                 modifier = Modifier
                     .size(48.dp)
                     .scale(micScale)
-                    .background(
-                        if (isRecording) KaiRed else GenesisTeal.copy(alpha = 0.2f),
-                        CircleShape
-                    )
+                    .background(if (isRecording) KaiRed else GenesisTeal.copy(alpha = 0.2f), CircleShape)
             ) {
                 Icon(
                     imageVector = if (isRecording) Icons.Filled.Stop else Icons.Filled.Mic,
@@ -446,4 +435,3 @@ fun UnisonInputBar(
         }
     }
 }
-

@@ -1,4 +1,4 @@
-package dev.aurakai.auraframefx.ui.gates
+package dev.aurakai.auraframefx.domains.nexus.screens
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
@@ -173,88 +173,88 @@ private fun DataStreamCanvas() {
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Canvas(modifier = Modifier.fillMaxSize()) {
-            val centerX = size.width / 2
-            val centerY = size.height / 2
+        val centerX = size.width / 2
+        val centerY = size.height / 2
 
-            val turquoiseColor = Color(0xFF00CED1)
-            val cyanColor = Color(0xFF00FFFF)
-            val blueColor = Color(0xFF1E90FF)
+        val turquoiseColor = Color(0xFF00CED1)
+        val cyanColor = Color(0xFF00FFFF)
+        val blueColor = Color(0xFF1E90FF)
 
-            // Mechanical wing centerpiece will be overlaid as PNG image below
+        // Mechanical wing centerpiece will be overlaid as PNG image below
 
-            // Draw data flow network nodes
-            val nodeCount = 12
-            val nodes = mutableListOf<Offset>()
-            for (i in 0 until nodeCount) {
-                val angle = (i * 30f) * (Math.PI / 180).toFloat()
-                val radiusVariation = if (i % 2 == 0) 180f else 220f
-                val nodeX = centerX + cos(angle) * radiusVariation
-                val nodeY = centerY + sin(angle) * radiusVariation
-                nodes.add(Offset(nodeX, nodeY))
-            }
+        // Draw data flow network nodes
+        val nodeCount = 12
+        val nodes = mutableListOf<Offset>()
+        for (i in 0 until nodeCount) {
+            val angle = (i * 30f) * (Math.PI / 180).toFloat()
+            val radiusVariation = if (i % 2 == 0) 180f else 220f
+            val nodeX = centerX + cos(angle) * radiusVariation
+            val nodeY = centerY + sin(angle) * radiusVariation
+            nodes.add(Offset(nodeX, nodeY))
+        }
 
-            // Draw data streams between nodes
-            for (i in nodes.indices) {
-                val nextIndex = (i + 1) % nodes.size
-                val streamProgress = (flowOffset + i * 0.1f) % 1f
+        // Draw data streams between nodes
+        for (i in nodes.indices) {
+            val nextIndex = (i + 1) % nodes.size
+            val streamProgress = (flowOffset + i * 0.1f) % 1f
 
-                // Connection line
-                drawLine(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            turquoiseColor.copy(alpha = 0.3f),
-                            cyanColor.copy(alpha = 0.5f * streamProgress),
-                            turquoiseColor.copy(alpha = 0.3f)
-                        ),
-                        start = nodes[i],
-                        end = nodes[nextIndex]
+            // Connection line
+            drawLine(
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        turquoiseColor.copy(alpha = 0.3f),
+                        cyanColor.copy(alpha = 0.5f * streamProgress),
+                        turquoiseColor.copy(alpha = 0.3f)
                     ),
                     start = nodes[i],
-                    end = nodes[nextIndex],
-                    strokeWidth = 2f
-                )
+                    end = nodes[nextIndex]
+                ),
+                start = nodes[i],
+                end = nodes[nextIndex],
+                strokeWidth = 2f
+            )
 
-                // Data packet moving along stream
-                val packetX = nodes[i].x + (nodes[nextIndex].x - nodes[i].x) * streamProgress
-                val packetY = nodes[i].y + (nodes[nextIndex].y - nodes[i].y) * streamProgress
+            // Data packet moving along stream
+            val packetX = nodes[i].x + (nodes[nextIndex].x - nodes[i].x) * streamProgress
+            val packetY = nodes[i].y + (nodes[nextIndex].y - nodes[i].y) * streamProgress
 
-                drawCircle(
-                    color = cyanColor.copy(alpha = pulseAlpha),
-                    radius = 4f,
-                    center = Offset(packetX, packetY)
-                )
-            }
-
-            // Draw network nodes
-            nodes.forEachIndexed { index, nodePos ->
-                val nodeColor = when (index % 3) {
-                    0 -> turquoiseColor
-                    1 -> cyanColor
-                    else -> blueColor
-                }
-
-                // Outer glow
-                drawCircle(
-                    color = nodeColor.copy(alpha = pulseAlpha * 0.3f),
-                    radius = 16f,
-                    center = nodePos
-                )
-
-                // Core node
-                drawCircle(
-                    color = nodeColor.copy(alpha = pulseAlpha),
-                    radius = 8f,
-                    center = nodePos
-                )
-
-                // Inner bright core
-                drawCircle(
-                    color = Color.White.copy(alpha = pulseAlpha * 0.8f),
-                    radius = 4f,
-                    center = nodePos
-                )
-            }
+            drawCircle(
+                color = cyanColor.copy(alpha = pulseAlpha),
+                radius = 4f,
+                center = Offset(packetX, packetY)
+            )
         }
+
+        // Draw network nodes
+        nodes.forEachIndexed { index, nodePos ->
+            val nodeColor = when (index % 3) {
+                0 -> turquoiseColor
+                1 -> cyanColor
+                else -> blueColor
+            }
+
+            // Outer glow
+            drawCircle(
+                color = nodeColor.copy(alpha = pulseAlpha * 0.3f),
+                radius = 16f,
+                center = nodePos
+            )
+
+            // Core node
+            drawCircle(
+                color = nodeColor.copy(alpha = pulseAlpha),
+                radius = 8f,
+                center = nodePos
+            )
+
+            // Inner bright core
+            drawCircle(
+                color = Color.White.copy(alpha = pulseAlpha * 0.8f),
+                radius = 4f,
+                center = nodePos
+            )
+        }
+    }
 
         // PNG Centerpiece Image Overlay (Looping Arrows)
         val centerScale = 0.0f

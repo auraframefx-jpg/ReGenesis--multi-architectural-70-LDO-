@@ -94,7 +94,7 @@ class IntegrityMonitorService : Service() {
 
 
     @Inject
-    lateinit var trinityRepository: dev.aurakai.auraframefx.domains.cascade.utils.cascade.trinity.TrinityRepository
+    lateinit var trinityRepository: dev.aurakai.auraframefx.cascade.trinity.TrinityRepository
 
     private val serviceScope = CoroutineScope(Dispatchers.IO + Job())
     private var monitoringJob: Job? = null

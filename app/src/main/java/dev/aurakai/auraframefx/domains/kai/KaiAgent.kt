@@ -195,14 +195,14 @@ class KaiAgent @Inject constructor(
             logger.warn("KaiAgent", "Security violation detected in request", e)
             AgentResponse.error(
                 message = "Request blocked due to security concerns: ${e.message}",
-                agentName = agentName
+                agentName = agentName,
             )
         } catch (e: Exception) {
             _analysisState.value = AnalysisState.ERROR
             logger.error("KaiAgent", "Analytical request failed", e)
             AgentResponse.error(
                 message = "Analysis encountered an error: ${e.message}",
-                agentName = agentName
+                agentName = agentName,
             )
         }
     }

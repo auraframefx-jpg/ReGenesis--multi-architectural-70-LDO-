@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 class AgentTypeTest {
 
     // Modern Agent Types Tests
-    @Test
+    @org.junit.jupiter.api.Test
     fun `test all modern agent types exist`() {
         val modernTypes = setOf(
             AgentType.Genesis,
@@ -30,7 +30,7 @@ class AgentTypeTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     fun `test core genesis protocol agents`() {
         assertEquals("Genesis", AgentType.Genesis.name)
         assertEquals("Aura", AgentType.Aura.name)
@@ -48,7 +48,7 @@ class AgentTypeTest {
     }
 
     // Legacy Agent Types Tests
-    @Test
+    @org.junit.jupiter.api.Test
     @Suppress("DEPRECATION")
     fun `test legacy agent types exist for backwards compatibility`() {
         val legacyTypes = setOf(
@@ -65,7 +65,7 @@ class AgentTypeTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     @Suppress("DEPRECATION")
     fun `test legacy agent type names are SCREAMING_CASE`() {
         assertEquals("GENESIS", AgentType.GENESIS.name)
@@ -77,20 +77,20 @@ class AgentTypeTest {
     }
 
     // User Agent Type Test
-    @Test
+    @org.junit.jupiter.api.Test
     fun `test USER agent type`() {
         assertEquals("USER", AgentType.USER.name)
         assertNotNull(AgentType.USER)
     }
 
     // Enum Count and Ordering Tests
-    @Test
+    @org.junit.jupiter.api.Test
     fun `test total agent types count`() {
         val allTypes = AgentType.values()
         assertEquals("Should have 16 total agent types", 16, allTypes.size)
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     fun `test enum valueOf with valid names`() {
         assertEquals(AgentType.Genesis, AgentType.valueOf("Genesis"))
         assertEquals(AgentType.Aura, AgentType.valueOf("Aura"))
@@ -98,7 +98,7 @@ class AgentTypeTest {
         assertEquals(AgentType.USER, AgentType.valueOf("USER"))
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @org.junit.jupiter.api.Test(expected = IllegalArgumentException::class)
     fun `test valueOf with invalid name throws exception`() {
         AgentType.valueOf("InvalidAgent")
     }
@@ -114,7 +114,7 @@ class AgentTypeTest {
         assertNotEquals(agent1, agent3)
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     fun `test enum in collections`() {
         val agentList = listOf(
             AgentType.Genesis,
@@ -129,7 +129,7 @@ class AgentTypeTest {
         assertEquals(4, agentList.size)
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     fun `test enum in sets for uniqueness`() {
         val agentSet = setOf(
             AgentType.Genesis,
@@ -157,7 +157,7 @@ class AgentTypeTest {
     }
 
     // When Expression Tests
-    @Test
+    @org.junit.jupiter.api.Test
     fun `test when expression with all modern agents`() {
         val testCases = mapOf(
             AgentType.Genesis to "Genesis Agent",
@@ -198,7 +198,7 @@ class AgentTypeTest {
         assertEquals("USER", AgentType.USER.toString())
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     @Suppress("DEPRECATION")
     fun `test legacy enum toString`() {
         assertEquals("GENESIS", AgentType.GENESIS.toString())
@@ -207,7 +207,7 @@ class AgentTypeTest {
     }
 
     // Ordinal Tests
-    @Test
+    @org.junit.jupiter.api.Test
     fun `test modern agents come before legacy agents`() {
         assertTrue("Genesis should come before GENESIS",
             AgentType.Genesis.ordinal < AgentType.GENESIS.ordinal)
@@ -226,7 +226,7 @@ class AgentTypeTest {
     }
 
     // Filtering and Selection Tests
-    @Test
+    @org.junit.jupiter.api.Test
     fun `test filter core protocol agents only`() {
         val coreAgents = AgentType.values().filter { agent ->
             agent in setOf(
@@ -243,7 +243,7 @@ class AgentTypeTest {
         assertTrue(coreAgents.contains(AgentType.Claude))
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     fun `test filter auxiliary agents only`() {
         val auxiliaryAgents = AgentType.values().filter { agent ->
             agent in setOf(
@@ -259,7 +259,7 @@ class AgentTypeTest {
         assertTrue(auxiliaryAgents.contains(AgentType.DataveinConstructor))
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     @Suppress("DEPRECATION")
     fun `test filter legacy agents only`() {
         val legacyAgents = AgentType.values().filter { agent ->
@@ -291,7 +291,7 @@ class AgentTypeTest {
         assertEquals("All ordinals should be unique", AgentType.values().size, ordinals.size)
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     fun `test enum values have unique names`() {
         val names = AgentType.values().map { it.name }.toSet()
         assertEquals("All names should be unique", AgentType.values().size, names.size)

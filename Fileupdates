@@ -923,7 +923,7 @@
             "ReGenesis--multi-architectural-70-LDO-/genesis/oracledrive/rootmanagement/src/main/kotlin/dev/aurakai/auraframefx/romtools/RomToolsViewModel.kt\n",
             "ReGenesis--multi-architectural-70-LDO-/genesis/oracledrive/rootmanagement/src/main/kotlin/dev/aurakai/auraframefx/romtools/SystemModificationManager.kt\n",
             "ReGenesis--multi-architectural-70-LDO-/genesis/oracledrive/rootmanagement/src/main/kotlin/dev/aurakai/auraframefx/romtools/RomOperationExtensions.kt\n",
-            "ReGenesis--multi-architectural-70-LDO-/genesis/oracledrive/rootmanagement/src/main/kotlin/dev/aurakai/auraframefx/romtools/RomToolsManager.kt\n",
+            "ReGenesis--multi-architectural-70-LDO-/genesis/oracledrive/rootmanagement/src/main/kotlin/dev/aurakai/auraframefx/romtools/OperationProgress.kt\n",
             "ReGenesis--multi-architectural-70-LDO-/genesis/oracledrive/rootmanagement/src/main/kotlin/dev/aurakai/auraframefx/romtools/RomVerificationManager.kt\n",
             "ReGenesis--multi-architectural-70-LDO-/genesis/oracledrive/rootmanagement/src/main/kotlin/dev/aurakai/auraframefx/romtools/BackupManager.kt\n",
             "ReGenesis--multi-architectural-70-LDO-/genesis/oracledrive/rootmanagement/src/main/kotlin/dev/aurakai/auraframefx/romtools/FakeRomToolsManager.kt\n",

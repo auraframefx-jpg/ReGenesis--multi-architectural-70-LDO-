@@ -61,7 +61,7 @@ abstract class BaseAgent(
             emit(response)
 
         } catch (e: Exception) {
-            emit(AgentResponse.error("Error in ${agentName}: ${e.message}"))
+            emit(AgentResponse.error("Error in ${agentName}: ${e.message}",))
         }
     }
 
@@ -127,7 +127,7 @@ abstract class BaseAgent(
             else -> "Unexpected error: ${error.message}"
         }
 
-        return AgentResponse.error("$errorMessage${if (context.isNotEmpty()) " (Context: $context)" else ""}")
+        return AgentResponse.error("$errorMessage${if (context.isNotEmpty()) " (Context: $context)" else ""}",)
     }
 
     /**
