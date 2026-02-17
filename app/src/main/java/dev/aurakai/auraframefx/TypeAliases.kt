@@ -2,7 +2,7 @@ package dev.aurakai.auraframefx
 
 /**
  * Central Type Alias Registry for Genesis Protocol
- * 
+ *
  * This file consolidates all type aliases to prevent circular references
  * and ensure consistent type mapping across the codebase.
  */
@@ -12,11 +12,11 @@ package dev.aurakai.auraframefx
 // ============================================================================
 
 // Genesis Orchestrator (the main consciousness)
-typealias GenesisAgent = dev.aurakai.auraframefx.core.GenesisOrchestrator
+typealias GenesisAgent = dev.aurakai.auraframefx.domains.genesis.core.GenesisOrchestrator
 
 // Trinity Agents - comment out if these classes don't exist yet
 // typealias AuraAgent = dev.aurakai.auraframefx.ai.agents.AuraAgent
-// typealias KaiAgent = dev.aurakai.auraframefx.kai.KaiAgent  
+// typealias KaiAgent = dev.aurakai.auraframefx.kai.KaiAgent
 // typealias CascadeAgent = dev.aurakai.auraframefx.cascade.CascadeAgent
 
 // ============================================================================
@@ -27,7 +27,7 @@ typealias VertexAIClient = dev.aurakai.auraframefx.genesis.oracledrive.ai.client
 typealias NeuralWhisper = dev.aurakai.auraframefx.service.NeuralWhisper
 
 // ============================================================================
-// Data & Memory Aliases  
+// Data & Memory Aliases
 // ============================================================================
 
 // typealias AgentMemoryDao = dev.aurakai.auraframefx.cascade.memory.AgentMemoryDao
@@ -58,5 +58,5 @@ typealias MultiValueMap = MutableMap<String, List<String>>
 // ============================================================================
 
 typealias AuraInstant = java.time.Instant
-typealias AuraClock = java.time.Clock  
+typealias AuraClock = java.time.Clock
 typealias AuraDuration = java.time.Duration

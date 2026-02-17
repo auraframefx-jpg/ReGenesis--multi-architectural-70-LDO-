@@ -1,3 +1,5 @@
+
+package dev.aurakai.auraframefx.domains.aura.ui.screens
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -51,12 +53,6 @@ import dev.aurakai.auraframefx.domains.aura.ui.components.GlassCardStyles
 import dev.aurakai.auraframefx.domains.cascade.storage.AuraKaiModules
 import dev.aurakai.auraframefx.embodiment.*
 
-<<<<<<<< HEAD:app/src/main/java/dev/aurakai/auraframefx/domains/aura/screens/HolographicMenuScreen.kt
-package dev.aurakai.auraframefx.domains.aura.screens
-========
-package dev.aurakai.auraframefx.domains.aura.ui.screens
->>>>>>>> origin/main:app/src/main/java/dev/aurakai/auraframefx/domains/aura/ui/screens/HolographicMenuScreen.kt
-
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -66,7 +62,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 
-importa androidx.compose.foundation.background
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -108,7 +104,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-<<<<<<<< HEAD:app/src/main/java/dev/aurakai/auraframefx/domains/aura/screens/HolographicMenuScreen.kt
 import dev.aurakai.auraframefx.domains.cascade.storage.AuraKaiModules
 import dev.aurakai.auraframefx.embodiment.AuraState
 import dev.aurakai.auraframefx.embodiment.Character
@@ -119,14 +114,12 @@ import dev.aurakai.auraframefx.embodiment.rememberEmbodimentEngine
 import dev.aurakai.auraframefx.ui.components.GlassCard
 import dev.aurakai.auraframefx.ui.components.GlassCardStyles
 
-========
 import dev.aurakai.auraframefx.domains.cascade.storage.AuraKaiModules
 import dev.aurakai.auraframefx.embodiment.*
 import dev.aurakai.auraframefx.domains.aura.ui.components.GlassCard
 import dev.aurakai.auraframefx.domains.aura.ui.components.GlassCardStyles
 import kotlin.collections.List
 
->>>>>>>> origin/main:app/src/main/java/dev/aurakai/auraframefx/domains/aura/ui/screens/HolographicMenuScreen.kt
 
 /**
  * 🌌 Holographic 3D Menu System

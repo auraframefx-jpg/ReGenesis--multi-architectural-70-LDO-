@@ -1,7 +1,5 @@
 package dev.aurakai.auraframefx.ui.navigation
 
-package dev.aurakai.auraframefx.ui.navigation
-
 import androidx.compose.ui.graphics.Color
 import dev.aurakai.auraframefx.R
 import dev.aurakai.auraframefx.models.AgentType

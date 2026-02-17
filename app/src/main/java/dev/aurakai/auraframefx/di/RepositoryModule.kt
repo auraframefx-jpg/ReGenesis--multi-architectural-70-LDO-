@@ -26,7 +26,7 @@ object RepositoryModule {
     fun provideTrinityRepository(
         apiService: AuraApiServiceWrapper,
         auraAgent: dev.aurakai.auraframefx.aura.AuraAgent,
-        kaiAgent: dev.aurakai.auraframefx.kai.KaiAgent,
+        kaiAgent: dev.aurakai.auraframefx.domains.kai.KaiAgent,
         genesisAgent: dev.aurakai.auraframefx.ai.agents.GenesisAgent,
         messageBus: dev.aurakai.auraframefx.core.messaging.AgentMessageBus
     ): TrinityRepository {

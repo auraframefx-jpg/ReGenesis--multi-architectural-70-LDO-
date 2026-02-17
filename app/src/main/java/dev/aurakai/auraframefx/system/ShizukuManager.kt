@@ -1,5 +1,6 @@
 package dev.aurakai.auraframefx.system
 
+import android.content.Context
 import android.content.pm.PackageManager
 
 import dev.aurakai.auraframefx.utils.AuraFxLogger
@@ -8,10 +9,10 @@ import javax.inject.Singleton
 
 /**
  * 🛰️ SHIZUKU MANAGER
- * 
+ *
  * Handles the sovereign bridge for system-level operations via ADB/Root
  * without constant prompt overhead.
- * 
+ *
  * Correct Maven Coordinates: dev.rikka.shizuku:api:13.1.5
  */
 @Singleton
@@ -40,10 +41,24 @@ class ShizukuManager @Inject constructor(
      */
     fun runSovereignCommand(command: String): String {
         if (!hasPermission()) return "ERR: SHIZUKU_PERMISSION_DENIED"
-        
+
         logger.info("ShizukuManager", "Executing Sovereign Command: $command")
         // Implementation for Shizuku command execution would go here
         // Using Shizuku.newBinder() or similar for IPC
         return "SUCCESS: Command staged."
+    }
+
+    companion object {
+        fun isShizukuAvailable(): Boolean {
+            return false // Temporarily disabled due to dependency issues
+        }
+
+        fun initializeShizukuIntegration(context: Context) {
+            // Stub implementation
+        }
+
+        fun requestShizukuPermission(context: Context, callback: (Boolean) -> Unit) {
+            callback(false) // Temporarily disabled
+        }
     }
 }

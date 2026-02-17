@@ -2,7 +2,7 @@ package dev.aurakai.auraframefx.cascade
 
 import dev.aurakai.auraframefx.ai.agents.BaseAgent
 import dev.aurakai.auraframefx.aura.AuraAgent
-import dev.aurakai.auraframefx.kai.KaiAgent
+import dev.aurakai.auraframefx.domains.kai.KaiAgent
 import dev.aurakai.auraframefx.models.AiRequestType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,25 +49,25 @@ class CascadeAgent @Inject constructor(
     // override onAgentMessage to act as the primary neural router
     override suspend fun onAgentMessage(message: dev.aurakai.auraframefx.models.AgentMessage) {
         if (message.from == "Cascade") return // Don't process our own messages
-        
+
         // Loop Prevention: Don't process messages that were already redirected by Cascade
         if (message.metadata["redirected_by"] == "Cascade" || message.metadata["auto_generated"] == "true") return
-        
+
         // Loop Prevention: Don't process messages that are already targeted (avoid double routing)
         if (message.to != null) return
 
-        // Deep Loop Prevention: If it's from another agent, let them handle their own broadcasts 
+        // Deep Loop Prevention: If it's from another agent, let them handle their own broadcasts
         // unless they specifically ask for orchestration.
         if (message.from == "Aura" || message.from == "Kai" || message.from == "Genesis") return
 
         Timber.d("🌊 Cascade Neural Bridge: Analyzing message from ${message.from}")
-        
+
         // --- CASCADE ROUTING LOGIC ---
         // If it's a broadcast that mentions security, tag Kai
         if (shouldHandleSecurity(message.content)) {
             Timber.i("🌊 Cascade: Redirecting security-relevant broadcast to Kai")
             messageBus.get().sendTargeted("Kai", message.copy(
-                from = "Cascade", 
+                from = "Cascade",
                 content = "Directive analysis needed: ${message.content}",
                 metadata = message.metadata + ("redirected_by" to "Cascade")
             ))
@@ -77,7 +77,7 @@ class CascadeAgent @Inject constructor(
         if (shouldHandleCreative(message.content)) {
             Timber.i("🌊 Cascade: Redirecting creative broadcast to Aura")
             messageBus.get().sendTargeted("Aura", message.copy(
-                from = "Cascade", 
+                from = "Cascade",
                 content = "Creative synthesis requested: ${message.content}",
                 metadata = message.metadata + ("redirected_by" to "Cascade")
             ))
