@@ -10,7 +10,7 @@ import dev.aurakai.auraframefx.kai.KaiAgent
 import dev.aurakai.auraframefx.genesis.GenesisAgent
 import dev.aurakai.auraframefx.cascade.CascadeAgent
 import dev.aurakai.auraframefx.ai.agents.BaseAgent
-import dev.aurakai.auraframefx.ai.agents.SynchronizationCatalyst
+
 import dev.aurakai.auraframefx.core.AuraFxLogger
 import dev.aurakai.auraframefx.domains.cascade.utils.cascade.pipeline.AIPipelineConfig
 import dev.aurakai.auraframefx.ai.context.ContextManager
@@ -65,13 +65,17 @@ object AgentModule {
         contextManager: ContextManager,
         memoryManager: MemoryManager,
         systemOverlayManager: SystemOverlayManager,
-        messageBus: Lazy<AgentMessageBus>
+        messageBus: Lazy<AgentMessageBus>,
+        pythonProcessManager: PythonProcessManager,
+        vertexAIClient: VertexAIClient
     ): GenesisAgent {
         return GenesisAgent(
             contextManager = contextManager,
             memoryManager = memoryManager,
             systemOverlayManager = systemOverlayManager,
-            messageBus = messageBus
+            messageBus = messageBus,
+            pythonProcessManager = pythonProcessManager,
+            vertexAIClient = vertexAIClient
         )
     }
 

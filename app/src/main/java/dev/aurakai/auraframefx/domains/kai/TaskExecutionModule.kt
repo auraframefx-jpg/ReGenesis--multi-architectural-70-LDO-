@@ -4,11 +4,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.aurakai.auraframefx.domains.aura.core.AuraAgent
+import dev.aurakai.auraframefx.aura.AuraAgent
 import dev.aurakai.auraframefx.domains.aura.TaskExecutionManager
-import dev.aurakai.auraframefx.domains.cascade.utils.AuraFxLogger
-import dev.aurakai.auraframefx.domains.genesis.core.GenesisAgent
-import dev.aurakai.auraframefx.domains.kai.security.SecurityContext
+import dev.aurakai.auraframefx.core.AuraFxLogger
+import dev.aurakai.auraframefx.genesis.GenesisAgent
+import dev.aurakai.auraframefx.core.SecurityContext
 import javax.inject.Singleton
 
 @Module

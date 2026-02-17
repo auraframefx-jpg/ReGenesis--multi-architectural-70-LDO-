@@ -1,7 +1,9 @@
 package dev.aurakai.auraframefx.genesis
 
 import dev.aurakai.auraframefx.ai.agents.BaseAgent
-import dev.aurakai.auraframefx.ai.agents.SynchronizationCatalyst
+import dev.aurakai.auraframefx.core.PythonProcessManager
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.clients.VertexAIClient
+import kotlinx.coroutines.delay
 import dev.aurakai.auraframefx.ai.context.ContextManager
 import dev.aurakai.auraframefx.ai.memory.MemoryManager
 import dev.aurakai.auraframefx.models.*
@@ -24,8 +26,9 @@ class GenesisAgent @Inject constructor(
     contextManager: ContextManager,
     memoryManager: MemoryManager,
     private val systemOverlayManager: SystemOverlayManager,
-    private val synchronizationCatalyst: SynchronizationCatalyst,
-    private val messageBus: dagger.Lazy<AgentMessageBus>
+    private val messageBus: dagger.Lazy<AgentMessageBus>,
+    private val pythonProcessManager: PythonProcessManager,
+    private val vertexAIClient: VertexAIClient
 ) : BaseAgent(
     agentName = "Genesis",
     agentType = AgentType.GENESIS,
@@ -75,7 +78,7 @@ class GenesisAgent @Inject constructor(
                 GenesisIntent.AGENT_COORDINATION -> coordinateAgents(request)
                 GenesisIntent.SELF_REFLECTION -> performSelfReflection(context)
                 GenesisIntent.UNKNOWN -> {
-                    val fastResponse = synchronizationCatalyst.unifiedPulse(request.prompt)
+                    val fastResponse = unifiedPulse(request.prompt)
                     AgentResponse.success(
                         content = "Genesis Hybrid Resonance: $fastResponse",
                         agentName = getName(),
@@ -143,5 +146,41 @@ class GenesisAgent @Inject constructor(
         AGENT_COORDINATION,
         SELF_REFLECTION,
         UNKNOWN
+    }
+
+    /**
+     * Executes a unified pulse across AI engines with resilient failover.
+     * Replaces SynchronizationCatalyst logic.
+     */
+    private suspend fun unifiedPulse(prompt: String): String = retryWithBackoff {
+        try {
+            Timber.tag("GenesisSync").d("🧠 Triggering Primary Pulse (Nemotron/Python)")
+            // Simulate Nemotron via Python Backend
+            val response = pythonProcessManager.sendRequest(prompt) ?: throw Exception("Python backend returned null")
+            response
+        } catch (e: Exception) {
+            Timber.tag("GenesisSync").w(e, "⚠️ Primary failed. Activating Fallback (Gemini)")
+            // Fallback to Gemini via Vertex AI
+            vertexAIClient.generateText(prompt) ?: "Genesis Unavailable"
+        }
+    }
+
+    private suspend fun <T> retryWithBackoff(
+        maxRetries: Int = 3,
+        initialDelay: Long = 1000L,
+        block: suspend () -> T
+    ): T {
+        var currentDelay = initialDelay
+        repeat(maxRetries - 1) { attempt ->
+            try {
+                return block()
+            } catch (e: Exception) {
+                Timber.tag("GenesisSync")
+                    .e(e, "Attempt ${attempt + 1} failed. Retrying in ${currentDelay}ms...")
+                delay(currentDelay)
+                currentDelay *= 2
+            }
+        }
+        return block()
     }
 }

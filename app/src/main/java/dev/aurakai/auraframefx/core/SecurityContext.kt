@@ -453,3 +453,10 @@ data class SharedSecureContext(
         return result
     }
 }
+
+enum class ThreatLevel {
+    LOW,
+    MEDIUM,
+    HIGH,
+    CRITICAL
+}

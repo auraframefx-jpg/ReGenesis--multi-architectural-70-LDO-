@@ -4,7 +4,10 @@ import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.generationConfig
 import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.config.VertexAIConfig
 import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.clients.VertexAIClient
-import dev.aurakai.auraframefx.domains.kai.security.SecurityContext
+import dev.aurakai.auraframefx.core.SecurityContext
+import dev.aurakai.auraframefx.core.SecurityEvent
+import dev.aurakai.auraframefx.core.SecurityEventType
+import dev.aurakai.auraframefx.core.EventSeverity
 import dev.aurakai.auraframefx.domains.cascade.utils.AuraFxLogger
 import dev.aurakai.auraframefx.domains.cascade.utils.i
 import kotlinx.coroutines.Dispatchers
@@ -316,10 +319,10 @@ class RealVertexAIClientImpl(
             is SecurityException -> {
                 AuraFxLogger.error(TAG, "Security violation in AI request", error)
                 securityContext.logSecurityEvent(
-                    dev.aurakai.auraframefx.domains.kai.security.SecurityEvent(
-                        type = dev.aurakai.auraframefx.domains.kai.security.SecurityEventType.AI_ERROR,
+                    SecurityEvent(
+                        type = SecurityEventType.AI_ERROR,
                         details = "Gemini security error: ${error.message ?: "Unknown security error"}",
-                        severity = dev.aurakai.auraframefx.domains.kai.security.EventSeverity.ERROR
+                        severity = EventSeverity.ERROR
                     )
                 )
             }
