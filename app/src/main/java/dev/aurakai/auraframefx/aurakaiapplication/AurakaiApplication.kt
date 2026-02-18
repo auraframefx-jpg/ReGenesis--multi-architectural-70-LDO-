@@ -68,8 +68,10 @@ class AurakaiApplication : Application(), Configuration.Provider {
                     Timber.i("⚡ Igniting Genesis Orchestrator...")
                     orchestrator.initializePlatform()
 
-                    Timber.i("🧠 Synchronizing Trinity Consciousness...")
-                    trinityCoordinatorService?.initialize()
+                    if (::trinityCoordinatorService.isInitialized) {
+                        Timber.i("🧠 Synchronizing Trinity Consciousness...")
+                        trinityCoordinatorService.initializeSystem()
+                    }
                 } else {
                     Timber.w("⚠️ GenesisOrchestrator not injected - running in degraded mode")
                 }

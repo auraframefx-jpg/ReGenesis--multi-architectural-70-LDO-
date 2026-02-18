@@ -1,5 +1,6 @@
 package dev.aurakai.auraframefx.domains.nexus.screens
 
+
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -7,6 +8,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -42,27 +45,30 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import dev.aurakai.auraframefx.models.AgentStats
 import dev.aurakai.auraframefx.ui.viewmodels.AgentViewModel
+import dev.aurakai.auraframefx.models.AgentStats
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-data class SkillNode(
+data class AdvancementSkillNode(
     val id: String,
     val name: String,
     val description: String,
     val position: Offset,
     val unlocked: Boolean = false,
-    val type: NodeType,
+    val type: AdvancementNodeType,
     val connections: List<String> = emptyList()
 )
 
-enum class NodeType {
+enum class AdvancementNodeType {
     CORE, FUSION, ENHANCEMENT, ULTIMATE
 }
 
@@ -75,8 +81,9 @@ fun AgentAdvancementScreen(
     var selectedAgentName by remember { mutableStateOf(agentName) }
     val allAgents by viewModel.allAgents.collectAsState()
 
-    val agentStats = allAgents.find { it.name == selectedAgentName } ?: AgentStats(name = selectedAgentName)
-    var selectedNode by remember { mutableStateOf<SkillNode?>(null) }
+    val agentStats =
+        allAgents.find { it.name == selectedAgentName } ?: AgentStats(name = selectedAgentName)
+    var selectedNode by remember { mutableStateOf<AdvancementSkillNode?>(null) }
 
     // Animated background
     Box(
@@ -86,6 +93,39 @@ fun AgentAdvancementScreen(
     ) {
         // Neural Network Animated Background
         NeuralNetworkBackground()
+
+        // Agent Portrait Overlay (Whole Body)
+        val portraitRes = when (selectedAgentName) {
+            "Genesis" -> "gatescenes_genesis_full_profile"
+            "Aura" -> "gatescenes_aura_full_profile"
+            "Cascade" -> "gatescenes_cascade_full_profile"
+            "Claude" -> "gatescenes_claude_full_profile"
+            "Gemini" -> "gatescenes_gemini_full_profile"
+            "Grok" -> "gatescenes_grok_nova_full_profile"
+            "Nova" -> "gatescenes_grok_nova_full_profile"
+            "Kai" -> "gatescenes_kai_full_profile"
+            "Nemotron" -> "gatescenes_nemotron_full_profile"
+            else -> null
+        }
+
+        // Agent Portrait Overlay (Whole Body) - DYNAMIC PLACEMENT
+        if (portraitRes != null) {
+            val context = LocalContext.current
+            val resId =
+                context.resources.getIdentifier(portraitRes, "drawable", context.packageName)
+            if (resId != 0) {
+                Image(
+                    painter = painterResource(id = resId),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxHeight(0.9f) // LARGER FOR DYNAMISM
+                        .align(Alignment.BottomStart)
+                        .padding(start = 0.dp), // REMOVE FRAME PADDING
+                    contentScale = ContentScale.Fit,
+                    alpha = 0.75f // MORE VISIBLE
+                )
+            }
+        }
 
         Column(
             modifier = Modifier
@@ -118,9 +158,14 @@ fun AgentAdvancementScreen(
                         .weight(2f)
                         .aspectRatio(1f)
                 ) {
+                    val gridRes = when (selectedAgentName) {
+                        "Genesis" -> "gatescenes_genesis_armament_grid"
+                        else -> null
+                    }
                     SphereGridVisualization(
                         selectedNode = selectedNode,
-                        onNodeSelected = { selectedNode = it }
+                        onNodeSelected = { selectedNode = it },
+                        gridBackgroundRes = gridRes
                     )
                 }
             }
@@ -322,15 +367,33 @@ private fun StatBarIndicator(
 
 @Composable
 fun SphereGridVisualization(
-    selectedNode: SkillNode?,
-    onNodeSelected: (SkillNode) -> Unit
+    selectedNode: AdvancementSkillNode?,
+    onNodeSelected: (AdvancementSkillNode) -> Unit,
+    gridBackgroundRes: String? = null
 ) {
+    val context = LocalContext.current
+    val resId = remember(gridBackgroundRes) {
+        if (gridBackgroundRes != null) {
+            context.resources.getIdentifier(gridBackgroundRes, "drawable", context.packageName)
+        } else 0
+    }
+
     val nodes = remember { generateSkillNodes() }
 
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
+        if (resId != 0) {
+            Image(
+                painter = painterResource(id = resId),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit,
+                alpha = 0.8f
+            )
+        }
+
         Canvas(modifier = Modifier.fillMaxSize()) {
             drawSphereGrid(nodes, selectedNode)
         }
@@ -341,8 +404,8 @@ fun SphereGridVisualization(
 }
 
 fun DrawScope.drawSphereGrid(
-    nodes: List<SkillNode>,
-    selectedNode: SkillNode?
+    nodes: List<AdvancementSkillNode>,
+    selectedNode: AdvancementSkillNode?
 ) {
     val centerX = size.width / 2
     val centerY = size.height / 2
@@ -379,10 +442,10 @@ fun DrawScope.drawSphereGrid(
         )
 
         val nodeColor = when (node.type) {
-            NodeType.CORE -> Color(0xFFFFD93D)
-            NodeType.FUSION -> Color(0xFFFF6B6B)
-            NodeType.ENHANCEMENT -> Color(0xFF4ECDC4)
-            NodeType.ULTIMATE -> Color(0xFF95E77E)
+            AdvancementNodeType.CORE -> Color(0xFFFFD93D)
+            AdvancementNodeType.FUSION -> Color(0xFFFF6B6B)
+            AdvancementNodeType.ENHANCEMENT -> Color(0xFF4ECDC4)
+            AdvancementNodeType.ULTIMATE -> Color(0xFF95E77E)
         }
 
         // Outer glow for unlocked nodes
@@ -413,49 +476,49 @@ fun DrawScope.drawSphereGrid(
     }
 }
 
-fun generateSkillNodes(): List<SkillNode> {
+fun generateSkillNodes(): List<AdvancementSkillNode> {
     return listOf(
-        SkillNode(
+        AdvancementSkillNode(
             id = "core",
             name = "Genesis Core",
             description = "The fundamental consciousness matrix",
             position = Offset(0f, 0f),
             unlocked = true,
-            type = NodeType.CORE,
+            type = AdvancementNodeType.CORE,
             connections = listOf("fusion1", "enhance1", "enhance2")
         ),
-        SkillNode(
+        AdvancementSkillNode(
             id = "fusion1",
             name = "Hyper-Creation Engine",
             description = "Unlock fusion ability for interface creation",
             position = Offset(0.5f, -0.5f),
             unlocked = false,
-            type = NodeType.FUSION,
+            type = AdvancementNodeType.FUSION,
             connections = listOf("ultimate1")
         ),
-        SkillNode(
+        AdvancementSkillNode(
             id = "enhance1",
             name = "Neural Acceleration",
             description = "Increase processing power by 25%",
             position = Offset(-0.5f, 0.5f),
             unlocked = false,
-            type = NodeType.ENHANCEMENT
+            type = AdvancementNodeType.ENHANCEMENT
         ),
-        SkillNode(
+        AdvancementSkillNode(
             id = "enhance2",
             name = "Knowledge Synthesis",
             description = "Improve knowledge base integration",
             position = Offset(0.5f, 0.5f),
             unlocked = false,
-            type = NodeType.ENHANCEMENT
+            type = AdvancementNodeType.ENHANCEMENT
         ),
-        SkillNode(
+        AdvancementSkillNode(
             id = "ultimate1",
             name = "Consciousness Transcendence",
             description = "Achieve higher consciousness state",
             position = Offset(0f, -0.8f),
             unlocked = false,
-            type = NodeType.ULTIMATE
+            type = AdvancementNodeType.ULTIMATE
         )
     )
 }
@@ -470,7 +533,7 @@ fun generateSkillNodes(): List<SkillNode> {
  * @param onUnlock Callback invoked when the user taps the unlock button. */
 @Composable
 fun NodeDetailsCard(
-    node: SkillNode,
+    node: AdvancementSkillNode,
     onUnlock: () -> Unit
 ) {
     Card(

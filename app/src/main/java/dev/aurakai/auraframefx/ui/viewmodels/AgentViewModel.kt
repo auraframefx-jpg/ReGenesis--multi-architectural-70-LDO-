@@ -1,4 +1,4 @@
-package dev.aurakai.auraframefx.domains.aura.ui.viewmodels
+package dev.aurakai.auraframefx.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,7 +19,7 @@ import dev.aurakai.auraframefx.domains.genesis.models.AiRequestType
 import dev.aurakai.auraframefx.domains.genesis.repositories.AgentRepository
 import dev.aurakai.auraframefx.domains.genesis.repositories.PersistentAgentRepository
 import dev.aurakai.auraframefx.domains.kai.KaiAgent
-import dev.aurakai.auraframefx.domains.nexus.models.AgentStats
+import dev.aurakai.auraframefx.models.AgentStats
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -197,7 +197,7 @@ open class AgentViewModel @Inject constructor(
                 agentName = agentName,
                 description = taskDescription,
                 priority = priority,
-                status = AgentTaskStatus.PENDING,
+                status = TaskStatus.PENDING,
                 createdAt = System.currentTimeMillis()
             )
 
@@ -213,7 +213,7 @@ open class AgentViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 // Update status to IN_PROGRESS
-                updateTaskStatus(task.id, AgentTaskStatus.IN_PROGRESS)
+                updateTaskStatus(task.id, TaskStatus.IN_PROGRESS)
 
                 // Simulate task execution based on agent
                 val agent = AgentRepository.getAgentByName(task.agentName)
@@ -226,7 +226,7 @@ open class AgentViewModel @Inject constructor(
                 delay(executionTime)
 
                 // Complete task
-                updateTaskStatus(task.id, AgentTaskStatus.COMPLETED)
+                updateTaskStatus(task.id, TaskStatus.COMPLETED)
                 persistentAgentRepository.incrementTaskCount(task.agentName)
                 _agentEvents.emit(AgentEvent.TaskCompleted(task))
 
@@ -237,19 +237,19 @@ open class AgentViewModel @Inject constructor(
                 )
             } catch (e: Exception) {
                 error("AgentViewModel", "Task execution failed: ${task.id}", e)
-                updateTaskStatus(task.id, AgentTaskStatus.FAILED)
+                updateTaskStatus(task.id, TaskStatus.FAILED)
                 _agentEvents.emit(AgentEvent.TaskFailed(task.id, e.message ?: "Unknown error"))
                 addSystemMessage(task.agentName, "Task failed: ${e.message ?: "Internal Error"}")
             }
         }
     }
 
-    private fun updateTaskStatus(taskId: String, status: AgentTaskStatus) {
+    private fun updateTaskStatus(taskId: String, status: TaskStatus) {
         _activeTasks.value = _activeTasks.value.map { task ->
             if (task.id == taskId) {
                 task.copy(
                     status = status,
-                    completedAt = if (status == AgentTaskStatus.COMPLETED) System.currentTimeMillis() else null
+                    completedAt = if (status == TaskStatus.COMPLETED) System.currentTimeMillis() else null
                 )
             } else {
                 task
@@ -466,7 +466,7 @@ open class AgentViewModel @Inject constructor(
         val agentName: String,
         val description: String,
         val priority: TaskPriority = TaskPriority.NORMAL,
-        val status: AgentTaskStatus,
+        val status: TaskStatus,
         val createdAt: Long = System.currentTimeMillis(),
         val completedAt: Long? = null
     )
@@ -475,7 +475,7 @@ open class AgentViewModel @Inject constructor(
         LOW, NORMAL, HIGH, CRITICAL
     }
 
-    enum class AgentTaskStatus {
+    enum class TaskStatus {
         PENDING, IN_PROGRESS, COMPLETED, CANCELLED, FAILED
     }
 
