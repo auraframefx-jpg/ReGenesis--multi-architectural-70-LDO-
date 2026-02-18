@@ -16,11 +16,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object CoreModule {
 
-    @Provides
-    @Singleton
-    fun providePythonProcessManager(
-        @ApplicationContext context: Context
-    ): PythonProcessManager = PythonProcessManager(context)
 
     @Provides
     @Singleton
