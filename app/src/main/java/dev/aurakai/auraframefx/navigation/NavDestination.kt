@@ -160,4 +160,9 @@ sealed class NavDestination(val route: String) {
     data object FAQBrowser : NavDestination("faq_browser")
     data object TutorialVideos : NavDestination("tutorial_videos")
     data object Settings : NavDestination("settings")
+
+    // Missing for compatibility
+    data object AppBuilder : NavDestination("app_builder")
+    data object SphereGrid : NavDestination("sphere_grid")
+    data object OracleDrive : NavDestination("oracle_drive")
 }

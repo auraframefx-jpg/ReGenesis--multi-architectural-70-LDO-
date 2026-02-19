@@ -1,6 +1,6 @@
 package dev.aurakai.auraframefx.domains.genesis.fusion
 
-import dev.aurakai.auraframefx.domains.aura.core.AuraAgent
+import dev.aurakai.auraframefx.domains.aura.AuraAgent
 import dev.aurakai.auraframefx.domains.kai.KaiAgent
 import dev.aurakai.colorblendr.ChromaCore
 import javax.inject.Inject

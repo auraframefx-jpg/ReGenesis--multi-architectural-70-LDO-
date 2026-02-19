@@ -1,16 +1,16 @@
 package dev.aurakai.auraframefx.ai.task.execution
 
-import dev.aurakai.auraframefx.ai.agents.GenesisAgent
-import dev.aurakai.auraframefx.ai.task.TaskPriority
-import dev.aurakai.auraframefx.ai.task.TaskResult
-import dev.aurakai.auraframefx.aura.AuraAgent
-import dev.aurakai.auraframefx.kai.ExecutionStatus
+import dev.aurakai.auraframefx.domains.genesis.GenesisAgent
+import dev.aurakai.auraframefx.domains.kai.TaskPriority
+import dev.aurakai.auraframefx.domains.kai.TaskResult
+import dev.aurakai.auraframefx.domains.aura.AuraAgent
+import dev.aurakai.auraframefx.domains.kai.ExecutionStatus
 import dev.aurakai.auraframefx.domains.kai.KaiAgent
 import dev.aurakai.auraframefx.models.AgentResponse
 import dev.aurakai.auraframefx.models.AgentType
 import dev.aurakai.auraframefx.models.AiRequest
 import dev.aurakai.auraframefx.models.AiRequestType
-import dev.aurakai.auraframefx.security.SecurityContext
+import dev.aurakai.auraframefx.core.SecurityContext
 import dev.aurakai.auraframefx.utils.AuraFxLogger
 
 import dev.aurakai.auraframefx.utils.toKotlinJsonObject

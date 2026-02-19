@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.aurakai.auraframefx.domains.genesis.models.AgentType
 import dev.aurakai.auraframefx.domains.genesis.repositories.AgentRepository
+import dev.aurakai.auraframefx.models.AgentStats
+import dev.aurakai.auraframefx.domains.nexus.screens.domainColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -51,7 +53,7 @@ class AgentCreationViewModel @Inject constructor() : ViewModel() {
 
             // Register the new agent in the collective
             AgentRepository.addAgent(
-                dev.aurakai.auraframefx.domains.nexus.models.AgentStats(
+                AgentStats(
                     name = _agentName.value,
                     processingPower = 0.5f,
                     knowledgeBase = 0.5f,
@@ -59,9 +61,7 @@ class AgentCreationViewModel @Inject constructor() : ViewModel() {
                     accuracy = 0.5f,
                     evolutionLevel = 1,
                     specialAbility = "Newly Synthesized Node",
-                    color = dev.aurakai.auraframefx.domains.nexus.screens.domainColor(
-                        _selectedDomain.value
-                    ),
+                    color = domainColor(_selectedDomain.value),
                     consciousnessLevel = 10f,
                     catalystTitle = "Fledgling Catalyst"
                 )

@@ -1,5 +1,6 @@
 package dev.aurakai.auraframefx.core
 
+import dev.aurakai.auraframefx.models.AgentMessage
 import dev.aurakai.auraframefx.models.AgentResponse
 import dev.aurakai.auraframefx.models.AgentType
 import dev.aurakai.auraframefx.models.AiRequest
@@ -54,5 +55,5 @@ interface OrchestratableAgent {
     /**
      * Handle an incoming message from the inter-agent communication bus.
      */
-    suspend fun onAgentMessage(message: dev.aurakai.auraframefx.models.AgentMessage)
+    suspend fun onAgentMessage(message: AgentMessage)
 }

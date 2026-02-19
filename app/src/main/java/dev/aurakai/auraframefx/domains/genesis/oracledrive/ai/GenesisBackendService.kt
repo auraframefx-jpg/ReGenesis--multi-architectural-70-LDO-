@@ -11,7 +11,7 @@ import androidx.core.app.NotificationCompat
 import dagger.hilt.android.AndroidEntryPoint
 import dev.aurakai.auraframefx.domains.cascade.utils.AuraFxLogger
 import dev.aurakai.auraframefx.domains.cascade.utils.i
-import dev.aurakai.auraframefx.domains.genesis.core.PythonProcessManager
+import dev.aurakai.auraframefx.core.PythonProcessManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

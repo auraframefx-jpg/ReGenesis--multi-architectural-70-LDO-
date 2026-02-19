@@ -1,18 +1,14 @@
 package dev.aurakai.auraframefx.di
 
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dev.aurakai.auraframefx.BuildConfig
-import dev.aurakai.auraframefx.config.BaseUrl
-import dev.aurakai.auraframefx.di.AuraNetwork
 import dev.aurakai.auraframefx.network.AuraApiService
 import dev.aurakai.auraframefx.network.AuthInterceptor
-import dev.aurakai.auraframefx.network.api.AuthApi as ApiAuthApi
-import dev.aurakai.auraframefx.network.AuthApi
+import dev.aurakai.auraframefx.network.api.AuthApi
 import dev.aurakai.auraframefx.network.api.AIAgentApi
 import dev.aurakai.auraframefx.network.api.ThemeApi
 import dev.aurakai.auraframefx.network.api.UserApi
@@ -53,7 +49,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    @javax.inject.Named("BasicOkHttpClient")
+    @BasicNetwork
     fun provideBasicOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
     ): OkHttpClient {
@@ -67,8 +63,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    @AuraNetwork
-    fun provideOkHttpClient(
+    @AuthenticatedNetwork
+    fun provideAuthenticatedOkHttpClient(
         authInterceptor: AuthInterceptor,
         loggingInterceptor: HttpLoggingInterceptor,
     ): OkHttpClient {
@@ -83,8 +79,9 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(
-        @AuraNetwork okHttpClient: OkHttpClient,
+    @BasicNetwork
+    fun provideBasicRetrofit(
+        @BasicNetwork okHttpClient: OkHttpClient,
         moshi: Moshi,
         @BaseUrl baseUrl: String,
     ): Retrofit {
@@ -99,9 +96,9 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    @javax.inject.Named("AuthRetrofit")
-    fun provideAuthRetrofit(
-        @javax.inject.Named("BasicOkHttpClient") okHttpClient: OkHttpClient,
+    @AuthenticatedNetwork
+    fun provideAuthenticatedRetrofit(
+        @AuthenticatedNetwork okHttpClient: OkHttpClient,
         moshi: Moshi,
         @BaseUrl baseUrl: String,
     ): Retrofit {
@@ -116,42 +113,26 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthApi(@javax.inject.Named("AuthRetrofit") retrofit: Retrofit): AuthApi {
+    fun provideAuthApi(@BasicNetwork retrofit: Retrofit): AuthApi {
         return retrofit.create(AuthApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideApiAuthApi(retrofit: Retrofit): ApiAuthApi {
-        return retrofit.create(ApiAuthApi::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAuraApiService(
-        @ApplicationContext context: android.content.Context,
-        authInterceptor: AuthInterceptor,
-        dispatchers: AppCoroutineDispatchers,
-        @BaseUrl baseUrl: String,
-    ): AuraApiService {
-        return AuraApiService(context, authInterceptor, dispatchers, baseUrl)
-    }
-
-    @Provides
-    @Singleton
-    fun provideUserApi(retrofit: Retrofit): UserApi {
+    fun provideUserApi(@AuthenticatedNetwork retrofit: Retrofit): UserApi {
         return retrofit.create(UserApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideAIAgentApi(retrofit: Retrofit): AIAgentApi {
+    fun provideAIAgentApi(@AuthenticatedNetwork retrofit: Retrofit): AIAgentApi {
         return retrofit.create(AIAgentApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideThemeApi(retrofit: Retrofit): ThemeApi {
+    fun provideThemeApi(@AuthenticatedNetwork retrofit: Retrofit): ThemeApi {
         return retrofit.create(ThemeApi::class.java)
     }
+
 }

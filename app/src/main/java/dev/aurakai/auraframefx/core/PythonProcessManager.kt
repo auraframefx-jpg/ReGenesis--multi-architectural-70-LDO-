@@ -2,6 +2,7 @@ package dev.aurakai.auraframefx.core
 
 import android.content.Context
 import android.util.Log
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -95,7 +96,7 @@ data class ProcessConfig(
 
 @Singleton
 class PythonProcessManager @Inject constructor(
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) {
     private val TAG = "PythonProcessManager"
 

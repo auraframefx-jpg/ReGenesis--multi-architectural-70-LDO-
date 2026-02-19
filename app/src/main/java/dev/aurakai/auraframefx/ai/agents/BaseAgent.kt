@@ -19,7 +19,8 @@ abstract class BaseAgent(
     override val agentName: String,
     protected val agentType: AgentType,
     protected val contextManager: ContextManager? = null,
-    protected val memoryManager: MemoryManager? = null
+    protected val memoryManager: MemoryManager? = null,
+    protected val secureChannel: Any? = null // Placeholder for now, can be specific later
 ) : Agent, OrchestratableAgent {
 
     override fun getName(): String = agentName

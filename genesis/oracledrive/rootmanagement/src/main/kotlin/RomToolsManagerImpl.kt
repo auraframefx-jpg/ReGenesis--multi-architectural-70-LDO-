@@ -2,8 +2,6 @@ package dev.aurakai.auraframefx.romtools
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dev.aurakai.auraframefx.domains.genesis.models.AgentResponse
-import dev.aurakai.auraframefx.domains.genesis.models.AgentType
 import dev.aurakai.auraframefx.romtools.bootloader.BootloaderManager
 import dev.aurakai.auraframefx.romtools.bootloader.BootloaderSafetyManager
 import dev.aurakai.auraframefx.romtools.retention.AurakaiRetentionManager
@@ -70,23 +68,21 @@ class RomToolsManagerImpl @Inject constructor(
         }
     }
 
-    override suspend fun processRomOperation(request: RomOperationRequest): AgentResponse {
+    override suspend fun processRomOperation(request: RomOperationRequest): RomAgentResponse {
         return try {
             Timber.i("Processing ROM operation: ${request.operation}")
 
             // TODO: Implement actual operation routing based on request.operation type
 
-            AgentResponse.success(
+            RomAgentResponse.success(
                 content = "ROM operation processed successfully",
-                agentName = "RomTools",
-                agentType = AgentType.GENESIS
+                agentName = "RomTools"
             )
         } catch (e: Exception) {
             Timber.e(e, "Failed to process ROM operation")
-            AgentResponse.error(
+            RomAgentResponse.error(
                 message = e.message ?: "Unknown error",
-                agentName = "RomTools",
-                agentType = AgentType.GENESIS
+                agentName = "RomTools"
             )
         }
     }

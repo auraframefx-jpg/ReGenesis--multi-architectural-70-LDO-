@@ -1,6 +1,5 @@
 package dev.aurakai.auraframefx.romtools
 
-import dev.aurakai.auraframefx.domains.genesis.models.AgentResponse
 import dev.aurakai.auraframefx.romtools.retention.RetentionStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +24,7 @@ interface RomToolsManager {
     /**
      * Process a ROM operation request through the Genesis AI agent system.
      */
-    suspend fun processRomOperation(request: RomOperationRequest): AgentResponse
+    suspend fun processRomOperation(request: RomOperationRequest): RomAgentResponse
 
     /**
      * Flash a ROM file to the device.
@@ -182,3 +181,22 @@ data class DownloadProgress(
     val isCompleted: Boolean = false,
     val percentage: Float = progress
 )
+
+/**
+ * Local response type for ROM agent operations.
+ * Avoids cross-module dependency on the app's AgentResponse class.
+ */
+data class RomAgentResponse(
+    val content: String,
+    val agentName: String = "RomTools",
+    val isSuccess: Boolean = true,
+    val error: String? = null
+) {
+    companion object {
+        fun success(content: String, agentName: String = "RomTools") =
+            RomAgentResponse(content = content, agentName = agentName, isSuccess = true)
+
+        fun error(message: String, agentName: String = "RomTools") =
+            RomAgentResponse(content = message, agentName = agentName, isSuccess = false, error = message)
+    }
+}

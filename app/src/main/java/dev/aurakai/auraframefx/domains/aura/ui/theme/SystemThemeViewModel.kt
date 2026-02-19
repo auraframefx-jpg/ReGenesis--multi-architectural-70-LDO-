@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.aurakai.auraframefx.domains.aura.SystemOverlayManager
+import dev.aurakai.auraframefx.system.ui.SystemOverlayManager
 import dev.aurakai.auraframefx.domains.aura.ui.theme.manager.SystemThemeManager
 import dev.aurakai.auraframefx.domains.aura.ui.theme.manager.ThemeColors
 import dev.aurakai.auraframefx.domains.aura.ui.theme.model.OverlayTheme

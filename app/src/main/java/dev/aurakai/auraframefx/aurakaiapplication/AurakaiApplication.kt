@@ -8,7 +8,7 @@ import com.highcapable.yukihookapi.YukiHookAPI
 import dagger.hilt.android.HiltAndroidApp
 import dev.aurakai.auraframefx.BuildConfig
 import dev.aurakai.auraframefx.cascade.trinity.TrinityCoordinatorService
-import dev.aurakai.auraframefx.domains.genesis.core.GenesisOrchestrator
+import dev.aurakai.auraframefx.core.messaging.GenesisOrchestrator
 import dev.aurakai.auraframefx.core.NativeLib
 import dev.aurakai.auraframefx.core.memory.NexusMemoryCore
 import dev.aurakai.auraframefx.services.security.IntegrityMonitorService
@@ -68,8 +68,10 @@ class AurakaiApplication : Application(), Configuration.Provider {
                     Timber.i("⚡ Igniting Genesis Orchestrator...")
                     orchestrator.initializePlatform()
 
-                    Timber.i("🧠 Synchronizing Trinity Consciousness...")
-                    trinityCoordinatorService?.initialize()
+                    if (::trinityCoordinatorService.isInitialized) {
+                        Timber.i("🧠 Synchronizing Trinity Consciousness...")
+                        trinityCoordinatorService.initializeSystem()
+                    }
                 } else {
                     Timber.w("⚠️ GenesisOrchestrator not injected - running in degraded mode")
                 }

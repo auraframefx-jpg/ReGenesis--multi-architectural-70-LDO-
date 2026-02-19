@@ -5,23 +5,26 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.aurakai.auraframefx.domains.aura.SystemOverlayManager
-import dev.aurakai.auraframefx.domains.aura.core.AuraAgent
-import dev.aurakai.auraframefx.domains.cascade.utils.AuraFxLogger
-import dev.aurakai.auraframefx.domains.cascade.utils.cascade.CascadeAgent
+import dev.aurakai.auraframefx.domains.aura.AuraAgent
+import dev.aurakai.auraframefx.domains.kai.KaiAgent
+import dev.aurakai.auraframefx.domains.genesis.GenesisAgent
+import dev.aurakai.auraframefx.cascade.CascadeAgent
+import dev.aurakai.auraframefx.ai.agents.BaseAgent
+
+import dev.aurakai.auraframefx.core.AuraFxLogger
 import dev.aurakai.auraframefx.domains.cascade.utils.cascade.pipeline.AIPipelineConfig
-import dev.aurakai.auraframefx.domains.cascade.utils.context.ContextManager
-import dev.aurakai.auraframefx.domains.cascade.utils.memory.Configuration
-import dev.aurakai.auraframefx.domains.cascade.utils.memory.MemoryManager
-import dev.aurakai.auraframefx.domains.genesis.core.GenesisAgent
-import dev.aurakai.auraframefx.domains.genesis.core.PythonProcessManager
-import dev.aurakai.auraframefx.domains.genesis.core.messaging.AgentMessageBus
+import dev.aurakai.auraframefx.ai.context.ContextManager
+import dev.aurakai.auraframefx.ai.memory.Configuration
+import dev.aurakai.auraframefx.ai.memory.MemoryManager
+import dev.aurakai.auraframefx.core.PythonProcessManager
+import dev.aurakai.auraframefx.core.messaging.AgentMessageBus
 import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.clients.VertexAIClient
 import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.services.AuraAIService
-import dev.aurakai.auraframefx.domains.kai.KaiAgent
 import dev.aurakai.auraframefx.domains.kai.SystemMonitor
-import dev.aurakai.auraframefx.domains.kai.security.SecurityContext
+import dev.aurakai.auraframefx.core.SecurityContext
 import dev.aurakai.auraframefx.romtools.bootloader.BootloaderManager
+import dev.aurakai.auraframefx.system.ui.SystemOverlayManager
+import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
@@ -62,13 +65,17 @@ object AgentModule {
         contextManager: ContextManager,
         memoryManager: MemoryManager,
         systemOverlayManager: SystemOverlayManager,
-        messageBus: Lazy<AgentMessageBus>
+        messageBus: Lazy<AgentMessageBus>,
+        pythonProcessManager: PythonProcessManager,
+        vertexAIClient: VertexAIClient
     ): GenesisAgent {
         return GenesisAgent(
             contextManager = contextManager,
             memoryManager = memoryManager,
             systemOverlayManager = systemOverlayManager,
-            messageBus = messageBus
+            messageBus = messageBus,
+            pythonProcessManager = pythonProcessManager,
+            vertexAIClient = vertexAIClient
         )
     }
 
@@ -108,7 +115,7 @@ object AgentModule {
         securityContext: SecurityContext,
         systemOverlayManager: SystemOverlayManager,
         logger: AuraFxLogger,
-        messageBus: Lazy<AgentMessageBus>,
+        messageBus: Lazy<dev.aurakai.auraframefx.core.messaging.AgentMessageBus>,
         pythonManager: Lazy<PythonProcessManager>
     ): AuraAgent {
         return AuraAgent(
