@@ -11,7 +11,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.AndroidEntryPoint
 import dev.aurakai.auraframefx.app.ipc.IAuraDriveService
  import dev.aurakai.auraframefx.ipc.IAuraDriveCallback
- import dev.aurakai.auraframefx.genesis.security.SecureFileManager
+ import dev.aurakai.auraframefx.domains.genesis.security.SecureFileManager
 import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
@@ -129,11 +129,11 @@ class AuraDriveService : Service() {
                 // Check if we should use root
                 val useRoot = params?.getBoolean("use_root", false) ?: false
                 val shell = if (useRoot) "su" else "sh"
-                
+
                 val process = Runtime.getRuntime().exec(arrayOf(shell, "-c", command))
                 val output = process.inputStream.bufferedReader().readText()
                 val error = process.errorStream.bufferedReader().readText()
-                
+
                 if (error.isNotEmpty()) {
                     "Output: $output\nError: $error"
                 } else {

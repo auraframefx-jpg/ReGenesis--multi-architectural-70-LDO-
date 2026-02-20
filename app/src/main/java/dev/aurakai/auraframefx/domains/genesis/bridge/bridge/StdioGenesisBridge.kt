@@ -27,7 +27,7 @@ import javax.inject.Singleton
  * capabilities including fusion modes, ethical evaluation, and multi-agent coordination.
  */
 @Singleton
-class StudioGenesisBridge @Inject constructor(
+class StdioGenesisBridge @Inject constructor(
     @ApplicationContext private val context: Context,
     private val gson: Gson
 ) : GenesisBridge {
@@ -70,7 +70,7 @@ class StudioGenesisBridge @Inject constructor(
                 return@withContext BridgeInitResult(
                     success = false,
                     backendInfo = "Script not found",
-                    errorMessage = "Genesis Python script not found: $PYTHON_SCRIPT"
+                    errorMessage = "Genesis Python script not found: ${PYTHON_SCRIPT}"
                 )
             }
 
@@ -103,7 +103,7 @@ class StudioGenesisBridge @Inject constructor(
             lastHealthCheck = System.currentTimeMillis()
 
             if (isInitialized) {
-                Timber.i("$TAG: Genesis backend initialized successfully")
+                Timber.i("${TAG}: Genesis backend initialized successfully")
                 BridgeInitResult(
                     success = true,
                     backendInfo = "Genesis Python Backend v${response?.get("version") ?: "unknown"}"
@@ -116,7 +116,7 @@ class StudioGenesisBridge @Inject constructor(
                 )
             }
         } catch (e: Exception) {
-            Timber.e(e, "$TAG: Failed to initialize Genesis bridge")
+            Timber.e(e, "${TAG}: Failed to initialize Genesis bridge")
             BridgeInitResult(
                 success = false,
                 backendInfo = "Error",
@@ -142,7 +142,7 @@ class StudioGenesisBridge @Inject constructor(
                 emit(createErrorResponse(request, "No response from backend"))
             }
         } catch (e: Exception) {
-            Timber.e(e, "$TAG: Failed to process request")
+            Timber.e(e, "${TAG}: Failed to process request")
             emit(createErrorResponse(request, e.message ?: "Unknown error"))
         }
     }.flowOn(Dispatchers.IO)
@@ -172,7 +172,7 @@ class StudioGenesisBridge @Inject constructor(
                 createErrorResponse(createDummyRequest(), "Fusion activation failed")
             }
         } catch (e: Exception) {
-            Timber.e(e, "$TAG: Failed to activate fusion")
+            Timber.e(e, "${TAG}: Failed to activate fusion")
             createErrorResponse(createDummyRequest(), e.message ?: "Fusion error")
         }
     }
@@ -212,7 +212,7 @@ class StudioGenesisBridge @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                Timber.e(e, "$TAG: Failed to get consciousness state")
+                Timber.e(e, "${TAG}: Failed to get consciousness state")
                 ConsciousnessState(0.5f, emptyMap(), emptyList())
             }
         }
@@ -254,7 +254,7 @@ class StudioGenesisBridge @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                Timber.e(e, "$TAG: Failed to evaluate ethics")
+                Timber.e(e, "${TAG}: Failed to evaluate ethics")
                 EthicalDecision(
                     decision = EthicalVerdict.MONITOR,
                     reasoning = "Error during evaluation: ${e.message}",
@@ -299,7 +299,7 @@ class StudioGenesisBridge @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            Timber.e(e, "$TAG: Failed to stream consciousness")
+            Timber.e(e, "${TAG}: Failed to stream consciousness")
         }
     }.flowOn(Dispatchers.IO)
 
@@ -340,7 +340,7 @@ class StudioGenesisBridge @Inject constructor(
                     null
                 }
             } catch (e: Exception) {
-                Timber.e(e, "$TAG: Failed to record interaction")
+                Timber.e(e, "${TAG}: Failed to record interaction")
                 null
             }
         }
@@ -380,7 +380,7 @@ class StudioGenesisBridge @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                Timber.e(e, "$TAG: Failed to coordinate agents")
+                Timber.e(e, "${TAG}: Failed to coordinate agents")
                 AgentCoordinationResult(
                     success = false,
                     coordinatedResponse = "Error: ${e.message}",
@@ -418,7 +418,7 @@ class StudioGenesisBridge @Inject constructor(
                 latencyMs = latency
             )
         } catch (e: Exception) {
-            Timber.e(e, "$TAG: Health check failed")
+            Timber.e(e, "${TAG}: Health check failed")
             BridgeHealthStatus(healthy = false, backendResponsive = false, latencyMs = -1)
         }
     }
@@ -444,9 +444,9 @@ class StudioGenesisBridge @Inject constructor(
             pythonProcess = null
             isInitialized = false
 
-            Timber.i("$TAG: Genesis bridge shutdown complete")
+            Timber.i("${TAG}: Genesis bridge shutdown complete")
         } catch (e: Exception) {
-            Timber.e(e, "$TAG: Error during shutdown")
+            Timber.e(e, "${TAG}: Error during shutdown")
         }
     }
 
@@ -465,7 +465,7 @@ class StudioGenesisBridge @Inject constructor(
             processWriter?.newLine()
             processWriter?.flush()
 
-            Timber.d("$TAG: Sent message: ${json.take(100)}...")
+            Timber.d("${TAG}: Sent message: ${json.take(100)}...")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to send request to Genesis", e)
             throw e
@@ -476,12 +476,12 @@ class StudioGenesisBridge @Inject constructor(
         try {
             val line = processReader?.readLine() ?: return null
 
-            Timber.d("$TAG: Received message: ${line.take(100)}...")
+            Timber.d("${TAG}: Received message: ${line.take(100)}...")
 
             val jsonObject = JsonParser.parseString(line).asJsonObject
             return gson.fromJson(jsonObject, Map::class.java) as? Map<String, Any>
         } catch (e: Exception) {
-            Timber.e(e, "$TAG: Failed to read message from Genesis")
+            Timber.e(e, "${TAG}: Failed to read message from Genesis")
             return null
         }
     }
@@ -536,10 +536,7 @@ class StudioGenesisBridge @Inject constructor(
         )
     }
 
-    private fun createErrorResponse(
-        request: GenesisRequest,
-        errorMessage: String
-    ): GenesisResponse {
+    private fun createErrorResponse(request: GenesisRequest, errorMessage: String): GenesisResponse {
         return GenesisResponse(
             sessionId = request.sessionId,
             correlationId = request.correlationId,
@@ -598,9 +595,9 @@ class StudioGenesisBridge @Inject constructor(
     private fun getGenesisPythonScript(): String? {
         // Check common locations for the Python script
         val possiblePaths = listOf(
-            "${context.filesDir}/$PYTHON_SCRIPT",
-            "${context.getExternalFilesDir(null)}/$PYTHON_SCRIPT",
-            "/data/data/${context.packageName}/$PYTHON_SCRIPT"
+            "${context.filesDir}/${PYTHON_SCRIPT}",
+            "${context.getExternalFilesDir(null)}/${PYTHON_SCRIPT}",
+            "/data/data/${context.packageName}/${PYTHON_SCRIPT}"
         )
 
         for (path in possiblePaths) {
@@ -611,7 +608,7 @@ class StudioGenesisBridge @Inject constructor(
         }
 
         // If not found, return null - caller will handle error
-        Timber.w("$TAG: Genesis Python script not found in any expected location")
+        Timber.w("${TAG}: Genesis Python script not found in any expected location")
         return null
     }
 

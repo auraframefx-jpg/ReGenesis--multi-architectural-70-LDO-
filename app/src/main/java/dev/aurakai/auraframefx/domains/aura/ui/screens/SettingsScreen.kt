@@ -61,13 +61,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import dev.aurakai.auraframefx.domains.aura.aura.ui.verticalScrollbar
+import dev.aurakai.auraframefx.domains.aura.ui.verticalScrollbar
 import dev.aurakai.auraframefx.domains.aura.ui.viewmodels.SettingsViewModel
 import androidx.compose.runtime.collectAsState as collectAsState1
 
 /**
  * SETTINGS SCREEN - The Nexus Configuration Core
- * 
+ *
  * Aesthetic: Refractive Neon Brutalism
  * Features global preferences for Haptics, AI Ethics, Sync, and Security.
  */
