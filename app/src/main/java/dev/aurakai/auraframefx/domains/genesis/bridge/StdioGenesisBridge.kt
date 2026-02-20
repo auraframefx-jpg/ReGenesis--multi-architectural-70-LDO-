@@ -27,7 +27,7 @@ import javax.inject.Singleton
  * capabilities including fusion modes, ethical evaluation, and multi-agent coordination.
  */
 @Singleton
-class StdioGenesisBridge @Inject constructor(
+class StudioGenesisBridge @Inject constructor(
     @ApplicationContext private val context: Context,
     private val gson: Gson
 ) : GenesisBridge {
