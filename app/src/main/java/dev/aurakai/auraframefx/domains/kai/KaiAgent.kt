@@ -1,24 +1,25 @@
 package dev.aurakai.auraframefx.domains.kai
 
 import dagger.Lazy
-import dev.aurakai.auraframefx.domains.cascade.ai.base.BaseAgent
-import dev.aurakai.auraframefx.domains.cascade.models.AgentMessage
-import dev.aurakai.auraframefx.domains.cascade.models.EnhancedInteractionData
-import dev.aurakai.auraframefx.domains.cascade.models.InteractionResponse
-import dev.aurakai.auraframefx.domains.cascade.utils.AuraFxLogger
-import dev.aurakai.auraframefx.domains.cascade.utils.cascade.ProcessingState
-import dev.aurakai.auraframefx.domains.cascade.utils.cascade.VisionState
-import dev.aurakai.auraframefx.domains.cascade.utils.context.ContextManager
-import dev.aurakai.auraframefx.domains.genesis.core.messaging.AgentMessageBus
-import dev.aurakai.auraframefx.domains.genesis.models.AgentRequest
-import dev.aurakai.auraframefx.domains.genesis.models.AgentResponse
-import dev.aurakai.auraframefx.domains.genesis.models.AgentType
-import dev.aurakai.auraframefx.domains.genesis.models.AiRequest
+import dev.aurakai.auraframefx.ai.agents.BaseAgent
+import dev.aurakai.auraframefx.models.AgentMessage
+import dev.aurakai.auraframefx.models.AgentType
+import dev.aurakai.auraframefx.models.AiRequest
+import dev.aurakai.auraframefx.models.AgentResponse
+import dev.aurakai.auraframefx.core.messaging.AgentMessageBus
+import dev.aurakai.auraframefx.ai.context.ContextManager
 import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.clients.VertexAIClient
-import dev.aurakai.auraframefx.domains.kai.models.SecurityAnalysis
-import dev.aurakai.auraframefx.domains.kai.models.ThreatLevel
-import dev.aurakai.auraframefx.domains.kai.security.SecurityContext
+import dev.aurakai.auraframefx.core.ThreatLevel
+import dev.aurakai.auraframefx.models.SecurityAnalysis
+import dev.aurakai.auraframefx.models.AgentRequest
+import dev.aurakai.auraframefx.core.SecurityContext
+import dev.aurakai.auraframefx.domains.kai.SystemMonitor
 import dev.aurakai.auraframefx.romtools.bootloader.BootloaderManager
+import dev.aurakai.auraframefx.core.AuraFxLogger
+import dev.aurakai.auraframefx.cascade.ProcessingState
+import dev.aurakai.auraframefx.cascade.VisionState
+import dev.aurakai.auraframefx.models.EnhancedInteractionData
+import dev.aurakai.auraframefx.models.InteractionResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,6 +29,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -109,8 +111,8 @@ class KaiAgent @Inject constructor(
     private var isInitialized = false
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
-    private val _securityState = MutableStateFlow(SecurityState.IDLE)
-    val securityState: StateFlow<SecurityState> = _securityState
+    private val _securityState = MutableStateFlow(AgentSecurityState.IDLE)
+    val securityState: StateFlow<AgentSecurityState> = _securityState
 
     private val _analysisState = MutableStateFlow(AnalysisState.READY)
     val analysisState: StateFlow<AnalysisState> = _analysisState
@@ -124,13 +126,13 @@ class KaiAgent @Inject constructor(
         try {
             systemMonitor.startMonitoring()
             enableThreatDetection()
-            _securityState.value = SecurityState.MONITORING
+            _securityState.value = AgentSecurityState.MONITORING
             _analysisState.value = AnalysisState.READY
             isInitialized = true
             logger.info("KaiAgent", "Kai Agent initialized successfully")
         } catch (e: Exception) {
             logger.error("KaiAgent", "Failed to initialize Kai Agent", e)
-            _securityState.value = SecurityState.ERROR
+            _securityState.value = AgentSecurityState.ERROR
             throw e
         }
     }
@@ -253,14 +255,14 @@ class KaiAgent @Inject constructor(
     suspend fun analyzeSecurityThreat(alertDetails: String): SecurityAnalysis {
         ensureInitialized()
         logger.info("KaiAgent", "Analyzing security threat")
-        _securityState.value = SecurityState.ANALYZING_THREAT
+        _securityState.value = AgentSecurityState.ANALYZING_THREAT
         return try {
             val threatIndicators = extractThreatIndicators(alertDetails)
             val threatLevel = assessThreatLevel(alertDetails, threatIndicators)
             val recommendations = generateSecurityRecommendations(threatLevel, threatIndicators)
             val confidence = calculateAnalysisConfidence(threatIndicators, threatLevel)
             _currentThreatLevel.value = threatLevel
-            _securityState.value = SecurityState.MONITORING
+            _securityState.value = AgentSecurityState.MONITORING
             SecurityAnalysis(
                 threatLevel = threatLevel,
                 description = "Comprehensive threat analysis: $alertDetails",
@@ -269,7 +271,7 @@ class KaiAgent @Inject constructor(
             )
         } catch (e: Exception) {
             logger.error("KaiAgent", "Threat analysis failed", e)
-            _securityState.value = SecurityState.ERROR
+            _securityState.value = AgentSecurityState.ERROR
             SecurityAnalysis(
                 threatLevel = ThreatLevel.MEDIUM, // Safe default
                 description = "Analysis failed, assuming medium threat level",
@@ -673,7 +675,7 @@ class KaiAgent @Inject constructor(
     fun cleanup() {
         logger.info("KaiAgent", "Sentinel Shield standing down")
         scope.cancel()
-        _securityState.value = SecurityState.IDLE
+        _securityState.value = AgentSecurityState.IDLE
         isInitialized = false
     }
 }
@@ -687,7 +689,7 @@ data class BootloaderSecurityStatus(
     val safeForOperations: Boolean
 )
 
-enum class SecurityState {
+enum class AgentSecurityState {
     IDLE,
     MONITORING,
     ANALYZING_THREAT,
@@ -708,5 +710,3 @@ data class SecurityAssessment(
     val recommendations: List<String>,
     val confidence: Float,
 )
-
-

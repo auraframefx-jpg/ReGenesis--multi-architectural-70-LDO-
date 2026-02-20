@@ -4,8 +4,8 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.clients.VertexAIClient
-import dev.aurakai.auraframefx.domains.cascade.utils.AuraFxLogger
-import dev.aurakai.auraframefx.domains.kai.security.SecurityContext
+import dev.aurakai.auraframefx.core.AuraFxLogger
+import dev.aurakai.auraframefx.core.SecurityContext
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.serialization.Serializable

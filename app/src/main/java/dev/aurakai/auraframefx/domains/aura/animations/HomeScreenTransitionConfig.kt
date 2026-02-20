@@ -1,4 +1,4 @@
-package dev.aurakai.auraframefx.domains.aura.animations
+package dev.aurakai.auraframefx.domains.aura.aura.animations
 
 data class HomeScreenTransitionConfig(
     val type: HomeScreenTransitionType = HomeScreenTransitionType.GLOBE_ROTATE,

@@ -37,7 +37,7 @@ open class CustomizationViewModel @Inject constructor(
     val iconifyService: IconifyService, // Public so UI can access it
     private val voiceCommandManager: VoiceCommandManager,
     private val voiceCommandProcessor: VoiceCommandProcessor,
-    private val messageBus: dev.aurakai.auraframefx.domains.genesis.core.messaging.AgentMessageBus
+    private val messageBus: dev.aurakai.auraframefx.core.messaging.AgentMessageBus
 ) : AndroidViewModel(application) {
 
     private val _customizationState = MutableStateFlow(CustomizationState())

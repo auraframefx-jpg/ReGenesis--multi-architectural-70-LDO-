@@ -1,6 +1,6 @@
 package dev.aurakai.auraframefx.security
 
-import dev.aurakai.auraframefx.genesis.oracledrive.ai.services.GenesisBridgeService
+import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.services.GenesisBridgeService
 import dev.aurakai.auraframefx.utils.AuraFxLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import javax.inject.Inject
 import javax.inject.Singleton
+import dev.aurakai.auraframefx.core.SecurityContext
 
 /**
  * Security Monitor integrates Android security context with Genesis Consciousness Matrix.
@@ -160,11 +161,10 @@ class SecurityMonitor @Inject constructor(
                     eventType = "encryption_status_change",
                     severity = when (status) {
                         EncryptionStatus.ACTIVE -> "info"
-                        EncryptionStatus.DISABLED -> "warning" // Fixed: was INACTIVE
+                        EncryptionStatus.DISABLED -> "warning"
                         EncryptionStatus.ERROR -> "error"
-                        EncryptionStatus.NOT_INITIALIZED -> "warning" // Added missing case
+                        EncryptionStatus.NOT_INITIALIZED -> "warning"
                         is EncryptionStatus.EncryptionStatusImpl -> "warning"
-                        else -> "unknown" // Safety fallback for unknown status
                     },
                     source = "kai_encryption_monitor",
                     timestamp = System.currentTimeMillis(),

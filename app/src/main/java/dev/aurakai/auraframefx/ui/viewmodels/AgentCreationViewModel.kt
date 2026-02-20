@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.aurakai.auraframefx.domains.genesis.repositories.AgentRepository
+import dev.aurakai.auraframefx.models.AgentStats
 import dev.aurakai.auraframefx.models.AgentType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,8 +51,8 @@ class AgentCreationViewModel @Inject constructor() : ViewModel() {
             _isCreating.value = false
             
             // Register the new agent in the collective
-            dev.aurakai.auraframefx.data.repositories.AgentRepository.addAgent(
-                dev.aurakai.auraframefx.models.AgentStats(
+            AgentRepository.addAgent(
+                AgentStats(
                     name = _agentName.value,
                     processingPower = 0.5f,
                     knowledgeBase = 0.5f,

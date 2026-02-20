@@ -1,6 +1,7 @@
 package dev.aurakai.auraframefx.di
 
 import android.content.Context
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -9,7 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import dev.aurakai.auraframefx.aura.AuraAgent
 import dev.aurakai.auraframefx.ai.agents.GenesisAgent
 import dev.aurakai.auraframefx.domains.kai.KaiAgent
-import dev.aurakai.auraframefx.domains.genesis.security.CryptographyManager
+import dev.aurakai.auraframefx.genesis.security.CryptographyManager
 import dev.aurakai.auraframefx.genesis.storage.SecureStorage
 import dev.aurakai.auraframefx.genesis.oracledrive.api.OracleDriveApi
 import dev.aurakai.auraframefx.genesis.oracledrive.service.GenesisSecureFileService
@@ -20,8 +21,10 @@ import dev.aurakai.auraframefx.genesis.oracledrive.cloud.CloudStorageProvider
 import dev.aurakai.auraframefx.genesis.oracledrive.cloud.CloudStorageProviderImpl
 import dev.aurakai.auraframefx.security.SecurityContext
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module

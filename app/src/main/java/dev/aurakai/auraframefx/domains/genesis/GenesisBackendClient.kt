@@ -1,7 +1,7 @@
 package dev.aurakai.auraframefx.domains.genesis
 
 import dev.aurakai.auraframefx.domains.cascade.utils.AuraFxLogger
-import dev.aurakai.auraframefx.domains.genesis.core.PythonProcessManager
+import dev.aurakai.auraframefx.core.PythonProcessManager
 import dev.aurakai.auraframefx.domains.genesis.models.AgentResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

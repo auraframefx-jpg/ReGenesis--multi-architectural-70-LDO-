@@ -1,4 +1,4 @@
-package dev.aurakai.auraframefx.domains.aura.animations
+package dev.aurakai.auraframefx.domains.aura.aura.animations
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter

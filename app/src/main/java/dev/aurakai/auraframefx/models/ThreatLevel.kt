@@ -1,5 +1,8 @@
 package dev.aurakai.auraframefx.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class ThreatLevel(val severity: Int, val description: String) {
     NONE(0, "No threats detected"),
     LOW(1, "Minor security concerns"),

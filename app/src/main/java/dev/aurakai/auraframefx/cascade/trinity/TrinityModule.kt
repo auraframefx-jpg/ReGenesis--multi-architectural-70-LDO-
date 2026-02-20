@@ -6,14 +6,13 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import dev.aurakai.auraframefx.domains.cascade.utils.AuraFxLogger
-import dev.aurakai.auraframefx.domains.cascade.utils.context.ContextManager
+import dev.aurakai.auraframefx.core.AuraFxLogger
+import dev.aurakai.auraframefx.core.SecurityContext
+import dev.aurakai.auraframefx.ai.context.ContextManager
 import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.clients.VertexAIClient
 import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.services.AuraAIService
 import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.services.GenesisBridgeService
 import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.services.KaiAIService
-import dev.aurakai.auraframefx.domains.kai.security.SecurityContext
-import dev.aurakai.auraframefx.domains.kai.security.SecurityMonitor
 import javax.inject.Singleton
 
 /**
@@ -66,17 +65,4 @@ object TrinityModule {
         )
     }
 
-    @Provides
-    @Singleton
-    fun provideSecurityMonitor(
-        securityContext: SecurityContext,
-        genesisBridgeService: GenesisBridgeService,
-        logger: AuraFxLogger,
-    ): SecurityMonitor {
-        return SecurityMonitor(
-            securityContext = securityContext,
-            genesisBridgeService = genesisBridgeService,
-            logger = logger
-        )
-    }
 }

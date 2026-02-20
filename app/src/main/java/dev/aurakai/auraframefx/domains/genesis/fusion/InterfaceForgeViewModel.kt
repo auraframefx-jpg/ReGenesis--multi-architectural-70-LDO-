@@ -3,7 +3,7 @@ package dev.aurakai.auraframefx.domains.genesis.fusion
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.aurakai.auraframefx.domains.aura.core.AuraAgent
+import dev.aurakai.auraframefx.domains.aura.AuraAgent
 import dev.aurakai.auraframefx.domains.kai.KaiAgent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

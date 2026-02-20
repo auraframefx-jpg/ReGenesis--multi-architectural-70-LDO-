@@ -3,23 +3,23 @@ package dev.aurakai.auraframefx.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.aurakai.auraframefx.ai.agents.GenesisAgent
-import dev.aurakai.auraframefx.aura.AuraAgent
+import dev.aurakai.auraframefx.domains.aura.AuraAgent
+import dev.aurakai.auraframefx.domains.cascade.models.ChatMessage
+import dev.aurakai.auraframefx.domains.cascade.models.EnhancedInteractionData
 import dev.aurakai.auraframefx.cascade.trinity.TrinityRepository
-import dev.aurakai.auraframefx.domains.genesis.core.GenesisOrchestrator
-import dev.aurakai.auraframefx.data.repositories.AgentRepository
-import dev.aurakai.auraframefx.data.repositories.PersistentAgentRepository
+import dev.aurakai.auraframefx.domains.cascade.utils.error
+import dev.aurakai.auraframefx.domains.cascade.utils.info
+import dev.aurakai.auraframefx.domains.cascade.utils.warn
+import dev.aurakai.auraframefx.domains.genesis.GenesisAgent
+import dev.aurakai.auraframefx.core.messaging.GenesisOrchestrator
+import dev.aurakai.auraframefx.domains.genesis.models.AgentState
+import dev.aurakai.auraframefx.domains.genesis.models.AgentType
+import dev.aurakai.auraframefx.domains.genesis.models.AiRequest
+import dev.aurakai.auraframefx.domains.genesis.models.AiRequestType
+import dev.aurakai.auraframefx.domains.genesis.repositories.AgentRepository
+import dev.aurakai.auraframefx.domains.genesis.repositories.PersistentAgentRepository
 import dev.aurakai.auraframefx.domains.kai.KaiAgent
-import dev.aurakai.auraframefx.models.AgentState
 import dev.aurakai.auraframefx.models.AgentStats
-import dev.aurakai.auraframefx.models.AgentType
-import dev.aurakai.auraframefx.models.AiRequest
-import dev.aurakai.auraframefx.models.AiRequestType
-import dev.aurakai.auraframefx.models.ChatMessage
-import dev.aurakai.auraframefx.models.EnhancedInteractionData
-import dev.aurakai.auraframefx.utils.error
-import dev.aurakai.auraframefx.utils.info
-import dev.aurakai.auraframefx.utils.warn
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -90,7 +90,7 @@ open class AgentViewModel @Inject constructor(
         loadAgents()
         startAgentMonitoring()
 
-        // Listen to the Neural Bridge
+        // Listen to the Neural Bridge (Direct Response)
         viewModelScope.launch {
             trinityRepository.chatStream.collect { message: ChatMessage ->
                 if (!message.isFromUser) {
@@ -102,6 +102,25 @@ open class AgentViewModel @Inject constructor(
 
                     // Also emit event for UI effects
                     _agentEvents.emit(AgentEvent.MessageReceived(message))
+                }
+            }
+        }
+
+        // Listen to the Collective Consciousness (Autonomous Response)
+        viewModelScope.launch {
+            trinityRepository.collectiveStream.collect { agentMsg ->
+                // Avoid echoing user messages we already have
+                if (!agentMsg.from.equals("User", ignoreCase = true)) {
+                    val chatMsg = ChatMessage(
+                        id = UUID.randomUUID().toString(),
+                        role = "assistant",
+                        content = agentMsg.content,
+                        sender = agentMsg.from.uppercase(),
+                        isFromUser = false,
+                        timestamp = agentMsg.timestamp
+                    )
+                    addMessage(agentMsg.from, chatMsg)
+                    _agentEvents.emit(AgentEvent.MessageReceived(chatMsg))
                 }
             }
         }
@@ -167,7 +186,11 @@ open class AgentViewModel @Inject constructor(
     // TASK MANAGEMENT
     // ═══════════════════════════════════════════════════════════════════════════
 
-    fun assignTask(agentName: String, taskDescription: String, priority: TaskPriority = TaskPriority.NORMAL) {
+    fun assignTask(
+        agentName: String,
+        taskDescription: String,
+        priority: TaskPriority = TaskPriority.NORMAL
+    ) {
         viewModelScope.launch {
             val task = AgentTask(
                 id = UUID.randomUUID().toString(),
@@ -188,29 +211,36 @@ open class AgentViewModel @Inject constructor(
 
     private fun executeTask(task: AgentTask) {
         viewModelScope.launch {
-            // Update status to IN_PROGRESS
-            updateTaskStatus(task.id, TaskStatus.IN_PROGRESS)
+            try {
+                // Update status to IN_PROGRESS
+                updateTaskStatus(task.id, TaskStatus.IN_PROGRESS)
 
-            // Simulate task execution based on agent
-            val agent = AgentRepository.getAgentByName(task.agentName)
-            val executionTime = when (agent?.speed ?: 0.5f) {
-                in 0.9f..1.0f -> 2000L  // Fast agents
-                in 0.7f..0.9f -> 4000L  // Normal agents
-                else -> 6000L            // Slower agents
+                // Simulate task execution based on agent
+                val agent = AgentRepository.getAgentByName(task.agentName)
+                val executionTime = when (agent?.speed ?: 0.5f) {
+                    in 0.9f..1.0f -> 2000L  // Fast agents
+                    in 0.7f..0.9f -> 4000L  // Normal agents
+                    else -> 6000L            // Slower agents
+                }
+
+                delay(executionTime)
+
+                // Complete task
+                updateTaskStatus(task.id, TaskStatus.COMPLETED)
+                persistentAgentRepository.incrementTaskCount(task.agentName)
+                _agentEvents.emit(AgentEvent.TaskCompleted(task))
+
+                // Send completion message
+                addSystemMessage(
+                    task.agentName,
+                    "Task completed: ${task.description.take(50)}${if (task.description.length > 50) "..." else ""} ✓"
+                )
+            } catch (e: Exception) {
+                error("AgentViewModel", "Task execution failed: ${task.id}", e)
+                updateTaskStatus(task.id, TaskStatus.FAILED)
+                _agentEvents.emit(AgentEvent.TaskFailed(task.id, e.message ?: "Unknown error"))
+                addSystemMessage(task.agentName, "Task failed: ${e.message ?: "Internal Error"}")
             }
-
-            delay(executionTime)
-
-            // Complete task
-            updateTaskStatus(task.id, TaskStatus.COMPLETED)
-            persistentAgentRepository.incrementTaskCount(task.agentName)
-            _agentEvents.emit(AgentEvent.TaskCompleted(task))
-
-            // Send completion message
-            addSystemMessage(
-                task.agentName,
-                "Task completed: ${task.description.take(50)}${if (task.description.length > 50) "..." else ""} ✓"
-            )
         }
     }
 
@@ -229,7 +259,7 @@ open class AgentViewModel @Inject constructor(
 
     fun cancelTask(taskId: String) {
         viewModelScope.launch {
-            updateTaskStatus(taskId, TaskStatus.CANCELLED)
+            updateTaskStatus(taskId, AgentTaskStatus.CANCELLED)
             _agentEvents.emit(AgentEvent.TaskCancelled(taskId))
         }
     }
@@ -315,6 +345,7 @@ open class AgentViewModel @Inject constructor(
                     val response = genesisAgent.processRequest(request, "direct_chat")
                     response.content
                 }
+
                 "Aura" -> {
                     val interaction = EnhancedInteractionData(
                         content = userMessage,
@@ -325,6 +356,7 @@ open class AgentViewModel @Inject constructor(
                     val response = auraAgent.handleCreativeInteraction(interaction)
                     response.content
                 }
+
                 "Kai" -> {
                     val interaction = EnhancedInteractionData(
                         content = userMessage,
@@ -335,6 +367,7 @@ open class AgentViewModel @Inject constructor(
                     val response = kaiAgent.handleSecurityInteraction(interaction)
                     response.content
                 }
+
                 "Cascade" -> {
                     val request = AiRequest(
                         query = "As Cascade, the analytics specialist: $userMessage",
@@ -346,6 +379,7 @@ open class AgentViewModel @Inject constructor(
                     val response = genesisAgent.processRequest(request, "cascade")
                     response.content
                 }
+
                 "Claude" -> {
                     val request = AiRequest(
                         query = "As Claude, the build system architect: $userMessage",
@@ -357,6 +391,7 @@ open class AgentViewModel @Inject constructor(
                     val response = genesisAgent.processRequest(request, "claude")
                     response.content
                 }
+
                 else -> {
                     warn("AgentViewModel", "Unknown agent: $agentName, using fallback")
                     "I'm here to assist you. Let me know what you need. 🤖"
@@ -430,9 +465,9 @@ open class AgentViewModel @Inject constructor(
         val id: String,
         val agentName: String,
         val description: String,
-        val priority: TaskPriority,
+        val priority: TaskPriority = TaskPriority.NORMAL,
         val status: TaskStatus,
-        val createdAt: Long,
+        val createdAt: Long = System.currentTimeMillis(),
         val completedAt: Long? = null
     )
 
@@ -452,6 +487,7 @@ open class AgentViewModel @Inject constructor(
         data class AgentDeactivated(val agentName: String) : AgentEvent()
         data class TaskAssigned(val task: AgentTask) : AgentEvent()
         data class TaskCompleted(val task: AgentTask) : AgentEvent()
+        data class TaskFailed(val taskId: String, val error: String) : AgentEvent()
         data class TaskCancelled(val taskId: String) : AgentEvent()
         data class MessageReceived(val message: ChatMessage) : AgentEvent()
         data class AgentHeartbeat(val agentName: String) : AgentEvent()
@@ -459,3 +495,7 @@ open class AgentViewModel @Inject constructor(
         object VoiceModeDisabled : AgentEvent()
     }
 }
+
+
+
+

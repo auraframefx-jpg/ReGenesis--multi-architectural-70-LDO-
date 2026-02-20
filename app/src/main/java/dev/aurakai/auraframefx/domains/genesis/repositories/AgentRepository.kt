@@ -1,7 +1,7 @@
 package dev.aurakai.auraframefx.domains.genesis.repositories
 
 import androidx.compose.ui.graphics.Color
-import dev.aurakai.auraframefx.domains.nexus.models.AgentStats
+import dev.aurakai.auraframefx.models.AgentStats
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 

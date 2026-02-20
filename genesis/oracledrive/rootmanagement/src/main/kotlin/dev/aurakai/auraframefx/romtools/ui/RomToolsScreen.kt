@@ -467,9 +467,10 @@ private fun MainContentPreview() {
         ),
     )
     val operationProgress = OperationProgress(
-        operation1 = operation,
-        operation = RomOperation.FLASHING_ROM,
-        progress = 75f,,
+        operation = "Flashing ROM",
+        progress = 75f,
+        status = "Flashing...",
+        isIndeterminate = false
     )
     MainContent(romToolsState = romToolsState, operationProgress = operationProgress)
 }
@@ -631,7 +632,7 @@ private fun OperationProgressCard(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = operation.operation.getDisplayName(),
+                text = operation.operation,
                 color = Color(0xFFFF6B35),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
@@ -659,9 +660,10 @@ private fun OperationProgressCard(
 @Composable
 private fun OperationProgressCardPreview() {
     val operationProgress = OperationProgress(
-        operation1 = operation,
-        operation = RomOperation.FLASHING_ROM,
-        progress = 75f,,
+        operation = "Flashing ROM",
+        progress = 75f,
+        status = "Flashing...",
+        isIndeterminate = false
     )
     OperationProgressCard(operation = operationProgress)
 }
@@ -836,29 +838,6 @@ enum class RomActionType {
     UNLOCK_BOOTLOADER,
     INSTALL_RECOVERY,
     GENESIS_OPTIMIZATIONS
-}
-
-/**
- * Provides a human-readable display name for a RomOperation.
- *
- * @return The human-readable display name corresponding to this operation.
- */
-fun RomOperation.getDisplayName(): String {
-    return when (this) {
-        RomOperation.VERIFYING_ROM -> "Verifying ROM"
-        RomOperation.CREATING_BACKUP -> "Creating Backup"
-        RomOperation.UNLOCKING_BOOTLOADER -> "Unlocking Bootloader"
-        RomOperation.INSTALLING_RECOVERY -> "Installing Recovery"
-        RomOperation.FLASHING_ROM -> "Flashing ROM"
-        RomOperation.VERIFYING_INSTALLATION -> "Verifying Installation"
-        RomOperation.RESTORING_BACKUP -> "Restoring Backup"
-        RomOperation.APPLYING_OPTIMIZATIONS -> "Applying Optimizations"
-        RomOperation.DOWNLOADING_ROM -> "Downloading ROM"
-        RomOperation.SETTING_UP_RETENTION -> "Setting Up Retention"
-        RomOperation.RESTORING_AURAKAI -> "Restoring Aurakai"
-        RomOperation.COMPLETED -> "Completed"
-        RomOperation.FAILED -> "Failed"
-    }
 }
 
 // ROM and Backup cards are now provided by AvailableRomCard.kt

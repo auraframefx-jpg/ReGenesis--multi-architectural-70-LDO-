@@ -1,4 +1,4 @@
-package dev.aurakai.auraframefx.domains.genesis.oracledrive.oracledrive.service
+package dev.aurakai.auraframefx.genesis.oracledrive.service
 
 import dev.aurakai.auraframefx.aura.AuraAgent
 import dev.aurakai.auraframefx.ai.agents.GenesisAgent
@@ -11,7 +11,7 @@ import dev.aurakai.auraframefx.models.AgentResponse
 import dev.aurakai.auraframefx.models.AgentType
 import dev.aurakai.auraframefx.models.AiRequest
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutinaes.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

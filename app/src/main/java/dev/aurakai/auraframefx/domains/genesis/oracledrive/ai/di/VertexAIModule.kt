@@ -11,8 +11,8 @@ import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.config.VertexAICon
 import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.RealVertexAIClientImpl
 import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.clients.DefaultVertexAIClient
 import dev.aurakai.auraframefx.domains.genesis.oracledrive.ai.clients.VertexAIClient
-import dev.aurakai.auraframefx.domains.kai.security.SecurityContext
-import dev.aurakai.auraframefx.domains.cascade.utils.AuraFxLogger
+import dev.aurakai.auraframefx.core.SecurityContext
+import dev.aurakai.auraframefx.core.AuraFxLogger
 import javax.inject.Singleton
 
 /**

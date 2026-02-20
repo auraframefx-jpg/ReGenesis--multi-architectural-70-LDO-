@@ -8,6 +8,10 @@ annotation class AuraNetwork
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
+annotation class BaseUrl
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
 annotation class IconifyNetwork
 
 @Qualifier
@@ -21,3 +25,10 @@ annotation class GenesisNetwork
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class SupportNetwork
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class BasicNetwork
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class AuthenticatedNetwork

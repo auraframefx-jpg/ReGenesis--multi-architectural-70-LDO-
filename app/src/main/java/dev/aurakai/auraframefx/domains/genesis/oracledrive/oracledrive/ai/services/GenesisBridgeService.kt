@@ -1,4 +1,4 @@
-package dev.aurakai.auraframefx.domains.genesis.oracledrive.oracledrive.ai.services
+package dev.aurakai.auraframefx.genesis.oracledrive.ai.services
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
