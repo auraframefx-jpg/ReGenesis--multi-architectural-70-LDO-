@@ -4,10 +4,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.aurakai.auraframefx.genesis.bridge.BridgeMemorySink
-import dev.aurakai.auraframefx.genesis.bridge.GenesisBridge
-import dev.aurakai.auraframefx.genesis.bridge.NexusMemoryBridgeSink
-import dev.aurakai.auraframefx.genesis.bridge.StdioGenesisBridge
+import dev.aurakai.auraframefx.domains.genesis.bridge.BridgeMemorySink
+import dev.aurakai.auraframefx.domains.genesis.bridge.GenesisBridge
+import dev.aurakai.auraframefx.domains.genesis.bridge.NexusMemoryBridgeSink
+import dev.aurakai.auraframefx.domains.genesis.bridge.StdioGenesisBridge
 import javax.inject.Singleton
 
 @Module

@@ -74,10 +74,10 @@ class AuraAgent : OrchestratableAgent, BaseAgent() { // Inherit from BaseAgent
 
     override suspend fun shutdown() {
         Log.i(TAG, "AuraAgent: shutdown() called.")
-        if (BaseAgent.isOrchestratorInitialized) {
+        if (isOrchestratorInitialized) {
             shutdownAuraSystems()
             agentScope = null // Clear the scope upon shutdown
-            BaseAgent.isOrchestratorInitialized = false // Reset the unified flag
+            isOrchestratorInitialized = false // Reset the unified flag
             Log.d(TAG, "AuraAgent: Orchestrator shut down.")
         } else {
             Log.i(TAG, "AuraAgent: Orchestrator not initialized. Skipping shutdown logic.")
